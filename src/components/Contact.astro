@@ -1,0 +1,95 @@
+---
+import { contact, budgets } from '../data/site';
+
+const champs = [
+  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Jean Dupont', required: true },
+  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'jean@entreprise.fr', required: true },
+  { id: 'n-soc', name: 'societe', label: 'Société', type: 'text', placeholder: 'Entreprise SARL', required: false },
+];
+
+const coordonnees = [
+  { label: 'Mail', valeur: contact.email },
+  { label: 'Téléphone', valeur: contact.tel },
+  { label: 'Zone', valeur: contact.zone },
+];
+---
+
+<section id="contact">
+  <div class="wrap cgrid">
+    <div class="glass cinfo rv">
+      <h2>Parlons de votre projet.<br /><span class="grad">Le café est offert.</span></h2>
+      <p>
+        Un échange de 30 minutes, sans engagement, pour évaluer ce qui est faisable, à quel prix et
+        en combien de temps.
+      </p>
+      {coordonnees.map((c) => (
+        <div class="crow"><span>{c.label}</span><span>{c.valeur}</span></div>
+      ))}
+      <div class="crow">
+        <span>Délai</span><span style="color:#6EE7A8">{contact.delai}</span>
+      </div>
+    </div>
+
+    <form class="glass rv" id="form" novalidate>
+      {champs.map((c) => (
+        <div class="f">
+          <label for={c.id}>{c.label}</label>
+          <input id={c.id} name={c.name} type={c.type} placeholder={c.placeholder} required={c.required} />
+        </div>
+      ))}
+
+      <div class="f">
+        <label for="n-bud">Budget</label>
+        <select id="n-bud" name="budget">
+          {budgets.map((b) => <option>{b}</option>)}
+        </select>
+      </div>
+
+      <div class="f full">
+        <label for="n-msg">Votre projet</label>
+        <textarea
+          id="n-msg"
+          name="message"
+          placeholder="Décrivez en quelques lignes ce que vous voulez construire…"
+          required></textarea>
+      </div>
+
+      <div class="f full">
+        <button type="submit" class="btn btn-p">Envoyer la demande</button>
+        <div class="fmsg" id="fmsg" role="status" aria-live="polite"></div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('form') as HTMLFormElement | null;
+  const msg = document.getElementById('fmsg');
+
+  const dire = (texte: string, ok: boolean) => {
+    if (!msg) return;
+    msg.style.color = ok ? '#6EE7A8' : '#FCA5A5';
+    msg.textContent = texte;
+  };
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const nom = String(data.get('nom') ?? '').trim();
+    const email = String(data.get('email') ?? '').trim();
+    const message = String(data.get('message') ?? '').trim();
+
+    if (!nom || !email || !message) {
+      dire('Nom, email et description sont requis.', false);
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      dire('Adresse email invalide.', false);
+      return;
+    }
+
+    // TODO : brancher sur un endpoint réel (webhook n8n ou route API).
+    dire('Demande enregistrée — réponse sous 24 h ouvrées. (démo : à brancher sur un backend)', true);
+    form.reset();
+  });
+</script>

@@ -1,0 +1,31 @@
+---
+import SectionHead from './SectionHead.astro';
+import { etapes } from '../data/methode';
+---
+
+<section id="methode">
+  <div class="wrap">
+    <SectionHead label="Méthode">
+      <Fragment slot="titre">
+        Quatre étapes.<br /><span class="grad">Zéro</span> mauvaise surprise.
+      </Fragment>
+      Un cadre clair, des points hebdomadaires, un accès permanent à l'avancement. Vous savez
+      toujours où en est votre projet.
+    </SectionHead>
+
+    <div class="tl">
+      {etapes.map((e) => (
+        <div class:list={['tnode', 'rv', { on: e.done }]}>
+          <div class="tdot">{e.num}</div>
+          <div class="glass tbody">
+            <div class="h">
+              <h3>{e.titre}</h3>
+              <span class="t">{e.delai}</span>
+            </div>
+            <p>{e.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

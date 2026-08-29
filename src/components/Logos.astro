@@ -1,0 +1,10 @@
+---
+import { clients } from '../data/site';
+---
+
+<div class="wrap strip rv">
+  <div class="t">Ils nous font confiance</div>
+  <div class="logos">
+    {clients.map((nom) => <span>{nom}</span>)}
+  </div>
+</div>

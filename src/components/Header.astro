@@ -1,0 +1,52 @@
+---
+import Logo from './Logo.astro';
+import { nav } from '../data/site';
+---
+
+<header>
+  <nav class="nav">
+    <a class="brand" href="#top">
+      <Logo />
+      MADARIA
+    </a>
+    <div class="links">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </div>
+    <a href="#contact" class="btn btn-p">Démarrer</a>
+    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
+      <i></i><i></i>
+    </button>
+  </nav>
+</header>
+
+<div class="mmenu" id="mmenu">
+  {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+  <a href="#contact">Démarrer un projet</a>
+</div>
+
+<script>
+  const burger = document.getElementById('burger');
+  const mmenu = document.getElementById('mmenu');
+
+  if (burger && mmenu) {
+    const setOpen = (open: boolean) => {
+      mmenu.classList.toggle('open', open);
+      document.body.classList.toggle('locked', open);
+      burger.setAttribute('aria-expanded', String(open));
+    };
+
+    burger.addEventListener('click', () => setOpen(!mmenu.classList.contains('open')));
+    mmenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+
+  // La nav se densifie dès qu'on quitte le haut de page.
+  const header = document.querySelector('header');
+  if (header) {
+    const sync = () => header.classList.toggle('scrolled', window.scrollY > 24);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+  }
+</script>

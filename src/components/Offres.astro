@@ -1,0 +1,33 @@
+---
+import SectionHead from './SectionHead.astro';
+import { offres } from '../data/offres';
+---
+
+<section id="offres">
+  <div class="wrap">
+    <SectionHead label="Offres">
+      <Fragment slot="titre">
+        Un tarif clair,<br />annoncé <span class="grad">avant</span> de commencer.
+      </Fragment>
+      Paiement en trois fois sans frais. Aucun coût caché : ce qui est dans le devis est dans la
+      livraison.
+    </SectionHead>
+
+    <div class="plans">
+      {offres.map((o) => (
+        <div class:list={['glass', 'plan', 'rv', { feat: o.feat }]}>
+          <div class="pn">
+            <span>{o.nom}</span>
+            {o.badge && <em>{o.badge}</em>}
+          </div>
+          <div class="price">
+            {o.prix}{o.unite && <sup>{o.unite}</sup>}
+          </div>
+          <p class="d">{o.accroche}</p>
+          <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
+          <a href="#contact" class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

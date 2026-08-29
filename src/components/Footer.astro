@@ -1,0 +1,39 @@
+---
+import Logo from './Logo.astro';
+import ParticleWordmark from './ParticleWordmark.astro';
+import { footerColumns } from '../data/site';
+
+const annee = new Date().getFullYear();
+---
+
+<footer>
+  <div class="wrap">
+    <div class="fg">
+      <div>
+        <a class="brand" href="#top">
+          <Logo gradientId="gn-footer" />
+          MADARIA
+        </a>
+        <p>
+          Agence digitale française. Sites internet, automatisations et développement sur-mesure.
+        </p>
+      </div>
+
+      {footerColumns.map((col) => (
+        <div>
+          <h4>{col.title}</h4>
+          <ul>
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <ParticleWordmark text="MADARIA" />
+
+    <div class="fbot">
+      <span>© {annee} Madaria — tous droits réservés</span>
+      <span>Mentions légales · Confidentialité</span>
+    </div>
+  </div>
+</footer>

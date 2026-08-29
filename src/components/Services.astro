@@ -1,0 +1,43 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { services } from '../data/services';
+---
+
+<section id="services">
+  <div class="wrap">
+    <SectionHead label="Services">
+      <Fragment slot="titre">
+        Un partenaire unique,<br />de la première ligne au <span class="grad">dernier client</span>.
+      </Fragment>
+      Nous ne vendons pas des pages. Nous construisons des actifs digitaux : rapides, mesurables, et
+      connectés à vos outils métier.
+    </SectionHead>
+
+    <div class="bento">
+      {services.map((s) => (
+        <div class:list={['glass', 'bcard', 'rv', { wide: s.wide }]}>
+          <div class="spark"></div>
+          <div class="ico"><Icon name={s.icon} /></div>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+          <div class="tags">{s.tags.map((t) => <b>{t}</b>)}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // La lueur des cartes bento suit le curseur.
+  document.querySelectorAll<HTMLElement>('.bcard').forEach((card) => {
+    const spark = card.querySelector<HTMLElement>('.spark');
+    if (!spark) return;
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      spark.style.left = `${e.clientX - r.left - 120}px`;
+      spark.style.right = 'auto';
+      spark.style.width = '240px';
+    });
+  });
+</script>

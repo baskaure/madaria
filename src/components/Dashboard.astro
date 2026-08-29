@@ -1,0 +1,81 @@
+---
+/** Maquette de tableau de bord client, entièrement en CSS — aucun visuel importé. */
+
+const menuPilotage = ["Vue d'ensemble", 'Trafic & SEO', 'Leads', 'Automatisations', 'Facturation'];
+const menuProjet = ['Contenus', 'Performance'];
+
+const kpis = [
+  { label: 'Leads qualifiés', valeur: '128', delta: '+42 %' },
+  { label: 'Temps admin gagné', valeur: '34 h', delta: '+8 h' },
+  { label: 'Score PageSpeed', valeur: '98', delta: '/100' },
+];
+
+/** Hauteurs des barres, en %. La plus haute est mise en avant. */
+const barres = [28, 42, 36, 58, 49, 72, 96, 64, 78, 55, 70, 88];
+const pic = Math.max(...barres);
+---
+
+<div class="mockwrap rv">
+  <div class="mock glass">
+    <div class="mtop">
+      <i></i><i></i><i></i>
+      <span class="url">madaria.fr / tableau-de-bord</span>
+    </div>
+
+    <div class="mbody">
+      <div class="mside">
+        <div class="t">Pilotage</div>
+        {menuPilotage.map((label, i) => (
+          <a class={i === 0 ? 'on' : undefined}><s></s> {label}</a>
+        ))}
+        <div class="t" style="margin-top:14px">Projet</div>
+        {menuProjet.map((label) => <a><s></s> {label}</a>)}
+      </div>
+
+      <div class="mmain">
+        <div class="mhead">
+          <b>Bonjour 👋 — voici votre mois</b>
+          <span>30 derniers jours</span>
+        </div>
+
+        <div class="kpis">
+          {kpis.map((k) => (
+            <div class="kpi">
+              <small>{k.label}</small><b>{k.valeur}</b><u>{k.delta}</u>
+            </div>
+          ))}
+        </div>
+
+        <div class="chart">
+          <div class="ct">
+            <span>Demandes entrantes</span>
+            <span>automatisées à 100 %</span>
+          </div>
+          <div class="bars">
+            {barres.map((h) => <i class={h === pic ? 'hi' : undefined} data-h={`${h}%`}></i>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Les barres se remplissent une fois la maquette visible.
+  const mock = document.querySelector<HTMLElement>('.mockwrap');
+  if (mock) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          io.disconnect();
+          mock.querySelectorAll<HTMLElement>('.bars i').forEach((bar, i) => {
+            setTimeout(() => (bar.style.height = bar.dataset.h ?? '0%'), 260 + i * 70);
+          });
+        }
+      },
+      { threshold: 0.12 },
+    );
+    io.observe(mock);
+  }
+</script>

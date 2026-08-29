@@ -1,0 +1,14 @@
+---
+interface Props {
+  /** Petite étiquette au-dessus du titre */
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class="shead rv">
+  <div class="lab">{label}</div>
+  <h2><slot name="titre" /></h2>
+  {Astro.slots.has('default') && <p><slot /></p>}
+</div>
