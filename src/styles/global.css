@@ -61,21 +61,20 @@ header{position:fixed;top:18px;left:0;right:0;z-index:100;display:flex;justify-c
 /* teinte propre à la nav : encre violette dense, volontairement distincte
    du verre blanc utilisé par tous les autres panneaux */
 .nav{display:flex;align-items:center;gap:26px;padding:9px 9px 9px 20px;border-radius:100px;
-  background:linear-gradient(165deg,rgba(31,17,72,.46),rgba(12,6,30,.6));
+  background:linear-gradient(165deg,rgba(31,17,72,.18),rgba(12,6,30,.28));
   backdrop-filter:blur(26px) saturate(165%);
-  -webkit-backdrop-filter:blur(26px) saturate(165%);
-  border:1px solid rgba(167,139,250,.26);
-  box-shadow:0 1px 0 rgba(196,181,253,.22) inset,0 -1px 0 rgba(0,0,0,.3) inset,
-    0 20px 46px -22px rgba(4,2,14,.85);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 1px 0 rgba(255,255,255,.26) inset,0 -1px 0 rgba(255,255,255,.07) inset,
+    0 20px 46px -22px rgba(4,2,14,.7);
   max-width:100%;
   transition:background .4s ease,border-color .4s ease,box-shadow .4s ease}
 /* au repos la nav laisse passer le hero ; dès qu'on défile, du contenu passe
    dessous et elle se densifie pour rester lisible */
 header.scrolled .nav{
-  background:linear-gradient(165deg,rgba(29,16,68,.66),rgba(10,5,26,.8));
-  border-color:rgba(167,139,250,.34);
-  box-shadow:0 1px 0 rgba(196,181,253,.26) inset,0 -1px 0 rgba(0,0,0,.4) inset,
-    0 24px 54px -20px rgba(4,2,14,.95)}
+  background:linear-gradient(165deg,rgba(29,16,68,.36),rgba(10,5,26,.48));
+  border-color:rgba(255,255,255,.26);
+  box-shadow:0 1px 0 rgba(255,255,255,.32) inset,0 -1px 0 rgba(255,255,255,.09) inset,
+    0 24px 54px -20px rgba(4,2,14,.85)}
 .brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:600;letter-spacing:.16em;font-size:13px}
 .brand svg{width:21px;height:auto}
 .links{display:flex;gap:2px;font-size:13.5px}
@@ -92,10 +91,10 @@ header.scrolled .nav{
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
 .nav-actions{display:flex;align-items:center;gap:8px}
-.burger{display:none;width:38px;height:38px;border-radius:100px;border:1px solid rgba(167,139,250,.32);
-  background:rgba(196,181,253,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;
+.burger{display:none;width:38px;height:38px;border-radius:100px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;
   cursor:pointer;transition:background .3s ease}
-.burger:hover{background:rgba(196,181,253,.24)}
+.burger:hover{background:rgba(255,255,255,.22)}
 .burger i{width:15px;height:1.5px;background:var(--fg);border-radius:2px;
   transition:transform .38s cubic-bezier(.2,.8,.2,1)}
 /* les deux barres se croisent à l'ouverture */
@@ -149,7 +148,7 @@ body.locked{overflow:hidden}
 /* ---- glass ---- */
 .glass{position:relative;border-radius:26px;
   background:linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.075));
-  backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);
+  backdrop-filter:blur(28px) saturate(170%);
   border:1px solid var(--edge);
   box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 -1px 0 rgba(255,255,255,.15) inset,
     0 34px 80px -30px rgba(10,5,26,.85)}
@@ -184,7 +183,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 /* cadre de verre autour de la maquette, comme un bezel */
 .mockframe{position:relative;border-radius:34px;padding:11px;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
-  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
   border:1px solid rgba(255,255,255,.3);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.14) inset,
     0 46px 100px -34px rgba(6,3,20,.95);
@@ -384,7 +383,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .faq{max-width:840px;margin:0 auto}
 details{margin-bottom:12px;border-radius:20px;overflow:hidden;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.06));
-  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  backdrop-filter:blur(22px) saturate(170%);
   border:1px solid var(--edge);box-shadow:0 1px 0 rgba(255,255,255,.4) inset;transition:.3s}
 details[open]{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
   border-color:var(--edge2)}
@@ -505,7 +504,7 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 footer{position:relative;z-index:1;padding:66px 0 30px;
   border-top:1px solid rgba(167,139,250,.22);
   background:linear-gradient(180deg,rgba(26,13,62,.62) 0%,rgba(10,5,26,.88) 55%,rgba(6,3,17,.94) 100%);
-  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  backdrop-filter:blur(22px) saturate(150%);
   box-shadow:0 1px 0 rgba(196,181,253,.14) inset}
 .fg{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px;margin-bottom:26px}
 .fg h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;font-weight:500}
@@ -611,9 +610,9 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .beam{display:none}
   .stars{animation:none}
   .heroglow{filter:blur(44px)}
-  .glass{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
-  .nav{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
-  .mockframe{backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%)}
+  .glass{backdrop-filter:blur(14px) saturate(150%);}
+  .nav{backdrop-filter:blur(14px) saturate(150%);}
+  .mockframe{backdrop-filter:blur(10px) saturate(150%);}
   .tdot{backdrop-filter:none}
   .badge{backdrop-filter:blur(10px)}
   details{backdrop-filter:blur(12px)}
@@ -649,4 +648,36 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .bigcta{padding:42px 18px}
   .wkpi{gap:18px}
   .hcta .btn{flex:1 1 100%}
+}
+
+/* ============================================================
+   Variantes -webkit- de backdrop-filter (Safari antérieur à 18).
+
+   Elles sont isolées dans un @supports pour une raison précise : lorsque
+   `backdrop-filter` et `-webkit-backdrop-filter` cohabitent dans la même
+   règle, le minifieur les considère équivalentes et n'en conserve qu'une
+   seule — la dernière écrite. On perdait donc soit Firefox, soit Safari.
+   Un @supports ne peut pas être fusionné avec la règle standard.
+   ============================================================ */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  .badge{-webkit-backdrop-filter:blur(16px)}
+  .nav{-webkit-backdrop-filter:blur(26px) saturate(165%)}
+  .btn-g{-webkit-backdrop-filter:blur(16px)}
+  .glass{-webkit-backdrop-filter:blur(28px) saturate(170%)}
+  .mockframe{-webkit-backdrop-filter:blur(18px) saturate(160%)}
+  .shead .lab{-webkit-backdrop-filter:blur(14px)}
+  .tdot{-webkit-backdrop-filter:blur(18px)}
+  details{-webkit-backdrop-filter:blur(22px) saturate(170%)}
+  .f input,.f textarea,.f select{-webkit-backdrop-filter:blur(12px)}
+  footer{-webkit-backdrop-filter:blur(22px) saturate(150%)}
+
+  @media(max-width:760px){
+    .glass{-webkit-backdrop-filter:blur(14px) saturate(150%)}
+    .nav{-webkit-backdrop-filter:blur(14px) saturate(150%)}
+    .mockframe{-webkit-backdrop-filter:blur(10px) saturate(150%)}
+    .tdot{-webkit-backdrop-filter:none}
+    .badge{-webkit-backdrop-filter:blur(10px)}
+    details{-webkit-backdrop-filter:blur(12px)}
+    .f input,.f textarea,.f select{-webkit-backdrop-filter:none}
+  }
 }
