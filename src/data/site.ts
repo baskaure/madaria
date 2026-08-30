@@ -19,7 +19,7 @@ export const contact = {
   tel: '06 99 68 19 57',
   /** même numéro au format international, pour les liens tel: */
   telLien: '+33699681957',
-  zone: 'France · 100 % à distance',
+  zone: 'Basé à Lyon · 100 % à distance',
   delai: 'Réponse sous 24 h',
 } as const;
 

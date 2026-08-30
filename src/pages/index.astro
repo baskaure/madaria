@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { questions } from '../data/faq';
 import Background from '../components/Background.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
@@ -12,6 +13,17 @@ import Faq from '../components/Faq.astro';
 import Contact from '../components/Contact.astro';
 import CtaFinal from '../components/CtaFinal.astro';
 import Footer from '../components/Footer.astro';
+
+// Données structurées FAQ, générées depuis la même source que l'affichage.
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: questions.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.r },
+  })),
+};
 ---
 
 <Base>
@@ -31,4 +43,6 @@ import Footer from '../components/Footer.astro';
   </main>
 
   <Footer />
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />
 </Base>

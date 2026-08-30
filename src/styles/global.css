@@ -407,6 +407,24 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .bigcta p{color:var(--mut);font-weight:300;max-width:520px;margin:0 auto 32px;position:relative}
 .bigcta .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
 
+/* ---- pages légales ---- */
+.legal{padding:150px 0 100px;position:relative;z-index:1}
+.legal .wrap{max-width:820px}
+.legal .retour{display:inline-block;font-size:13px;color:var(--mut);margin-bottom:26px;
+  border-bottom:1px solid transparent;transition:.25s}
+.legal .retour:hover{color:#fff;border-bottom-color:var(--edge2)}
+.legal h1{font-size:clamp(1.7rem,4vw,2.5rem);margin-bottom:10px}
+.legal .maj{font-size:12.5px;color:var(--faint);margin-bottom:34px}
+.legal .corps{padding:36px 38px 40px}
+.legal .corps h2{font-size:1.15rem;margin:30px 0 12px}
+.legal .corps h2:first-child{margin-top:0}
+.legal .corps p,.legal .corps li{color:var(--mut);font-size:.95rem;font-weight:300;margin-bottom:12px}
+.legal .corps ul{padding-left:20px;margin-bottom:12px}
+.legal .corps li{margin-bottom:6px}
+.legal .corps a{color:var(--glow);border-bottom:1px solid rgba(196,181,253,.35)}
+.legal .corps strong{color:var(--fg);font-weight:500}
+@media(max-width:760px){.legal{padding:120px 0 70px}.legal .corps{padding:26px 22px 30px}}
+
 /* ---- footer ---- */
 /* le footer est un bloc d'encre à part : il assombrit le fond là où les
    panneaux de verre l'éclaircissent, ce qui le détache du reste de la page */
