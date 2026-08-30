@@ -16,6 +16,7 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
+const majISO = new Date().toISOString().slice(0, 10);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -46,6 +47,15 @@ const jsonLd = {
         { '@type': 'Country', name: 'France' },
       ],
       sameAs: ['https://www.instagram.com/madaria_agency/'],
+      founder: { '@id': 'https://madaria.fr/#fondateur' },
+      slogan: 'Votre site internet en ligne en 7 jours.',
+      currenciesAccepted: 'EUR',
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '09:00',
+        closes: '18:00',
+      },
       knowsAbout: [
         'Création de site internet',
         'Site vitrine',
@@ -72,12 +82,38 @@ const jsonLd = {
       ],
     },
     {
+      '@type': 'Person',
+      '@id': 'https://madaria.fr/#fondateur',
+      name: 'Aurélien Branco',
+      jobTitle: 'Fondateur et développeur',
+      worksFor: { '@id': 'https://madaria.fr/#organisation' },
+      knowsAbout: [
+        'Développement web',
+        'Astro',
+        'Next.js',
+        'Référencement naturel',
+        'Automatisation des processus',
+      ],
+      sameAs: ['https://www.instagram.com/madaria_agency/'],
+    },
+    {
       '@type': 'WebSite',
       '@id': 'https://madaria.fr/#site',
       url: 'https://madaria.fr/',
       name: site.name,
       inLanguage: 'fr-FR',
       publisher: { '@id': 'https://madaria.fr/#organisation' },
+    },
+    {
+      '@type': 'WebPage',
+      '@id': canonical.href,
+      url: canonical.href,
+      name: title,
+      description,
+      inLanguage: 'fr-FR',
+      dateModified: majISO,
+      isPartOf: { '@id': 'https://madaria.fr/#site' },
+      about: { '@id': 'https://madaria.fr/#organisation' },
     },
   ],
 };
