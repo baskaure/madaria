@@ -510,6 +510,24 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .fbot{font-size:11px}
 }
 
+/* ---- allègement du rendu sur mobile ----
+   Le grain plein écran en mix-blend-mode et les faisceaux floutés animés
+   coûtent très cher aux GPU de téléphone (saccades au défilement), pour un
+   apport quasi invisible à cette taille. Les backdrop-filter sont réduits. */
+@media(max-width:760px){
+  .grain{display:none}
+  .beam{display:none}
+  .stars{animation:none}
+  .heroglow{filter:blur(44px)}
+  .glass{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
+  .nav{backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
+  .mockframe{backdrop-filter:blur(10px) saturate(150%);-webkit-backdrop-filter:blur(10px) saturate(150%)}
+  .tdot{backdrop-filter:none}
+  .badge{backdrop-filter:blur(10px)}
+  details{backdrop-filter:blur(12px)}
+  .f input,.f textarea,.f select{backdrop-filter:none}
+}
+
 @media(max-width:460px){
   .wrap{padding:0 15px}
   .hero{padding:126px 15px 0}
