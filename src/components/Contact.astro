@@ -105,6 +105,14 @@ const coordonnees = [
     }
 
     const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    // En développement, le serveur répond 200 au POST sans rien traiter :
+    // afficher un succès ici serait mensonger. Seul le site déployé enregistre.
+    if (import.meta.env.DEV) {
+      dire('Mode développement : rien n’est envoyé. Testez sur le site déployé.', false);
+      return;
+    }
+
     if (bouton) bouton.disabled = true;
     dire('Envoi en cours…', true);
 
