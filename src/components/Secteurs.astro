@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { secteurs } from '../data/secteurs';
+---
+
+<section id="secteurs">
+  <div class="wrap">
+    <SectionHead label="Secteurs">
+      <Fragment slot="titre">
+        Des sites internet pensés<br />pour <span class="grad">votre métier</span>.
+      </Fragment>
+      Un site de coiffeur n'a rien à voir avec un site de restaurant. Nous connaissons les besoins
+      concrets de ces métiers et construisons ce qui fait vraiment gagner des clients.
+    </SectionHead>
+
+    <div class="secteurs">
+      {secteurs.map((s) => (
+        <a class="glass secteur rv" href={`/site-internet/${s.slug}/`}>
+          <div class="ico"><Icon name={s.icon} /></div>
+          <h3>{s.nom}</h3>
+          <p>{s.text}</p>
+          <div class="tags">{s.besoins.map((b) => <b>{b}</b>)}</div>
+          <span class="voir">Voir la page métier →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

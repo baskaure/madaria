@@ -9,7 +9,7 @@ export const site = {
 export const nav = [
   { href: '#services', label: 'Services' },
   { href: '#methode', label: 'Méthode' },
-  { href: '#travaux', label: 'Travaux' },
+  { href: '#secteurs', label: 'Secteurs' },
   { href: '#offres', label: 'Offres' },
   { href: '#faq', label: 'FAQ' },
 ] as const;
@@ -31,14 +31,15 @@ export const budgets = [
   'Je ne sais pas encore',
 ] as const;
 
-// TODO : données fictives, à remplacer par de vraies références avant mise en ligne.
 export const clients = [
-  'Atelier Verel',
-  'Norvia',
-  'Cabinet Halden',
-  'Groupe Astria',
-  'Kimbo Studio',
-  'Lumen & Co',
+  'Barbiers',
+  'Coiffeurs',
+  'Tatoueurs',
+  'Perceurs',
+  'Restaurants',
+  'Instituts de beauté',
+  'Organismes de formation',
+  'BTP & artisans',
 ] as const;
 
 export const footerColumns = [
@@ -55,7 +56,7 @@ export const footerColumns = [
     title: 'Agence',
     links: [
       { href: '#methode', label: 'Méthode' },
-      { href: '#travaux', label: 'Travaux' },
+      { href: '#secteurs', label: 'Secteurs' },
       { href: '#offres', label: 'Offres' },
       { href: '#faq', label: 'FAQ' },
     ],

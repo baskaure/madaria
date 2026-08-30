@@ -22,6 +22,14 @@ export const questions: Question[] = [
     r: 'Vous choisissez : autonomie complète, ou contrat de maintenance mensuel (mises à jour, sauvegardes, sécurité, évolutions et rapport de performance).',
   },
   {
+    q: "Combien coûte la création d'un site internet ?",
+    r: "Chez nous, un site vitrine sur-mesure démarre à 690 € HT et un site complet avec référencement à 1 490 € HT. À titre de comparaison, une agence lyonnaise classique facture généralement entre 2 000 et 5 000 € pour une prestation équivalente. Le devis est chiffré sous 24 heures et le prix annoncé est celui que vous payez : la maquette est comprise, il n'y a pas de frais cachés.",
+  },
+  {
+    q: 'Travaillez-vous uniquement à Lyon ?',
+    r: "Nous sommes basés à Lyon, mais nous travaillons à 100 % à distance et accompagnons des clients partout en France. Les échanges se font en visioconférence, la préproduction est accessible en continu et vous suivez l'avancement de votre site internet au jour le jour. Si vous êtes dans la région lyonnaise, un rendez-vous sur place reste évidemment possible.",
+  },
+  {
     q: 'Comment pouvez-vous être moins cher que les autres ?',
     r: "Pas de bureaux, pas de commerciaux, pas de chef de projet entre vous et la personne qui code. Un process rodé et des outils modernes qui suppriment les semaines de mise en place. Vous payez le travail, pas la structure autour.",
   },

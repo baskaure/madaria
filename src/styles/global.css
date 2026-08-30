@@ -341,6 +341,26 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .wkpi b{display:block;font-family:'Sora';font-size:1.32rem;font-weight:600;letter-spacing:-.03em}
 .wkpi span{font-size:10.5px;color:var(--faint)}
 
+/* ---- secteurs ---- */
+.secteurs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.secteur{padding:26px 24px 28px;transition:background .45s ease,border-color .45s ease}
+.secteur:hover{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
+  border-color:var(--edge2)}
+.secteur .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;margin-bottom:17px;
+  background:linear-gradient(150deg,rgba(255,255,255,.4),rgba(255,255,255,.12));border:1px solid var(--edge2);
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset}
+.secteur .ico svg{width:19px;height:19px;stroke:#DCD5FF;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.secteur h3{font-size:1.06rem;margin-bottom:9px}
+.secteur p{color:var(--mut);font-size:.9rem;font-weight:300}
+.secteur .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:15px}
+.secteur .tags b{font-size:10px;font-weight:400;color:#fff;border:1px solid var(--edge);
+  background:rgba(255,255,255,.13);padding:4px 9px;border-radius:100px}
+.secteur .voir{display:block;margin-top:16px;font-size:12px;color:var(--glow);opacity:.75;transition:.3s}
+.secteur:hover .voir{opacity:1;transform:translateX(3px)}
+@media(max-width:1040px){.secteurs{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.secteurs{grid-template-columns:1fr}}
+
 /* ---- offres ---- */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
 .plan{padding:32px 28px 30px;display:flex;flex-direction:column}
@@ -409,6 +429,57 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .bigcta h2{font-size:clamp(1.7rem,3.7vw,2.7rem);margin-bottom:18px;position:relative}
 .bigcta p{color:var(--mut);font-weight:300;max-width:520px;margin:0 auto 32px;position:relative}
 .bigcta .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* ---- pages métier ---- */
+.metier{padding:140px 0 60px;position:relative;z-index:1}
+.metier .wrap{max-width:1080px}
+.ariane{font-size:12.5px;color:var(--faint);margin-bottom:26px}
+.ariane a{border-bottom:1px solid transparent;transition:.25s}
+.ariane a:hover{color:#fff;border-bottom-color:var(--edge2)}
+.ariane span{margin:0 6px}
+.metier-hero{max-width:780px;margin-bottom:82px}
+.ico-grand{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;margin-bottom:24px;
+  background:linear-gradient(150deg,rgba(255,255,255,.4),rgba(255,255,255,.12));border:1px solid var(--edge2);
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset}
+.ico-grand svg{width:24px;height:24px;stroke:#DCD5FF;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.metier h1{font-size:clamp(1.9rem,4.2vw,3rem);margin-bottom:22px;text-wrap:balance}
+.chapo{color:var(--mut);font-size:1.02rem;font-weight:300;margin-bottom:16px}
+.metier .hcta{justify-content:flex-start;margin-top:30px}
+.metier .bloc{padding:0 0 78px}
+.metier .bloc h2{font-size:clamp(1.5rem,3vw,2.15rem);margin-bottom:30px;text-wrap:balance}
+
+.enjeux{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.enjeu{padding:26px 26px 28px}
+.enjeu .num{font-size:11.5px;letter-spacing:.16em;color:var(--lav);margin-bottom:12px}
+.enjeu h3{font-size:1.08rem;margin-bottom:10px}
+.enjeu p{color:var(--mut);font-size:.93rem;font-weight:300}
+
+.metier .split{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.livrables{list-style:none;padding:26px 28px;display:flex;flex-direction:column;gap:13px}
+.livrables li{color:#CFC9E8;font-size:.94rem;font-weight:300;display:flex;gap:11px;align-items:flex-start}
+.livrables li::before{content:'✓';color:#C4B5FD;font-size:12px;font-weight:700;margin-top:2px}
+
+.plans.deux{grid-template-columns:repeat(2,1fr)}
+
+.liens-metiers{display:flex;flex-wrap:wrap;gap:10px}
+.liens-metiers a{display:inline-flex;align-items:center;gap:9px;padding:11px 17px;border-radius:100px;
+  font-size:13.5px;color:var(--mut);border:1px solid var(--edge);background:rgba(255,255,255,.09);
+  transition:.28s}
+.liens-metiers a:hover{color:#fff;background:rgba(255,255,255,.18);border-color:var(--edge2)}
+.liens-metiers svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+
+@media(max-width:860px){
+  .enjeux,.metier .split,.plans.deux{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .metier{padding:120px 0 40px}
+  .metier-hero{margin-bottom:54px}
+  .metier .bloc{padding-bottom:54px}
+  .enjeu{padding:22px 21px 24px}
+  .livrables{padding:22px 21px}
+}
 
 /* ---- pages légales ---- */
 .legal{padding:150px 0 100px;position:relative;z-index:1}
