@@ -8,8 +8,8 @@ const champs = [
 ];
 
 const coordonnees = [
-  { label: 'Mail', valeur: contact.email },
-  { label: 'Téléphone', valeur: contact.tel },
+  { label: 'Mail', valeur: contact.email, lien: `mailto:${contact.email}` },
+  { label: 'Téléphone', valeur: contact.tel, lien: `tel:${contact.telLien}` },
   { label: 'Zone', valeur: contact.zone },
 ];
 ---
@@ -17,13 +17,16 @@ const coordonnees = [
 <section id="contact">
   <div class="wrap cgrid">
     <div class="glass cinfo rv">
-      <h2>Parlons de votre projet.<br /><span class="grad">Le café est offert.</span></h2>
+      <h2>Parlons de votre projet.<br /><span class="grad">Le devis est offert.</span></h2>
       <p>
         Un échange de 30 minutes, sans engagement, pour évaluer ce qui est faisable, à quel prix et
         en combien de temps.
       </p>
       {coordonnees.map((c) => (
-        <div class="crow"><span>{c.label}</span><span>{c.valeur}</span></div>
+        <div class="crow">
+          <span>{c.label}</span>
+          {c.lien ? <a href={c.lien}>{c.valeur}</a> : <span>{c.valeur}</span>}
+        </div>
       ))}
       <div class="crow">
         <span>Délai</span><span style="color:#6EE7A8">{contact.delai}</span>
@@ -89,7 +92,7 @@ const coordonnees = [
     }
 
     // TODO : brancher sur un endpoint réel (webhook n8n ou route API).
-    dire('Demande enregistrée — réponse sous 24 h ouvrées. (démo : à brancher sur un backend)', true);
+    dire('Demande enregistrée — réponse sous 24 h. (démo : à brancher sur un backend)', true);
     form.reset();
   });
 </script>

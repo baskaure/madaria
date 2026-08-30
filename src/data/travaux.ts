@@ -1,3 +1,4 @@
+// TODO : données fictives, à remplacer par de vraies références avant mise en ligne.
 export type Projet = {
   secteur: string;
   nom: string;

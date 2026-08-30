@@ -16,9 +16,11 @@ export const nav = [
 
 export const contact = {
   email: 'contact@madaria.fr',
-  tel: '+33 6 00 00 00 00',
+  tel: '06 99 68 19 57',
+  /** même numéro au format international, pour les liens tel: */
+  telLien: '+33699681957',
   zone: 'France · 100 % à distance',
-  delai: 'Réponse sous 24 h ouvrées',
+  delai: 'Réponse sous 24 h',
 } as const;
 
 export const budgets = [
@@ -29,6 +31,7 @@ export const budgets = [
   'Je ne sais pas encore',
 ] as const;
 
+// TODO : données fictives, à remplacer par de vraies références avant mise en ligne.
 export const clients = [
   'Atelier Verel',
   'Norvia',
