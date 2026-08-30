@@ -19,28 +19,28 @@ h1,h2,h3{font-family:'Sora',sans-serif;font-weight:500;line-height:1.08;letter-s
 /* ============ ATMOSPHÈRE : faisceaux volumétriques + grain ============ */
 .atmo{position:fixed;inset:0;z-index:-3;overflow:hidden;
   background:radial-gradient(130% 85% at 50% -18%,#140A2E 0%,#09041A 44%,#05020C 100%)}
-.beam{position:absolute;filter:blur(72px);opacity:.24;will-change:transform}
+/* Les faisceaux sont statiques : les animer en continu (sway/pulse) forçait
+   chaque backdrop-filter visible à re-filtrer son arrière-plan à CHAQUE frame,
+   même page immobile — principale cause des saccades sur Chrome. Le mouvement
+   (~3 px/s) était de toute façon imperceptible. */
+.beam{position:absolute;filter:blur(72px);opacity:.24}
 .beam.a{width:900px;height:1500px;left:-14%;top:-32%;transform:rotate(28deg);
-  background:linear-gradient(180deg,rgba(167,139,250,.85),rgba(99,102,241,.25) 45%,transparent 78%);
-  animation:sway 22s ease-in-out infinite}
+  background:linear-gradient(180deg,rgba(167,139,250,.85),rgba(99,102,241,.25) 45%,transparent 78%)}
 .beam.b{width:760px;height:1400px;right:-12%;top:-26%;transform:rotate(-24deg);
-  background:linear-gradient(180deg,rgba(59,130,246,.75),rgba(139,92,246,.22) 50%,transparent 80%);
-  animation:sway 27s ease-in-out infinite reverse}
-.beam.c{width:1200px;height:640px;left:50%;top:52%;margin-left:-600px;opacity:.4;
-  background:radial-gradient(ellipse at center,rgba(167,139,250,.7),transparent 65%);
-  animation:pulseglow 14s ease-in-out infinite}
-@keyframes sway{50%{transform:rotate(20deg) translate3d(60px,50px,0) scale(1.08)}}
-@keyframes pulseglow{50%{opacity:.62;transform:scale(1.12)}}
+  background:linear-gradient(180deg,rgba(59,130,246,.75),rgba(139,92,246,.22) 50%,transparent 80%)}
+.beam.c{width:1200px;height:640px;left:50%;top:52%;margin-left:-600px;opacity:.5;
+  background:radial-gradient(ellipse at center,rgba(167,139,250,.7),transparent 65%)}
 .stars{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.2;
   background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff,transparent),
     radial-gradient(1.2px 1.2px at 74% 12%,#DCD5FF,transparent),
     radial-gradient(1.6px 1.6px at 34% 62%,#fff,transparent),
     radial-gradient(1.1px 1.1px at 88% 46%,#C4B5FD,transparent),
     radial-gradient(1.3px 1.3px at 58% 82%,#fff,transparent),
-    radial-gradient(1px 1px at 22% 88%,#DCD5FF,transparent);
-  animation:twinkle 6s ease-in-out infinite}
-@keyframes twinkle{50%{opacity:.22}}
-.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.32;mix-blend-mode:overlay;
+    radial-gradient(1px 1px at 22% 88%,#DCD5FF,transparent)}
+/* Grain sans mix-blend-mode : le blend `overlay` plein écran obligeait Chrome à
+   re-composer tout le viewport en permanence. En fusion normale à faible
+   opacité, la texture reste perceptible pour un coût quasi nul. */
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
 
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
@@ -49,7 +49,7 @@ section{padding:118px 0;position:relative;z-index:1}
 
 /* ---- pill badge ---- */
 .badge{display:inline-flex;align-items:center;gap:10px;padding:6px 6px 6px 7px;border-radius:100px;
-  background:rgba(255,255,255,.13);border:1px solid var(--edge);backdrop-filter:blur(16px);
+  background:rgba(255,255,255,.13);border:1px solid var(--edge);
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset;
   font-size:12.5px;color:var(--mut);margin-bottom:28px}
 .badge i{width:6px;height:6px;border-radius:50%;flex:none;
@@ -62,7 +62,7 @@ header{position:fixed;top:18px;left:0;right:0;z-index:100;display:flex;justify-c
    sobre pour ne pas rejouer le violet des faisceaux en arrière-plan */
 .nav{display:flex;align-items:center;gap:26px;padding:9px 9px 9px 20px;border-radius:100px;
   background:linear-gradient(165deg,rgba(22,20,34,.22),rgba(10,9,16,.32));
-  backdrop-filter:blur(26px) saturate(112%);
+  backdrop-filter:blur(16px) saturate(112%);
   border:1px solid rgba(255,255,255,.16);
   box-shadow:0 1px 0 rgba(255,255,255,.26) inset,0 -1px 0 rgba(255,255,255,.07) inset,
     0 20px 46px -22px rgba(4,2,14,.7);
@@ -87,7 +87,7 @@ header.scrolled .nav{
   box-shadow:0 0 0 1px rgba(196,181,253,.4),0 12px 34px -10px rgba(124,107,245,.95),
     0 1px 0 rgba(255,255,255,.28) inset}
 .btn-p:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(196,181,253,.7),0 20px 46px -10px rgba(124,107,245,1),0 1px 0 rgba(255,255,255,.35) inset}
-.btn-g{background:rgba(255,255,255,.14);border-color:var(--edge);color:#fff;backdrop-filter:blur(16px);
+.btn-g{background:rgba(255,255,255,.14);border-color:var(--edge);color:#fff;
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
 .nav-actions{display:flex;align-items:center;gap:8px}
@@ -148,7 +148,7 @@ body.locked{overflow:hidden}
 /* ---- glass ---- */
 .glass{position:relative;border-radius:26px;
   background:linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.075));
-  backdrop-filter:blur(28px) saturate(170%);
+  backdrop-filter:blur(14px) saturate(160%);
   border:1px solid var(--edge);
   box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 -1px 0 rgba(255,255,255,.15) inset,
     0 34px 80px -30px rgba(10,5,26,.85)}
@@ -183,7 +183,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 /* cadre de verre autour de la maquette, comme un bezel */
 .mockframe{position:relative;border-radius:34px;padding:11px;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
-  backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(12px) saturate(160%);
   border:1px solid rgba(255,255,255,.3);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.14) inset,
     0 46px 100px -34px rgba(6,3,20,.95);
@@ -242,7 +242,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .shead{text-align:center;max-width:720px;margin:0 auto 58px}
 .shead .lab{display:inline-block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
   color:#fff;border:1px solid var(--edge);border-radius:100px;padding:5px 15px;margin-bottom:20px;
-  background:rgba(255,255,255,.14);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
+  background:rgba(255,255,255,.14);box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .shead h2{font-size:clamp(1.65rem,3.3vw,2.45rem);margin-bottom:14px}
 .shead p{color:var(--mut);font-weight:300}
 
@@ -303,7 +303,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .tnode:last-child{padding-bottom:0}
 .tnode.atteint{opacity:1}
 .tdot{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;
-  background:rgba(255,255,255,.14);backdrop-filter:blur(18px);border:1px solid var(--edge);color:#fff;
+  background:rgba(255,255,255,.14);border:1px solid var(--edge);color:#fff;
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset;position:relative;z-index:1;
   transition:background .45s ease,border-color .45s ease,box-shadow .45s ease,transform .5s cubic-bezier(.34,1.3,.5,1)}
 .tnode.atteint .tdot{background:linear-gradient(140deg,#7C6BF5,#4F80F0);border-color:transparent;
@@ -383,7 +383,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .faq{max-width:840px;margin:0 auto}
 details{margin-bottom:12px;border-radius:20px;overflow:hidden;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.06));
-  backdrop-filter:blur(22px) saturate(170%);
+  backdrop-filter:blur(12px) saturate(160%);
   border:1px solid var(--edge);box-shadow:0 1px 0 rgba(255,255,255,.4) inset;transition:.3s}
 details[open]{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
   border-color:var(--edge2)}
@@ -409,8 +409,7 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .f.full{grid-column:1/-1}
 .f label{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
 .f input,.f textarea,.f select{background:rgba(255,255,255,.13);border:1px solid var(--edge);border-radius:14px;
-  padding:13px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:.25s;
-  backdrop-filter:blur(12px)}
+  padding:13px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:.25s}
 .f input::placeholder,.f textarea::placeholder{color:rgba(255,255,255,.48)}
 .f input:focus,.f textarea:focus,.f select:focus{border-color:#fff;
   background:rgba(255,255,255,.22);box-shadow:0 0 0 4px rgba(255,255,255,.15)}
@@ -504,7 +503,7 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 footer{position:relative;z-index:1;padding:66px 0 30px;
   border-top:1px solid rgba(167,139,250,.22);
   background:linear-gradient(180deg,rgba(26,13,62,.62) 0%,rgba(10,5,26,.88) 55%,rgba(6,3,17,.94) 100%);
-  backdrop-filter:blur(22px) saturate(150%);
+  backdrop-filter:blur(12px) saturate(150%);
   box-shadow:0 1px 0 rgba(196,181,253,.14) inset}
 .fg{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px;margin-bottom:26px}
 .fg h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;font-weight:500}
@@ -612,15 +611,11 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @media(max-width:760px){
   .grain{display:none}
   .beam{display:none}
-  .stars{animation:none}
   .heroglow{filter:blur(44px)}
-  .glass{backdrop-filter:blur(14px) saturate(150%);}
-  .nav{backdrop-filter:blur(14px) saturate(150%);}
-  .mockframe{backdrop-filter:blur(10px) saturate(150%);}
-  .tdot{backdrop-filter:none}
-  .badge{backdrop-filter:blur(10px)}
-  details{backdrop-filter:blur(12px)}
-  .f input,.f textarea,.f select{backdrop-filter:none}
+  .glass{backdrop-filter:blur(10px) saturate(150%);}
+  .nav{backdrop-filter:blur(10px) saturate(150%);}
+  .mockframe{backdrop-filter:blur(8px) saturate(150%);}
+  details{backdrop-filter:blur(10px)}
 }
 
 @media(max-width:460px){
@@ -667,24 +662,16 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
    Un @supports ne peut pas être fusionné avec la règle standard.
    ============================================================ */
 @supports (-webkit-backdrop-filter: blur(1px)) {
-  .badge{-webkit-backdrop-filter:blur(16px)}
-  .nav{-webkit-backdrop-filter:blur(26px) saturate(165%)}
-  .btn-g{-webkit-backdrop-filter:blur(16px)}
-  .glass{-webkit-backdrop-filter:blur(28px) saturate(170%)}
-  .mockframe{-webkit-backdrop-filter:blur(18px) saturate(160%)}
-  .shead .lab{-webkit-backdrop-filter:blur(14px)}
-  .tdot{-webkit-backdrop-filter:blur(18px)}
-  details{-webkit-backdrop-filter:blur(22px) saturate(170%)}
-  .f input,.f textarea,.f select{-webkit-backdrop-filter:blur(12px)}
-  footer{-webkit-backdrop-filter:blur(22px) saturate(150%)}
+  .nav{-webkit-backdrop-filter:blur(16px) saturate(112%)}
+  .glass{-webkit-backdrop-filter:blur(14px) saturate(160%)}
+  .mockframe{-webkit-backdrop-filter:blur(12px) saturate(160%)}
+  details{-webkit-backdrop-filter:blur(12px) saturate(160%)}
+  footer{-webkit-backdrop-filter:blur(12px) saturate(150%)}
 
   @media(max-width:760px){
-    .glass{-webkit-backdrop-filter:blur(14px) saturate(150%)}
-    .nav{-webkit-backdrop-filter:blur(14px) saturate(150%)}
-    .mockframe{-webkit-backdrop-filter:blur(10px) saturate(150%)}
-    .tdot{-webkit-backdrop-filter:none}
-    .badge{-webkit-backdrop-filter:blur(10px)}
-    details{-webkit-backdrop-filter:blur(12px)}
-    .f input,.f textarea,.f select{-webkit-backdrop-filter:none}
+    .glass{-webkit-backdrop-filter:blur(10px) saturate(150%)}
+    .nav{-webkit-backdrop-filter:blur(10px) saturate(150%)}
+    .mockframe{-webkit-backdrop-filter:blur(8px) saturate(150%)}
+    details{-webkit-backdrop-filter:blur(10px)}
   }
 }
