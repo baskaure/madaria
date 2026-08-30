@@ -31,7 +31,7 @@ export const offres: Offre[] = [
   },
   {
     nom: 'Visibilité',
-    prix: '1 490',
+    prix: '1 490',
     unite: '€ HT',
     badge: 'Le plus choisi',
     accroche: 'Le site complet, pensé pour être trouvé sur Google et dans les moteurs de réponse IA.',

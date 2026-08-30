@@ -90,16 +90,59 @@ header.scrolled .nav{
 .btn-g{background:rgba(255,255,255,.14);border-color:var(--edge);color:#fff;backdrop-filter:blur(16px);
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
+.nav-actions{display:flex;align-items:center;gap:8px}
 .burger{display:none;width:38px;height:38px;border-radius:100px;border:1px solid rgba(167,139,250,.32);
-  background:rgba(196,181,253,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;cursor:pointer}
-.burger i{width:14px;height:1.5px;background:var(--fg)}
-.mmenu{position:fixed;inset:88px 16px auto;z-index:95;border-radius:24px;padding:12px;display:none;
-  background:linear-gradient(165deg,rgba(31,17,72,.94),rgba(12,6,30,.97));
-  backdrop-filter:blur(26px) saturate(150%);border:1px solid rgba(167,139,250,.3);
-  box-shadow:0 1px 0 rgba(196,181,253,.24) inset,0 30px 70px -20px rgba(4,2,14,.95)}
-.mmenu.open{display:block}
-.mmenu a{display:block;padding:15px 16px;border-radius:14px;color:var(--mut);font-size:15px}
-.mmenu a:hover{background:rgba(196,181,253,.16);color:#fff}
+  background:rgba(196,181,253,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .3s ease}
+.burger:hover{background:rgba(196,181,253,.24)}
+.burger i{width:15px;height:1.5px;background:var(--fg);border-radius:2px;
+  transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+/* les deux barres se croisent à l'ouverture */
+.burger.open i:first-child{transform:translateY(2.75px) rotate(45deg)}
+.burger.open i:last-child{transform:translateY(-2.75px) rotate(-45deg)}
+/* ---- menu plein écran ---- */
+.mmenu{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:space-between;
+  padding:120px 26px 38px;counter-reset:m;
+  background:radial-gradient(120% 70% at 50% 0%,#1B0E3D 0%,#0B0520 55%,#06030E 100%);
+  opacity:0;visibility:hidden;pointer-events:none;
+  overflow-y:auto;overscroll-behavior:contain;
+  transition:opacity .38s ease,visibility .38s}
+.mmenu.open{opacity:1;visibility:visible;pointer-events:auto}
+
+.mmenu-links{display:flex;flex-direction:column;flex:none}
+.mmenu-links a{display:flex;align-items:baseline;gap:16px;padding:18px 2px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  font-family:'Sora',sans-serif;font-weight:500;letter-spacing:-.03em;
+  font-size:clamp(1.6rem,7.5vw,2.2rem);color:var(--fg);
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1),color .25s}
+.mmenu-links a::before{counter-increment:m;content:counter(m,decimal-leading-zero);
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:400;letter-spacing:.14em;color:var(--faint)}
+.mmenu-links a:active{color:var(--glow)}
+.mmenu.open .mmenu-links a{opacity:1;transform:none}
+.mmenu.open .mmenu-links a:nth-child(1){transition-delay:.08s}
+.mmenu.open .mmenu-links a:nth-child(2){transition-delay:.14s}
+.mmenu.open .mmenu-links a:nth-child(3){transition-delay:.2s}
+.mmenu.open .mmenu-links a:nth-child(4){transition-delay:.26s}
+.mmenu.open .mmenu-links a:nth-child(5){transition-delay:.32s}
+
+.mmenu-bas{display:flex;flex-direction:column;gap:22px;flex:none;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1) .36s,transform .5s cubic-bezier(.16,1,.3,1) .36s}
+.mmenu.open .mmenu-bas{opacity:1;transform:none}
+.mmenu-bas .btn{width:100%;padding:16px 22px;font-size:14.5px}
+.mmenu-coord{display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--mut)}
+.mmenu-coord a{width:fit-content}
+
+/* écrans courts (petits téléphones, paysage) : le menu se compacte */
+@media(max-height:760px){
+  .mmenu{padding-top:96px;padding-bottom:28px;justify-content:flex-start;gap:24px}
+  .mmenu-links a{padding:11px 2px;font-size:clamp(1.2rem,5vw,1.5rem);gap:13px}
+  .mmenu-bas{gap:14px}
+  .mmenu-bas .btn{padding:14px 20px}
+  .mmenu-coord{font-size:12.5px;gap:5px}
+}
+
 body.locked{overflow:hidden}
 
 /* ---- glass ---- */
@@ -115,7 +158,7 @@ body.locked{overflow:hidden}
   -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
 
 /* ---- hero ---- */
-.hero{padding:178px 0 0;text-align:center;position:relative}
+.hero{padding:178px 26px 0;text-align:center;position:relative}
 /* la lumière vient d'en bas : large horizon violet dont le mockup émerge,
    pendant que le haut de page reste presque noir */
 .heroglow{position:absolute;left:50%;bottom:0;width:138%;height:70%;
@@ -190,7 +233,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .bars i.hi{background:linear-gradient(180deg,#C4B5FD,#6366F1);box-shadow:0 0 22px rgba(167,139,250,.75)}
 
 /* ---- logos ---- */
-.strip{padding:56px 0 10px;text-align:center}
+.strip{padding:56px 26px 10px;text-align:center}
 .strip .t{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
 .logos{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;opacity:.62}
 .logos span{font-family:'Sora';font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:var(--mut)}
@@ -309,7 +352,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .plan .pn em{font-style:normal;font-size:10.5px;background:linear-gradient(100deg,#7C6BF5,#4F80F0);
   color:#fff;padding:4px 11px;border-radius:100px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .plan .price{font-family:'Sora';font-size:2.3rem;font-weight:600;letter-spacing:-.045em;line-height:1}
-.plan .price sup{font-size:.72rem;font-weight:400;color:var(--mut);vertical-align:super;letter-spacing:0}
+.plan .price sup{font-size:.72rem;font-weight:400;color:var(--mut);vertical-align:super;letter-spacing:0;margin-left:6px}
 .plan .d{color:var(--mut);font-size:.92rem;font-weight:300;margin:14px 0 24px;min-height:50px}
 .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px;flex:1}
 .plan li{font-size:.9rem;color:rgba(255,255,255,.86);font-weight:300;display:flex;gap:11px;align-items:flex-start}
@@ -383,29 +426,116 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 .pw{position:relative;width:100%;aspect-ratio:1600/340;overflow:hidden;margin:26px 0 6px;
   user-select:none;-webkit-user-select:none}
 .pw canvas{display:block;width:100%;height:100%}
-@media(max-width:720px){.pw{aspect-ratio:1600/420;margin:18px 0 4px}}
 
 .rv{opacity:0;transform:scale(.965);
   transition:opacity .3s ease-out,transform .42s cubic-bezier(.34,1.3,.5,1)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
 
+/* ============================================================
+   RESPONSIF
+   1040px  tablette et petit portable
+    860px  la barre de nav n'a plus la place de ses liens
+    760px  téléphone en portrait
+    460px  petits écrans
+   ============================================================ */
+
 @media(max-width:1040px){
+  section{padding:92px 0}
+  .wrap{padding:0 22px}
+  .hero{padding:158px 22px 0}
+  .mockwrap{margin-top:84px}
+  .strip{padding:48px 22px 10px}
+  .shead{margin-bottom:46px}
+
+  /* grilles */
   .bento{grid-template-columns:repeat(2,1fr)}
   .bcard,.bcard.wide{grid-column:span 1}
-  .works,.plans{grid-template-columns:1fr}
+  .works{grid-template-columns:repeat(2,1fr)}
+  .plans{grid-template-columns:1fr}
   .cgrid{grid-template-columns:1fr}
+  .fg{grid-template-columns:1fr 1fr}
+
+  /* la maquette perd sa colonne latérale, illisible à cette largeur */
   .mbody{grid-template-columns:1fr}
   .mside{display:none}
-  .fg{grid-template-columns:1fr 1fr}
 }
+
+@media(max-width:860px){
+  .links{display:none}
+  .burger{display:flex}
+  /* sans ses liens, la pilule se réduirait à la largeur de son contenu :
+     on lui impose une largeur pour que marque et actions s'écartent */
+  .nav{width:100%;max-width:560px;justify-content:space-between;gap:16px;padding:8px 8px 8px 20px}
+}
+
 @media(max-width:760px){
-  section{padding:80px 0}.wrap{padding:0 18px}
-  .links{display:none}.burger{display:flex}
-  .hero{padding-top:150px}
-  .kpis{grid-template-columns:1fr}
-  form{grid-template-columns:1fr}
-  .bento{grid-template-columns:1fr}
-  .fg{grid-template-columns:1fr}
+  section{padding:74px 0}
+  .wrap{padding:0 18px}
+  .hero{padding:138px 18px 0}
+  .mockwrap{margin-top:58px}
+  .strip{padding:40px 18px 6px}
+  .shead{margin-bottom:38px}
+
+  /* tout passe sur une colonne */
+  .bento,.works,.kpis,.fg,form{grid-template-columns:1fr}
+
+  /* la maquette : cadre et marges resserrés */
+  .mockframe{padding:7px;border-radius:26px;transform:rotateX(5deg)}
+  .mockwrap:hover .mockframe{transform:rotateX(2deg)}
+  .mock{border-radius:19px}
+  .mmain{padding:16px 16px 18px}
+  .mtop{padding:11px 14px}
+  .mbody{min-height:0}
+  .chart{padding:14px 15px}
+  .bars{height:88px}
+
+  /* frise : la colonne de pastilles se resserre */
+  .tnode{gap:16px;padding-bottom:30px}
+  .tbody{padding:17px 19px}
+
+  /* densité des blocs */
+  .bcard{padding:26px 22px 28px}
+  .wbody{padding:20px 21px 22px}
+  .plan{padding:28px 23px 26px}
+  .cinfo{padding:28px 24px}
+  form{padding:24px 21px}
+  summary{padding:18px 20px;font-size:.98rem}
+  details p{padding:0 20px 20px}
   .bigcta{padding:52px 22px}
+
+  /* wordmark du footer : plus haut pour rester lisible une fois étroit */
+  .pw{aspect-ratio:1600/440;margin:20px 0 4px}
+  .fbot{font-size:11px}
+}
+
+@media(max-width:460px){
+  .wrap{padding:0 15px}
+  .hero{padding:126px 15px 0}
+  .mockwrap{margin-top:44px}
+  .strip{padding:34px 15px 6px}
+
+  /* la barre de nav doit tenir : marque + bouton + burger */
+  .nav{gap:10px;padding:7px 7px 7px 16px}
+  .nav-actions{gap:6px}
+  .mmenu{padding-left:18px;padding-right:18px}
+  .brand{font-size:11.5px;letter-spacing:.11em;gap:8px}
+  .brand svg{width:18px}
+  .nav .btn-p{padding:10px 15px;font-size:12.5px}
+  .burger{width:35px;height:35px}
+
+  .badge{font-size:11.5px;padding:6px 13px;gap:8px}
+  .mockwrap{perspective:none}
+  .mockframe{padding:5px;border-radius:21px;transform:none}
+  .mockwrap:hover .mockframe{transform:none}
+  .mock{border-radius:16px}
+  .kpi{padding:12px 13px}
+  .tnode{gap:13px}
+  .tbody{padding:15px 16px}
+  .bcard{padding:22px 19px 24px}
+  .plan{padding:24px 20px 22px}
+  .cinfo,form{padding:22px 18px}
+  .bigcta{padding:42px 18px}
+  .wkpi{gap:18px}
+  .hcta .btn{flex:1 1 100%}
 }

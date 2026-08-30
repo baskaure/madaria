@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { nav } from '../data/site';
+import { nav, contact } from '../data/site';
 ---
 
 <header>
@@ -9,19 +9,32 @@ import { nav } from '../data/site';
       <Logo />
       MADARIA
     </a>
+
     <div class="links">
       {nav.map((item) => <a href={item.href}>{item.label}</a>)}
     </div>
-    <a href="#contact" class="btn btn-p">Démarrer</a>
-    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
-      <i></i><i></i>
-    </button>
+
+    <div class="nav-actions">
+      <a href="#contact" class="btn btn-p">Démarrer</a>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
+        <i></i><i></i>
+      </button>
+    </div>
   </nav>
 </header>
 
 <div class="mmenu" id="mmenu">
-  {nav.map((item) => <a href={item.href}>{item.label}</a>)}
-  <a href="#contact">Démarrer un projet</a>
+  <nav class="mmenu-links">
+    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+  </nav>
+
+  <div class="mmenu-bas">
+    <a href="#contact" class="btn btn-p">Démarrer un projet</a>
+    <div class="mmenu-coord">
+      <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      <a href={`tel:${contact.telLien}`}>{contact.tel}</a>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -31,8 +44,10 @@ import { nav } from '../data/site';
   if (burger && mmenu) {
     const setOpen = (open: boolean) => {
       mmenu.classList.toggle('open', open);
+      burger.classList.toggle('open', open);
       document.body.classList.toggle('locked', open);
       burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
     };
 
     burger.addEventListener('click', () => setOpen(!mmenu.classList.contains('open')));
