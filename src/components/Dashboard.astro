@@ -16,7 +16,8 @@ const pic = Math.max(...barres);
 ---
 
 <div class="mockwrap rv">
-  <div class="mock glass">
+  <div class="mockframe">
+    <div class="mock glass">
     <div class="mtop">
       <i></i><i></i><i></i>
       <span class="url">madaria.fr / tableau-de-bord</span>
@@ -54,6 +55,7 @@ const pic = Math.max(...barres);
           <div class="bars">
             {barres.map((h) => <i class={h === pic ? 'hi' : undefined} data-h={`${h}%`}></i>)}
           </div>
+        </div>
         </div>
       </div>
     </div>

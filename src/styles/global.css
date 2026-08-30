@@ -13,12 +13,12 @@ body{background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-ser
 a{color:inherit;text-decoration:none}
 svg{display:block}
 ::selection{background:var(--violet);color:#fff}
-h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.05;letter-spacing:-.038em}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:500;line-height:1.08;letter-spacing:-.03em}
 
 /* ============ ATMOSPHÈRE : faisceaux volumétriques + grain ============ */
 .atmo{position:fixed;inset:0;z-index:-3;overflow:hidden;
-  background:radial-gradient(120% 80% at 50% -10%,#1B0E3D 0%,#0C0620 45%,#07030F 100%)}
-.beam{position:absolute;filter:blur(64px);opacity:.62;will-change:transform}
+  background:radial-gradient(130% 85% at 50% -18%,#140A2E 0%,#09041A 44%,#05020C 100%)}
+.beam{position:absolute;filter:blur(72px);opacity:.24;will-change:transform}
 .beam.a{width:900px;height:1500px;left:-14%;top:-32%;transform:rotate(28deg);
   background:linear-gradient(180deg,rgba(167,139,250,.85),rgba(99,102,241,.25) 45%,transparent 78%);
   animation:sway 22s ease-in-out infinite}
@@ -30,7 +30,7 @@ h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;line-height:1.05;letter-s
   animation:pulseglow 14s ease-in-out infinite}
 @keyframes sway{50%{transform:rotate(20deg) translate3d(60px,50px,0) scale(1.08)}}
 @keyframes pulseglow{50%{opacity:.62;transform:scale(1.12)}}
-.stars{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.5;
+.stars{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.2;
   background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff,transparent),
     radial-gradient(1.2px 1.2px at 74% 12%,#DCD5FF,transparent),
     radial-gradient(1.6px 1.6px at 34% 62%,#fff,transparent),
@@ -50,7 +50,7 @@ section{padding:118px 0;position:relative;z-index:1}
 .badge{display:inline-flex;align-items:center;gap:10px;padding:6px 6px 6px 7px;border-radius:100px;
   background:rgba(255,255,255,.13);border:1px solid var(--edge);backdrop-filter:blur(16px);
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset;
-  font-size:13px;color:var(--mut);margin-bottom:28px}
+  font-size:12.5px;color:var(--mut);margin-bottom:22px}
 .badge b{background:linear-gradient(100deg,var(--violet),var(--lav));color:#fff;font-weight:500;font-size:11.5px;
   padding:4px 11px;border-radius:100px;letter-spacing:.02em}
 .badge span{padding-right:12px}
@@ -75,7 +75,7 @@ header.scrolled .nav{
   border-color:rgba(167,139,250,.34);
   box-shadow:0 1px 0 rgba(196,181,253,.26) inset,0 -1px 0 rgba(0,0,0,.4) inset,
     0 24px 54px -20px rgba(4,2,14,.95)}
-.brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:700;letter-spacing:.16em;font-size:13px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:600;letter-spacing:.16em;font-size:13px}
 .brand svg{width:21px;height:auto}
 .links{display:flex;gap:2px;font-size:13.5px}
 .links a{padding:8px 14px;border-radius:100px;color:var(--mut);transition:.28s}
@@ -115,21 +115,46 @@ body.locked{overflow:hidden}
   -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
 
 /* ---- hero ---- */
-.hero{padding:132px 0 0;text-align:center}
-h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
-.hero .lead{color:var(--mut);font-size:1.1rem;font-weight:300;max-width:610px;margin:0 auto 38px}
+.hero{padding:154px 0 0;text-align:center;position:relative}
+/* la lumière vient d'en bas : large horizon violet dont le mockup émerge,
+   pendant que le haut de page reste presque noir */
+.heroglow{position:absolute;left:50%;bottom:0;width:138%;height:70%;
+  transform:translateX(-50%);z-index:-1;pointer-events:none;filter:blur(72px);
+  background:
+    radial-gradient(42% 54% at 24% 70%,rgba(124,58,237,.85),transparent 66%),
+    radial-gradient(40% 50% at 76% 62%,rgba(79,70,229,.8),transparent 66%),
+    radial-gradient(54% 42% at 50% 90%,rgba(167,139,250,.72),transparent 68%),
+    radial-gradient(76% 32% at 50% 102%,rgba(214,204,255,.5),transparent 70%)}
+h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em;margin-bottom:20px;
+  text-wrap:balance}
+.hero .lead{color:var(--mut);font-size:1.04rem;font-weight:300;max-width:700px;margin:0 auto 30px;
+  text-wrap:balance}
 .hero .lead b{color:var(--fg);font-weight:500}
-.hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
-.hnote{font-size:12.5px;color:var(--faint)}
-.hnote em{font-style:normal;color:#6EE7A8}
+.hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* ---- mockup dashboard ---- */
-.mockwrap{margin-top:66px;position:relative;perspective:1600px}
-.mockwrap::before{content:'';position:absolute;left:50%;top:-10%;width:120%;height:70%;margin-left:-60%;
-  background:radial-gradient(ellipse at center,rgba(196,181,253,.72),transparent 62%);filter:blur(52px);z-index:-1}
-.mock{border-radius:24px;overflow:hidden;transform:rotateX(9deg);transform-origin:top center;
+.mockwrap{margin-top:78px;position:relative;perspective:1600px}
+.mockwrap::before{content:'';position:absolute;left:50%;bottom:-16%;width:104%;height:66%;
+  transform:translateX(-50%);z-index:-1;filter:blur(46px);
+  background:radial-gradient(ellipse at center,rgba(214,204,255,.6),transparent 66%)}
+/* cadre de verre autour de la maquette, comme un bezel */
+.mockframe{position:relative;border-radius:34px;padding:11px;
+  background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
+  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.14) inset,
+    0 46px 100px -34px rgba(6,3,20,.95);
+  transform:rotateX(9deg);transform-origin:top center;
   transition:transform .8s cubic-bezier(.16,1,.3,1)}
-.mockwrap:hover .mock{transform:rotateX(2deg)}
+.mockwrap:hover .mockframe{transform:rotateX(2deg)}
+/* filet spéculaire sur l'arête haute + halo qui déborde au-dessus */
+.mockframe::before{content:'';position:absolute;left:14%;right:14%;top:0;height:1px;z-index:2;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(233,229,255,.9) 22%,#fff 50%,rgba(233,229,255,.9) 78%,transparent)}
+.mockframe::after{content:'';position:absolute;left:20%;right:20%;top:-34px;height:66px;z-index:0;
+  pointer-events:none;filter:blur(20px);
+  background:radial-gradient(52% 62% at 50% 100%,rgba(199,187,255,.6),transparent 72%)}
+.mock{border-radius:24px;overflow:hidden}
 .mtop{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);
   background:rgba(255,255,255,.08)}
 .mtop i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.32);
@@ -153,7 +178,7 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
 .kpi:first-child::after{content:'';position:absolute;left:0;right:0;bottom:-16px;height:34px;
   background:radial-gradient(ellipse at center,rgba(167,139,250,.75),transparent 70%);filter:blur(10px)}
 .kpi small{display:block;font-size:10.5px;color:var(--faint);margin-bottom:7px}
-.kpi b{font-family:'Sora';font-size:1.42rem;font-weight:700;letter-spacing:-.03em}
+.kpi b{font-family:'Sora';font-size:1.42rem;font-weight:600;letter-spacing:-.03em}
 .kpi u{text-decoration:none;font-size:10.5px;color:#6EE7A8;margin-left:7px}
 .chart{border-radius:16px;border:1px solid var(--edge);
   background:linear-gradient(150deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
@@ -175,7 +200,7 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
 .shead .lab{display:inline-block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
   color:#fff;border:1px solid var(--edge);border-radius:100px;padding:5px 15px;margin-bottom:20px;
   background:rgba(255,255,255,.14);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
-.shead h2{font-size:clamp(2rem,4.6vw,3.4rem);margin-bottom:16px}
+.shead h2{font-size:clamp(1.65rem,3.3vw,2.45rem);margin-bottom:14px}
 .shead p{color:var(--mut);font-weight:300}
 
 /* ---- bento services ---- */
@@ -188,7 +213,7 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
   background:linear-gradient(150deg,rgba(255,255,255,.42),rgba(255,255,255,.12));border:1px solid var(--edge2);
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 10px 26px -12px rgba(10,5,26,.9)}
 .bcard .ico svg{width:20px;height:20px;stroke:#DCD5FF;fill:none;stroke-width:1.7}
-.bcard h3{font-size:1.28rem;margin-bottom:10px}
+.bcard h3{font-size:1.14rem;margin-bottom:10px}
 .bcard p{color:var(--mut);font-size:.94rem;font-weight:300}
 .bcard .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
 .bcard .tags b{font-size:10.5px;font-weight:400;color:#fff;border:1px solid var(--edge);
@@ -210,7 +235,7 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
   box-shadow:0 0 0 5px rgba(124,107,245,.16),0 10px 28px -8px rgba(124,107,245,.95)}
 .tbody{padding:20px 24px;border-radius:22px}
 .tbody .h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
-.tbody h3{font-size:1.18rem}
+.tbody h3{font-size:1.06rem}
 .tbody .t{font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:100px;padding:3px 11px}
 .tbody p{color:var(--mut);font-size:.94rem;font-weight:300}
 
@@ -226,10 +251,10 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
   background-size:26px 26px;mask-image:linear-gradient(160deg,#000,transparent 75%)}
 .wbody{padding:22px 24px 24px}
 .work .meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
-.work h3{font-size:1.35rem;margin-bottom:10px}
+.work h3{font-size:1.2rem;margin-bottom:10px}
 .work p{color:var(--mut);font-size:.92rem;font-weight:300;margin-bottom:20px}
 .wkpi{display:flex;gap:26px;border-top:1px solid var(--line);padding-top:16px}
-.wkpi b{display:block;font-family:'Sora';font-size:1.32rem;font-weight:700;letter-spacing:-.03em}
+.wkpi b{display:block;font-family:'Sora';font-size:1.32rem;font-weight:600;letter-spacing:-.03em}
 .wkpi span{font-size:10.5px;color:var(--faint)}
 
 /* ---- offres ---- */
@@ -243,7 +268,7 @@ h1{font-size:clamp(2.6rem,7vw,5.5rem);font-weight:800;margin-bottom:26px}
 .plan .pn span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 .plan .pn em{font-style:normal;font-size:10.5px;background:linear-gradient(100deg,#7C6BF5,#4F80F0);
   color:#fff;padding:4px 11px;border-radius:100px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
-.plan .price{font-family:'Sora';font-size:2.5rem;font-weight:800;letter-spacing:-.045em;line-height:1}
+.plan .price{font-family:'Sora';font-size:2.3rem;font-weight:600;letter-spacing:-.045em;line-height:1}
 .plan .price sup{font-size:.72rem;font-weight:400;color:var(--mut);vertical-align:super;letter-spacing:0}
 .plan .d{color:var(--mut);font-size:.92rem;font-weight:300;margin:14px 0 24px;min-height:50px}
 .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px;flex:1}
@@ -260,7 +285,7 @@ details{margin-bottom:12px;border-radius:20px;overflow:hidden;
 details[open]{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
   border-color:var(--edge2)}
 summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;gap:16px;align-items:center;
-  font-family:'Sora';font-weight:600;font-size:1.02rem;letter-spacing:-.02em}
+  font-family:'Sora';font-weight:500;font-size:1rem;letter-spacing:-.02em}
 summary::-webkit-details-marker{display:none}
 summary .pm{margin-left:auto;width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;
   border:1px solid var(--edge2);color:#fff;font-size:15px;font-weight:400;transition:.3s}
@@ -270,7 +295,7 @@ details p{padding:0 24px 22px 24px;color:var(--mut);font-weight:300;font-size:.9
 /* ---- contact ---- */
 .cgrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:start}
 .cinfo{padding:34px 32px}
-.cinfo h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin-bottom:16px}
+.cinfo h2{font-size:clamp(1.55rem,2.9vw,2.05rem);margin-bottom:16px}
 .cinfo p{color:var(--mut);font-weight:300;margin-bottom:26px}
 .crow{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--line);font-size:13.5px}
 .crow span:first-child{color:var(--faint);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
@@ -292,7 +317,7 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .bigcta{padding:76px 44px;text-align:center;overflow:hidden}
 .bigcta::before{content:'';position:absolute;left:50%;bottom:-60%;width:900px;height:900px;margin-left:-450px;
   background:radial-gradient(circle,rgba(167,139,250,.42),transparent 62%);filter:blur(30px)}
-.bigcta h2{font-size:clamp(2rem,5vw,3.6rem);margin-bottom:18px;position:relative}
+.bigcta h2{font-size:clamp(1.7rem,3.7vw,2.7rem);margin-bottom:18px;position:relative}
 .bigcta p{color:var(--mut);font-weight:300;max-width:520px;margin:0 auto 32px;position:relative}
 .bigcta .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
 
@@ -335,7 +360,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @media(max-width:760px){
   section{padding:80px 0}.wrap{padding:0 18px}
   .links{display:none}.burger{display:flex}
-  .hero{padding-top:112px}
+  .hero{padding-top:132px}
   .kpis{grid-template-columns:1fr}
   form{grid-template-columns:1fr}
   .bento{grid-template-columns:1fr}

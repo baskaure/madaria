@@ -1,30 +1,28 @@
 ---
 import Dashboard from './Dashboard.astro';
-
-const preuves = ['48 projets livrés', '21 jours en moyenne', '98/100 PageSpeed'];
 ---
 
 <div class="wrap hero">
+  <div class="heroglow"></div>
+
   <div class="badge">
     <b>Nouveau</b><span>2 créneaux ouverts ce trimestre</span>
   </div>
 
   <h1>
     Des sites qui convertissent.<br />
-    <span class="grad">Des systèmes qui<br />travaillent seuls.</span>
+    <span class="grad">Des systèmes qui travaillent seuls.</span>
   </h1>
 
   <p class="lead">
-    Madaria conçoit votre <b>site internet</b>, automatise vos <b>tâches répétitives</b> et développe
-    les <b>outils métier</b> dont votre activité a besoin. Livré vite. Pensé pour durer.
+    Madaria conçoit votre <b>site internet</b>, automatise vos <b>tâches répétitives</b> et
+    développe vos <b>outils métier</b>. Livré vite, pensé pour durer.
   </p>
 
   <div class="hcta">
     <a href="#contact" class="btn btn-p">Devis en 24 h</a>
     <a href="#travaux" class="btn btn-g">Voir nos réalisations</a>
   </div>
-
-  <div class="hnote"><em>●</em> {preuves.join(' · ')}</div>
 
   <Dashboard />
 </div>
