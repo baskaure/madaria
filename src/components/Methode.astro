@@ -14,8 +14,9 @@ import { etapes } from '../data/methode';
     </SectionHead>
 
     <div class="tl">
+      <div class="tlfill"></div>
       {etapes.map((e) => (
-        <div class:list={['tnode', 'rv', { on: e.done }]}>
+        <div class="tnode">
           <div class="tdot">{e.num}</div>
           <div class="glass tbody">
             <div class="h">
@@ -29,3 +30,40 @@ import { etapes } from '../data/methode';
     </div>
   </div>
 </section>
+
+<script>
+  const tl = document.querySelector<HTMLElement>('.tl');
+  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (tl && !reduit) {
+    const noeuds = Array.from(tl.querySelectorAll<HTMLElement>('.tnode'));
+    let planifie = false;
+
+    const actualiser = () => {
+      planifie = false;
+      const r = tl.getBoundingClientRect();
+      // ligne de lecture : un peu sous le milieu de l'écran
+      const ligne = window.innerHeight * 0.62;
+      const p = Math.max(0, Math.min(1, (ligne - r.top) / (r.height || 1)));
+      tl.style.setProperty('--tlp', String(p));
+      tl.classList.toggle('termine', p >= 1);
+
+      for (const n of noeuds) {
+        const dot = n.querySelector<HTMLElement>('.tdot');
+        if (!dot) continue;
+        const d = dot.getBoundingClientRect();
+        n.classList.toggle('atteint', d.top + d.height / 2 <= ligne);
+      }
+    };
+
+    const demander = () => {
+      if (planifie) return;
+      planifie = true;
+      requestAnimationFrame(actualiser);
+    };
+
+    actualiser();
+    window.addEventListener('scroll', demander, { passive: true });
+    window.addEventListener('resize', demander, { passive: true });
+  }
+</script>

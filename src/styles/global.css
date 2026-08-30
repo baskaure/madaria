@@ -50,7 +50,7 @@ section{padding:118px 0;position:relative;z-index:1}
 .badge{display:inline-flex;align-items:center;gap:10px;padding:6px 6px 6px 7px;border-radius:100px;
   background:rgba(255,255,255,.13);border:1px solid var(--edge);backdrop-filter:blur(16px);
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset;
-  font-size:12.5px;color:var(--mut);margin-bottom:22px}
+  font-size:12.5px;color:var(--mut);margin-bottom:28px}
 .badge b{background:linear-gradient(100deg,var(--violet),var(--lav));color:#fff;font-weight:500;font-size:11.5px;
   padding:4px 11px;border-radius:100px;letter-spacing:.02em}
 .badge span{padding-right:12px}
@@ -115,7 +115,7 @@ body.locked{overflow:hidden}
   -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
 
 /* ---- hero ---- */
-.hero{padding:154px 0 0;text-align:center;position:relative}
+.hero{padding:178px 0 0;text-align:center;position:relative}
 /* la lumière vient d'en bas : large horizon violet dont le mockup émerge,
    pendant que le haut de page reste presque noir */
 .heroglow{position:absolute;left:50%;bottom:0;width:138%;height:70%;
@@ -125,15 +125,15 @@ body.locked{overflow:hidden}
     radial-gradient(40% 50% at 76% 62%,rgba(79,70,229,.8),transparent 66%),
     radial-gradient(54% 42% at 50% 90%,rgba(167,139,250,.72),transparent 68%),
     radial-gradient(76% 32% at 50% 102%,rgba(214,204,255,.5),transparent 70%)}
-h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em;margin-bottom:20px;
+h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em;margin-bottom:24px;
   text-wrap:balance}
-.hero .lead{color:var(--mut);font-size:1.04rem;font-weight:300;max-width:700px;margin:0 auto 30px;
+.hero .lead{color:var(--mut);font-size:1.04rem;font-weight:300;max-width:700px;margin:0 auto 36px;
   text-wrap:balance}
 .hero .lead b{color:var(--fg);font-weight:500}
 .hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* ---- mockup dashboard ---- */
-.mockwrap{margin-top:78px;position:relative;perspective:1600px}
+.mockwrap{margin-top:112px;position:relative;perspective:1600px}
 .mockwrap::before{content:'';position:absolute;left:50%;bottom:-16%;width:104%;height:66%;
   transform:translateX(-50%);z-index:-1;filter:blur(46px);
   background:radial-gradient(ellipse at center,rgba(214,204,255,.6),transparent 66%)}
@@ -205,10 +205,24 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 
 /* ---- bento services ---- */
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
-.bcard{grid-column:span 2;padding:30px 28px 32px;overflow:hidden;transition:.45s cubic-bezier(.2,.8,.2,1)}
+/* --mx / --my suivent le curseur, écrits par le script de la section */
+.bcard{grid-column:span 2;padding:30px 28px 32px;overflow:hidden;--mx:50%;--my:50%;
+  transition:background .45s ease,border-color .45s ease,box-shadow .45s ease}
 .bcard.wide{grid-column:span 3}
+/* filet lumineux sur l'arête, allumé sous le curseur */
+.bcard::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;
+  opacity:0;transition:opacity .4s ease;padding:1px;
+  background:radial-gradient(200px circle at var(--mx) var(--my),rgba(237,233,254,.95),transparent 68%);
+  -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+  -webkit-mask-composite:xor;mask-composite:exclude}
+.bcard:hover::before{opacity:1}
 /* `.rv.in` pose transform:none plus bas : il faut passer devant en spécificité */
-.bcard:hover,.bcard.rv:hover{transform:translateY(-8px);border-color:var(--edge2)}
+.bcard:hover{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 -1px 0 rgba(255,255,255,.18) inset,
+    0 40px 90px -34px rgba(10,5,26,.95)}
+.bcard .ico{transition:transform .5s cubic-bezier(.34,1.3,.5,1),box-shadow .45s ease}
+.bcard:hover .ico{transform:scale(1.07);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 12px 30px -10px rgba(124,107,245,1)}
 .bcard .ico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:20px;
   background:linear-gradient(150deg,rgba(255,255,255,.42),rgba(255,255,255,.12));border:1px solid var(--edge2);
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 10px 26px -12px rgba(10,5,26,.9)}
@@ -222,18 +236,44 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   background:radial-gradient(ellipse at center,rgba(167,139,250,.55),transparent 68%);filter:blur(20px)}
 .bcard:hover .spark{opacity:1}
 
-/* ---- méthode ---- */
-.tl{max-width:840px;margin:0 auto;position:relative}
+/* ---- méthode : frise pilotée par le défilement ---- */
+/* --tlp (0 → 1) est écrit par le script au fil du scroll */
+.tl{max-width:840px;margin:0 auto;position:relative;--tlp:0}
+/* rail éteint */
 .tl::before{content:'';position:absolute;left:19px;top:12px;bottom:12px;width:1px;
   background:linear-gradient(180deg,transparent,var(--line2) 12%,var(--line2) 88%,transparent)}
-.tnode{display:grid;grid-template-columns:40px 1fr;gap:24px;padding-bottom:38px}
+/* trait qui se remplit */
+.tlfill{position:absolute;left:19px;top:12px;width:1px;z-index:0;
+  height:calc((100% - 24px) * var(--tlp));
+  background:linear-gradient(180deg,#7C6BF5,#A78BFA 55%,#DCD5FF);
+  box-shadow:0 0 10px rgba(167,139,250,.8);
+  transition:height .12s linear}
+/* tête lumineuse en bout de trait */
+.tlfill::after{content:'';position:absolute;left:50%;bottom:0;width:7px;height:7px;border-radius:50%;
+  transform:translate(-50%,50%);background:#EDE9FE;
+  box-shadow:0 0 16px 4px rgba(196,181,253,.85);
+  opacity:calc(var(--tlp) * 4);transition:opacity .3s ease}
+.tl.termine .tlfill::after{opacity:0}
+
+.tnode{display:grid;grid-template-columns:40px 1fr;gap:24px;padding-bottom:38px;
+  opacity:.34;transition:opacity .55s ease}
 .tnode:last-child{padding-bottom:0}
+.tnode.atteint{opacity:1}
 .tdot{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;
   background:rgba(255,255,255,.14);backdrop-filter:blur(18px);border:1px solid var(--edge);color:#fff;
-  box-shadow:0 1px 0 rgba(255,255,255,.45) inset;position:relative;z-index:1}
-.tnode.on .tdot{background:linear-gradient(140deg,#7C6BF5,#4F80F0);color:#fff;border-color:transparent;
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset;position:relative;z-index:1;
+  transition:background .45s ease,border-color .45s ease,box-shadow .45s ease,transform .5s cubic-bezier(.34,1.3,.5,1)}
+.tnode.atteint .tdot{background:linear-gradient(140deg,#7C6BF5,#4F80F0);border-color:transparent;
+  transform:scale(1.08);
   box-shadow:0 0 0 5px rgba(124,107,245,.16),0 10px 28px -8px rgba(124,107,245,.95)}
-.tbody{padding:20px 24px;border-radius:22px}
+.tbody{padding:20px 24px;border-radius:22px;
+  transform:translateX(-14px);transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.tnode.atteint .tbody{transform:none}
+@media(prefers-reduced-motion:reduce){
+  .tl{--tlp:1}
+  .tnode{opacity:1}
+  .tbody{transform:none}
+}
 .tbody .h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
 .tbody h3{font-size:1.06rem}
 .tbody .t{font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:100px;padding:3px 11px}
@@ -360,7 +400,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @media(max-width:760px){
   section{padding:80px 0}.wrap{padding:0 18px}
   .links{display:none}.burger{display:flex}
-  .hero{padding-top:132px}
+  .hero{padding-top:150px}
   .kpis{grid-template-columns:1fr}
   form{grid-template-columns:1fr}
   .bento{grid-template-columns:1fr}

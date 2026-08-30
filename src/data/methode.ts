@@ -3,8 +3,6 @@ export type Etape = {
   titre: string;
   delai: string;
   text: string;
-  /** pastille pleine (étape considérée comme acquise dans le parcours type) */
-  done?: boolean;
 };
 
 export const etapes: Etape[] = [
@@ -13,21 +11,18 @@ export const etapes: Etape[] = [
     titre: 'Cadrage',
     delai: 'Jour 1 → 3',
     text: "Un appel de 45 minutes pour comprendre votre marché, vos objectifs et vos contraintes. Vous repartez avec un périmètre chiffré, pas une estimation floue.",
-    done: true,
   },
   {
     num: '02',
     titre: 'Design',
     delai: 'Semaine 1',
     text: 'Maquettes sur-mesure validées avant la moindre ligne de code. Deux tours de retours inclus, sans surcoût.',
-    done: true,
   },
   {
     num: '03',
     titre: 'Build',
     delai: 'Semaine 2 → 3',
     text: "Développement, intégration des contenus, automatisations, tests sur tous les écrans et navigateurs. Préproduction accessible en continu.",
-    done: true,
   },
   {
     num: '04',
