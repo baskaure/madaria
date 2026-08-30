@@ -10,7 +10,9 @@ interface Props {
 const {
   // Title pensé pour la requête « création de site internet » : mot-clé en tête,
   // différenciateur (7 jours), marque en fin. 56 caractères.
-  title = 'Création de site internet à Lyon, livré en 7 jours | Madaria',
+  // Marque volontairement absente : Google la place lui-même en tête du
+  // résultat. Le suffixe « | Madaria » ne faisait que consommer des caractères.
+  title = 'Création de site internet en 7 jours — Lyon & France',
   description = "Agence de création de site internet à Lyon : site sur-mesure livré en 7 jours, dès 690 € HT, partout en France. Maquette offerte, devis gratuit sous 24 h.",
 } = Astro.props;
 
@@ -128,7 +130,13 @@ const jsonLd = {
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href={canonical} />
+    <!-- Google cherche /favicon.ico en priorité ; le SVG sert aux navigateurs
+         modernes, les PNG couvrent le reste. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#07030F" />
 
