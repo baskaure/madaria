@@ -33,7 +33,20 @@ const coordonnees = [
       </div>
     </div>
 
-    <form class="glass rv" id="form" novalidate>
+    <form
+      class="glass rv"
+      id="form"
+      name="contact"
+      method="POST"
+      action="/"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      novalidate
+    >
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="pot" hidden aria-hidden="true">
+        <label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+      </p>
       {champs.map((c) => (
         <div class="f">
           <label for={c.id}>{c.label}</label>
@@ -75,7 +88,7 @@ const coordonnees = [
     msg.textContent = texte;
   };
 
-  form?.addEventListener('submit', (e) => {
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = new FormData(form);
     const nom = String(data.get('nom') ?? '').trim();
@@ -91,8 +104,24 @@ const coordonnees = [
       return;
     }
 
-    // TODO : brancher sur un endpoint réel (webhook n8n ou route API).
-    dire('Demande enregistrée — réponse sous 24 h. (démo : à brancher sur un backend)', true);
-    form.reset();
+    const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (bouton) bouton.disabled = true;
+    dire('Envoi en cours…', true);
+
+    try {
+      // Netlify Forms : POST url-encodé vers la page elle-même.
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      dire('Demande envoyée — réponse sous 24 h. Merci !', true);
+      form.reset();
+    } catch {
+      dire("L'envoi a échoué. Écrivez-nous directement : contact@madaria.fr", false);
+    } finally {
+      if (bouton) bouton.disabled = false;
+    }
   });
 </script>

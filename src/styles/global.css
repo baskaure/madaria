@@ -398,6 +398,9 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .f textarea{resize:vertical;min-height:118px}
 .f select option{background:#1A0F38;color:#fff}
 .fmsg{font-size:12.5px;margin-top:4px}
+.btn:disabled{opacity:.55;pointer-events:none}
+/* piège à robots du formulaire Netlify : jamais visible */
+.pot{display:none!important}
 
 /* ---- big cta ---- */
 .bigcta{padding:76px 44px;text-align:center;overflow:hidden}
