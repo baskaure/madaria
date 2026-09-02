@@ -29,6 +29,11 @@ const { text = 'MADARIA' } = Astro.props;
     const SIZE_BIG = [3, 4.2];
     const BIG_CHANCE = 0.07;
     const GAP = 6; // écart de la grille en px — augmenter allège le rendu
+    /* En dessous de cette largeur, les lettres ne font plus que quelques
+       points de large et le mot devient illisible : la grille se resserre
+       (et les points rétrécissent d'autant pour garder la même densité). */
+    const ETROIT = 560;
+    const GAP_ETROIT = 3.6;
     const SPEED = 2;
     const SEED = 1337;
     const GAMMA = 0.8;
@@ -146,24 +151,26 @@ const { text = 'MADARIA' } = Astro.props;
 
       const echantillon = construireMasque(w, h);
       const rand = lcg(SEED);
-      const cols = Math.ceil(w / GAP);
-      const rows = Math.ceil(h / GAP);
-      const ox = (w - (cols - 1) * GAP) / 2;
-      const oy = (h - (rows - 1) * GAP) / 2;
+      const pas = w < ETROIT ? GAP_ETROIT : GAP;
+      const finesse = pas / GAP;
+      const cols = Math.ceil(w / pas);
+      const rows = Math.ceil(h / pas);
+      const ox = (w - (cols - 1) * pas) / 2;
+      const oy = (h - (rows - 1) * pas) / 2;
 
       particules = [];
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
           const plage = rand() < BIG_CHANCE ? SIZE_BIG : SIZE_SMALL;
-          const px = ox + x * GAP;
-          const py = oy + y * GAP;
+          const px = ox + x * pas;
+          const py = oy + y * pas;
           particules.push({
             cx: px,
             cy: py,
             nx: cols > 1 ? x / (cols - 1) : 0.5,
             ny: rows > 1 ? y / (rows - 1) : 0.5,
             format: FORMATS[Math.floor(rand() * FORMATS.length)],
-            size: plage[0] + rand() * (plage[1] - plage[0]),
+            size: (plage[0] + rand() * (plage[1] - plage[0])) * finesse,
             offset: rand(),
             mask: echantillon ? echantillon(px, py) : 1,
           });

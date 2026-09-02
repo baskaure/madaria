@@ -495,7 +495,15 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .secteur .voir{position:absolute;top:22px;right:22px;font-size:16px;color:var(--glow);
   opacity:.4;transition:opacity .3s ease,transform .3s ease}
 .secteur:hover .voir{opacity:1;transform:translateX(3px)}
-@media(max-width:860px){.secteurs{grid-template-columns:1fr}}
+@media(max-width:860px){
+  .secteurs{grid-template-columns:1fr}
+  /* Les néons sont calés sur la grille à deux colonnes. Sur une seule, l'anneau
+     et le cône débordaient des tuiles et se lisaient comme des taches : on les
+     réduit et on les repousse hors-champ, il ne reste que la lueur. */
+  #secteurs .neons .n1{width:82%;height:60px}
+  #secteurs .neons .n2{width:230px;height:230px;right:-96px}
+  #secteurs .neons .n3{width:330px;height:290px;left:-110px}
+}
 
 /* ---- offres ---- */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
@@ -694,7 +702,9 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .bcard:nth-child(1){padding:30px 28px 32px}
   .bcard:nth-child(1) h3{font-size:1.3rem}
   .works{grid-template-columns:repeat(2,1fr)}
-  .plans{grid-template-columns:1fr}
+  /* empilées, les formules garderaient toute la largeur : prix et listes
+     se perdraient dans le vide. On les ramène à une largeur de lecture. */
+  .plans,.plans.deux{grid-template-columns:1fr;max-width:560px;margin-inline:auto}
   .plan.feat{margin-top:0}
   .cgrid{grid-template-columns:1fr}
   .fg{grid-template-columns:1fr 1fr}
@@ -702,6 +712,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   /* les splits sticky passent en une colonne */
   .msplit,.fsplit{grid-template-columns:1fr;gap:44px}
   .mintro,.fintro{position:static}
+
 
   /* la maquette perd sa colonne latérale, illisible à cette largeur */
   .mbody{grid-template-columns:1fr}
@@ -732,6 +743,10 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 
   /* tout passe sur une colonne */
   .bento,.works,.kpis,.fg,form{grid-template-columns:1fr}
+  /* sauf le footer : quatre blocs empilés donnaient un pied de page
+     interminable. Les trois listes de liens tiennent à deux de front. */
+  .fg{grid-template-columns:1fr 1fr;gap:32px 24px}
+  .fg > div:first-child{grid-column:1/-1}
 
   /* la maquette : cadre et marges resserrés */
   .mockframe{padding:7px;border-radius:26px;transform:rotateX(5deg)}
