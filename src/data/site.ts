@@ -6,13 +6,18 @@ export const site = {
     "Madaria conçoit des sites internet performants, automatise vos process et développe les outils métier dont votre activité a besoin.",
 } as const;
 
+/**
+ * Ancres préfixées par « / » : depuis une page métier ou légale, un simple
+ * `#services` ne pointe sur rien. Sur l'accueil, `/#services` se comporte
+ * exactement comme `#services` — même document, pas de rechargement.
+ */
 export const nav = [
-  { href: '#services', label: 'Services' },
-  { href: '#methode', label: 'Méthode' },
-  { href: '#realisations', label: 'Réalisations' },
-  { href: '#secteurs', label: 'Secteurs' },
-  { href: '#offres', label: 'Offres' },
-  { href: '#faq', label: 'FAQ' },
+  { href: '/#services', label: 'Services' },
+  { href: '/#methode', label: 'Méthode' },
+  { href: '/#realisations', label: 'Réalisations' },
+  { href: '/#secteurs', label: 'Secteurs' },
+  { href: '/#offres', label: 'Offres' },
+  { href: '/#faq', label: 'FAQ' },
 ] as const;
 
 export const contact = {
@@ -47,28 +52,28 @@ export const footerColumns = [
   {
     title: 'Services',
     links: [
-      { href: '#services', label: 'Sites internet' },
-      { href: '#services', label: 'Automatisations' },
-      { href: '#services', label: 'Développement' },
-      { href: '#services', label: 'SEO' },
+      { href: '/#services', label: 'Sites internet' },
+      { href: '/#services', label: 'Automatisations' },
+      { href: '/#services', label: 'Développement' },
+      { href: '/#services', label: 'SEO' },
     ],
   },
   {
     title: 'Agence',
     links: [
-      { href: '#methode', label: 'Méthode' },
-      { href: '#realisations', label: 'Réalisations' },
-      { href: '#secteurs', label: 'Secteurs' },
-      { href: '#offres', label: 'Offres' },
-      { href: '#faq', label: 'FAQ' },
+      { href: '/#methode', label: 'Méthode' },
+      { href: '/#realisations', label: 'Réalisations' },
+      { href: '/#secteurs', label: 'Secteurs' },
+      { href: '/#offres', label: 'Offres' },
+      { href: '/#faq', label: 'FAQ' },
     ],
   },
   {
     title: 'Contact',
     links: [
       { href: 'mailto:contact@madaria.fr', label: 'contact@madaria.fr' },
-      { href: '#contact', label: 'Demander un devis' },
-      { href: '#contact', label: 'Réserver un appel' },
+      { href: '/#contact', label: 'Demander un devis' },
+      { href: '/#contact', label: 'Réserver un appel' },
     ],
   },
 ] as const;

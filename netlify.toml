@@ -7,16 +7,39 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# En-têtes de sécurité de base.
+# En-têtes de sécurité. Pas de Content-Security-Policy : Astro inline ses
+# scripts, il faudrait des nonces à chaque build pour en poser une utile.
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+    # HTTPS imposé un an. Sans `preload` : l'inscription sur la liste des
+    # navigateurs est irréversible, elle se décide à part.
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
 # Les assets hashés par Astro sont immuables.
 [[headers]]
   for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Polices auto-hébergées : nom de fichier versionné, donc immuables aussi.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Médias des réalisations et logos : pas de hash dans le nom, donc un cache
+# long mais fini — un fichier remplacé est repris sous une semaine.
+[[headers]]
+  for = "/realisations/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

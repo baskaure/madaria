@@ -43,12 +43,19 @@ const jsonLd = {
         addressRegion: 'Auvergne-Rhône-Alpes',
         addressCountry: 'FR',
       },
-      geo: { '@type': 'GeoCoordinates', latitude: 45.764043, longitude: 4.835659 },
+      // Pas de `geo` : l'adresse est un domicile, exigée dans les mentions
+      // légales mais pas à situer au mètre près. `areaServed` suffit pour une
+      // activité 100 % à distance.
       areaServed: [
         { '@type': 'City', name: 'Lyon' },
         { '@type': 'Country', name: 'France' },
       ],
-      sameAs: ['https://www.instagram.com/madaria_agency/'],
+      sameAs: [
+        'https://www.instagram.com/madaria_agency/',
+        // Fiche Google Business, par son identifiant Knowledge Graph : stable,
+        // contrairement au lien de partage qui redirige avec du tracking.
+        'https://www.google.com/search?kgmid=/g/11zf9zzc34',
+      ],
       founder: { '@id': 'https://madaria.fr/#fondateur' },
       slogan: 'Votre site internet en ligne en 7 jours.',
       currenciesAccepted: 'EUR',
@@ -158,12 +165,15 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Polices auto-hébergées (déclarées dans global.css). On précharge les
+         deux sous-ensembles latins, utilisés par tout le texte visible au
+         chargement ; latin-ext n'arrive que si un caractère l'exige. -->
+    <link rel="preload" href="/fonts/sora-5.3-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-5.3-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Sans JavaScript, les blocs `.rv` resteraient à opacité nulle : la page
+         serait vide sous la ligne de flottaison. -->
+    <noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>

@@ -3,9 +3,12 @@ import Logo from './Logo.astro';
 import { nav, contact } from '../data/site';
 ---
 
+<!-- Lien d'évitement : invisible tant qu'il n'a pas le focus clavier -->
+<a class="skip" href="#contenu">Aller au contenu</a>
+
 <header>
   <nav class="nav">
-    <a class="brand" href="#top">
+    <a class="brand" href="/#top">
       <Logo />
       MADARIA
     </a>
@@ -15,7 +18,7 @@ import { nav, contact } from '../data/site';
     </div>
 
     <div class="nav-actions">
-      <a href="#contact" class="btn btn-p">Démarrer</a>
+      <a href="/#contact" class="btn btn-p">Démarrer</a>
       <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
         <i></i><i></i>
       </button>
@@ -29,7 +32,7 @@ import { nav, contact } from '../data/site';
   </nav>
 
   <div class="mmenu-bas">
-    <a href="#contact" class="btn btn-p">Démarrer un projet</a>
+    <a href="/#contact" class="btn btn-p">Démarrer un projet</a>
     <div class="mmenu-coord">
       <a href={`mailto:${contact.email}`}>{contact.email}</a>
       <a href={`tel:${contact.telLien}`}>{contact.tel}</a>

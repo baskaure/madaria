@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Background from '../components/Background.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { secteurs } from '../data/secteurs';
+
+// Netlify sert dist/404.html pour toute URL inconnue, avec un vrai statut 404.
+---
+
+<Base title="Page introuvable | Madaria" description="Cette page n'existe pas ou a été déplacée.">
+  <Background />
+  <Header />
+
+  <main id="contenu" class="legal">
+    <div class="wrap">
+      <a class="retour" href="/">← Retour à l'accueil</a>
+      <h1>Page introuvable</h1>
+      <p class="maj">Erreur 404</p>
+      <div class="glass corps">
+        <p>
+          L'adresse que vous avez suivie ne mène nulle part : la page a été déplacée, ou le lien
+          comportait une erreur.
+        </p>
+        <h2>Vous cherchiez peut-être</h2>
+        <ul>
+          <li><a href="/">L'accueil</a> — sites internet, automatisations, outils métier</li>
+          <li><a href="/#offres">Les offres et tarifs</a></li>
+          <li><a href="/#contact">Demander un devis</a></li>
+        </ul>
+        <h2>Un site pour votre métier</h2>
+        <ul>
+          {secteurs.map((s) => (
+            <li><a href={`/site-internet/${s.slug}/`}>{s.nom}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Base>
