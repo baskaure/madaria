@@ -1,10 +1,31 @@
 ---
 import { clients } from '../data/site';
+
+/**
+ * Mise en phrase d'un métier : minuscule d'attaque, sauf pour les sigles qui
+ * gardent leurs capitales. L'entrée à esperluette est réécrite : « BTP &
+ * artisans » ne se lit pas dans une énumération.
+ */
+const enPhrase = (nom: string) =>
+  nom === 'BTP & artisans'
+    ? 'artisans du BTP'
+    : /^[A-ZÀ-Ý][a-zà-ÿ]/.test(nom)
+      ? nom[0].toLowerCase() + nom.slice(1)
+      : nom;
+
+const dernier = clients.length - 1;
 ---
 
 <div class="wrap strip rv">
   <div class="t">Ils nous ont confié leur site internet</div>
-  <div class="logos">
-    {clients.map((nom) => <span>{nom}</span>)}
-  </div>
+
+  <p class="phrase">
+    {clients.map((nom, i) => (
+      <Fragment>
+        {i === 0 ? '' : i === dernier ? ' et ' : ', '}
+        <b>{i === 0 ? nom : enPhrase(nom)}</b>
+        {i === dernier ? '.' : ''}
+      </Fragment>
+    ))}
+  </p>
 </div>

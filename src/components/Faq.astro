@@ -1,15 +1,17 @@
 ---
-import SectionHead from './SectionHead.astro';
 import { questions } from '../data/faq';
 ---
 
 <section id="faq">
-  <div class="wrap">
-    <SectionHead label="FAQ">
-      <Fragment slot="titre">
+  <div class="wrap fsplit">
+    <div class="fintro rv">
+      <div class="lab">FAQ</div>
+      <h2>
         Tout ce que vous vous demandez <span class="grad">avant</span> de nous écrire.
-      </Fragment>
-    </SectionHead>
+      </h2>
+      <p>Une réponse manque ? Écrivez-nous, vous l'aurez sous 24 h.</p>
+      <a href="#contact" class="btn btn-g">Poser une question</a>
+    </div>
 
     <div class="faq rv">
       {questions.map((item, i) => (

@@ -2,12 +2,14 @@
 interface Props {
   /** Petite étiquette au-dessus du titre */
   label: string;
+  /** `gauche` : titre à gauche, paragraphe en colonne droite (défaut : centré) */
+  align?: 'centre' | 'gauche';
 }
 
-const { label } = Astro.props;
+const { label, align = 'centre' } = Astro.props;
 ---
 
-<div class="shead rv">
+<div class:list={['shead', 'rv', { gauche: align === 'gauche' }]}>
   <div class="lab">{label}</div>
   <h2><slot name="titre" /></h2>
   {Astro.slots.has('default') && <p><slot /></p>}

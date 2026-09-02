@@ -1,5 +1,5 @@
 :root{
-  --bg:#07030F; --bg2:#0C0620; --card:#120A24;
+  --bg:#000;
   --violet:#6366F1; --blue:#3B82F6; --lav:#A78BFA; --glow:#C4B5FD;
   --fg:#FFFFFF; --mut:rgba(255,255,255,.74); --faint:rgba(255,255,255,.5);
   --line:rgba(255,255,255,.18); --line2:rgba(255,255,255,.32);
@@ -17,8 +17,9 @@ svg{display:block}
 h1,h2,h3{font-family:'Sora',sans-serif;font-weight:500;line-height:1.08;letter-spacing:-.03em}
 
 /* ============ ATMOSPHÈRE : faisceaux volumétriques + grain ============ */
-.atmo{position:fixed;inset:0;z-index:-3;overflow:hidden;
-  background:radial-gradient(130% 85% at 50% -18%,#140A2E 0%,#09041A 44%,#05020C 100%)}
+/* fond noir pur : toute la profondeur vient des lumières colorées
+   (faisceaux, spots de section), plus d'aucune teinte de base */
+.atmo{position:fixed;inset:0;z-index:-3;overflow:hidden;background:#000}
 /* Les faisceaux sont statiques : les animer en continu (sway/pulse) forçait
    chaque backdrop-filter visible à re-filtrer son arrière-plan à CHAQUE frame,
    même page immobile — principale cause des saccades sur Chrome. Le mouvement
@@ -45,6 +46,88 @@ h1,h2,h3{font-family:'Sora',sans-serif;font-weight:500;line-height:1.08;letter-s
 
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px;position:relative;z-index:1}
 section{padding:118px 0;position:relative;z-index:1}
+/* ============ LUMIÈRES DE SECTION ============
+   L'atmosphère (faisceaux, étoiles) court sous toute la page ; c'est la
+   LUMIÈRE qui différencie les sections : chacune a sa propre source néon
+   (spots de scène, tube, colonne, nappe latérale). Formes floutées
+   statiques — jamais animées, le blur re-rendu par frame ruine le GPU. */
+
+/* Services — deux spots de scène tombent des coins supérieurs (cônes
+   coniques floutés), comme des projecteurs braqués sur le bento */
+#services::before{content:'';position:absolute;left:-4%;right:-4%;top:-120px;height:78%;
+  z-index:-1;pointer-events:none;filter:blur(52px);
+  background:
+    conic-gradient(from 103deg at 2% 0%,transparent 0deg,rgba(167,139,250,.4) 30deg,rgba(124,107,245,.1) 52deg,transparent 68deg),
+    conic-gradient(from 190deg at 98% 0%,transparent 0deg,rgba(96,132,246,.34) 28deg,rgba(99,102,241,.09) 50deg,transparent 66deg)}
+
+/* Méthode — nappe violette qui monte du bord gauche, derrière l'intro
+   sticky : la colonne de texte baigne dedans, la frise reste dans l'ombre */
+#methode::before{content:'';position:absolute;left:-280px;top:14%;width:740px;height:740px;
+  z-index:-1;pointer-events:none;filter:blur(90px);
+  background:radial-gradient(circle,rgba(124,58,237,.3),transparent 62%)}
+
+/* Secteurs — formes néon atypiques piégées DERRIÈRE les tuiles de verre :
+   un bâton lumineux incliné, un anneau fuchsia, un cône bleu qui monte du
+   coin. Les tuiles dépolies les floutent, les interstices entre tuiles les
+   laissent filer nets — c'est ce contraste qui fait exister le verre. */
+#secteurs .neons{position:absolute;inset:0;z-index:0;pointer-events:none}
+#secteurs .neons i{position:absolute;display:block}
+#secteurs .neons .n1{left:4%;top:36%;width:60%;height:76px;transform:rotate(-13deg);
+  border-radius:100px;filter:blur(26px);
+  background:linear-gradient(90deg,transparent,rgba(139,111,255,.8) 28%,rgba(96,132,246,.75) 72%,transparent)}
+#secteurs .neons .n2{right:-46px;top:20%;width:310px;height:310px;filter:blur(18px);
+  background:radial-gradient(closest-side,transparent 50%,rgba(217,70,239,.5) 60%,rgba(167,139,250,.45) 68%,transparent 75%)}
+#secteurs .neons .n3{left:-60px;bottom:-30px;width:440px;height:380px;filter:blur(28px);
+  background:conic-gradient(from 8deg at 10% 96%,transparent 0deg,rgba(96,132,246,.55) 26deg,rgba(124,58,237,.18) 46deg,transparent 62deg)}
+
+/* Offres — colonne de lumière qui descend du haut sur la formule vedette,
+   façon scène : le panneau violet est LE point chaud éclairé */
+#offres::before{content:'';position:absolute;left:50%;top:130px;width:min(660px,82%);height:88%;
+  transform:translateX(-50%);z-index:-1;pointer-events:none;filter:blur(64px);
+  background:linear-gradient(180deg,rgba(167,139,250,.32),rgba(124,58,237,.11) 46%,transparent 74%)}
+
+/* FAQ — contre-jour bleuté depuis la droite, derrière la liste : répond en
+   froid au violet des Offres juste au-dessus */
+#faq::before{content:'';position:absolute;right:-260px;top:-40px;width:780px;height:640px;
+  z-index:-1;pointer-events:none;filter:blur(90px);
+  background:radial-gradient(circle,rgba(59,130,246,.24),transparent 62%)}
+
+/* Contact — lueur douce plein centre au-dessus des panneaux, discrète :
+   le vrai feu d'artifice reste pour le CTA final */
+#contact::before{content:'';position:absolute;left:50%;top:-110px;width:900px;height:420px;
+  transform:translateX(-50%);z-index:-1;pointer-events:none;filter:blur(80px);
+  background:radial-gradient(50% 60% at 50% 0%,rgba(124,107,245,.2),transparent 70%)}
+
+/* ---- respiration des néons ----
+   Dérive + pulsation TRÈS lentes, uniquement transform/opacity (composées
+   par le GPU sans re-rendu du blur). Le filter lui-même n'est jamais animé.
+   --tb : transform de base de l'élément, recomposé dans les keyframes. */
+@keyframes lueur-derive{
+  0%,100%{transform:var(--tb,translate(0,0)) translate(0,0)}
+  50%{transform:var(--tb,translate(0,0)) translate(var(--dx,14px),var(--dy,-10px))}
+}
+@keyframes lueur-pulse{
+  0%,100%{opacity:1}
+  50%{opacity:var(--po,.72)}
+}
+#services::before{--dx:20px;--dy:12px;
+  animation:lueur-derive 27s ease-in-out infinite,lueur-pulse 19s ease-in-out infinite}
+#methode::before{--dx:-18px;--dy:16px;--po:.68;
+  animation:lueur-derive 31s ease-in-out infinite,lueur-pulse 23s ease-in-out infinite}
+#faq::before{--dx:16px;--dy:18px;--po:.7;
+  animation:lueur-derive 29s ease-in-out infinite,lueur-pulse 21s ease-in-out infinite}
+#offres::before{--tb:translateX(-50%);--dx:0px;--dy:20px;--po:.78;
+  animation:lueur-derive 33s ease-in-out infinite,lueur-pulse 24s ease-in-out infinite}
+#contact::before{--tb:translateX(-50%);--dx:12px;--dy:0px;--po:.75;
+  animation:lueur-derive 30s ease-in-out infinite,lueur-pulse 22s ease-in-out infinite}
+#secteurs .neons .n1{--tb:rotate(-13deg);--dx:24px;--dy:-10px;--po:.72;
+  animation:lueur-derive 24s ease-in-out infinite,lueur-pulse 15s ease-in-out infinite}
+#secteurs .neons .n2{--dx:-16px;--dy:14px;--po:.66;
+  animation:lueur-derive 28s ease-in-out infinite 2s,lueur-pulse 18s ease-in-out infinite 1s}
+#secteurs .neons .n3{--dx:12px;--dy:-8px;--po:.7;
+  animation:lueur-derive 26s ease-in-out infinite 4s,lueur-pulse 20s ease-in-out infinite 3s}
+.proj i{--tb:translateX(-50%);--dx:0px;--dy:-8px;--po:.84;
+  animation:lueur-derive 17s ease-in-out infinite,lueur-pulse 11s ease-in-out infinite}
 .grad{background:linear-gradient(100deg,#DCD5FF,#A78BFA 40%,#6EA8FE);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---- pill badge ---- */
@@ -83,10 +166,16 @@ header.scrolled .nav{
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:11px 22px;border-radius:100px;
   font-size:13.5px;font-weight:500;border:1px solid transparent;cursor:pointer;transition:.3s cubic-bezier(.2,.8,.2,1);
   font-family:'Inter',sans-serif;position:relative}
-.btn-p{background:linear-gradient(100deg,#7C6BF5,#4F80F0);color:#fff;
-  box-shadow:0 0 0 1px rgba(196,181,253,.4),0 12px 34px -10px rgba(124,107,245,.95),
-    0 1px 0 rgba(255,255,255,.28) inset}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(196,181,253,.7),0 20px 46px -10px rgba(124,107,245,1),0 1px 0 rgba(255,255,255,.35) inset}
+/* bouton principal blanc lumineux : pilule claire, texte encre — c'est le
+   point le plus clair de la page, contraste maximal sur le fond noir */
+.btn-p{background:linear-gradient(180deg,#FFFFFF 0%,#EFEAFF 100%);color:#150C2E;font-weight:600;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 0 24px -8px rgba(220,209,255,.75),
+    0 14px 36px -14px rgba(196,181,253,.65)}
+/* pas de changement de fond au survol : un dégradé ne s'interpole pas,
+   le fond sauterait d'un coup — seuls l'ombre et le soulèvement animent */
+.btn-p:hover{transform:translateY(-2px);
+  box-shadow:0 1px 0 #fff inset,0 0 34px -6px rgba(226,217,255,.95),
+    0 20px 46px -14px rgba(196,181,253,.85)}
 .btn-g{background:rgba(255,255,255,.14);border-color:var(--edge);color:#fff;
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
@@ -103,7 +192,7 @@ header.scrolled .nav{
 /* ---- menu plein écran ---- */
 .mmenu{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:space-between;
   padding:120px 26px 38px;counter-reset:m;
-  background:radial-gradient(120% 70% at 50% 0%,#1B0E3D 0%,#0B0520 55%,#06030E 100%);
+  background:radial-gradient(120% 70% at 50% 0%,#170A35 0%,#08030F 55%,#000 100%);
   opacity:0;visibility:hidden;pointer-events:none;
   overflow-y:auto;overscroll-behavior:contain;
   transition:opacity .38s ease,visibility .38s}
@@ -177,9 +266,21 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 
 /* ---- mockup dashboard ---- */
 .mockwrap{margin-top:112px;position:relative;perspective:1600px}
-.mockwrap::before{content:'';position:absolute;left:50%;bottom:-16%;width:104%;height:66%;
-  transform:translateX(-50%);z-index:-1;filter:blur(46px);
-  background:radial-gradient(ellipse at center,rgba(214,204,255,.6),transparent 66%)}
+/* aura diffuse qui enveloppe tout le dashboard — elle dépasse des quatre
+   côtés ; le dessus reste plus lumineux grâce à .proj qui s'y ajoute */
+.mockwrap::before{content:'';position:absolute;inset:-110px -100px -90px;
+  z-index:-1;pointer-events:none;filter:blur(58px);
+  background:radial-gradient(50% 50% at 50% 48%,rgba(160,132,255,.44),rgba(146,118,255,.16) 62%,transparent 80%)}
+/* lumière au-dessus du dashboard : étincelante au ras de l'arête (cœur
+   blanc-lavande) puis diffusion naturelle en halo elliptique — pas de
+   colonne aux bords droits, une seule couleur, projection courte */
+.proj{position:absolute;left:0;right:0;top:-220px;height:250px;z-index:-1;pointer-events:none}
+.proj i{position:absolute;left:50%;bottom:0;width:96%;height:100%;transform:translateX(-50%);
+  filter:blur(26px);
+  background:
+    radial-gradient(32% 32% at 50% 100%,rgba(237,233,254,.92),transparent 70%),
+    radial-gradient(58% 72% at 50% 100%,rgba(167,139,250,.55),transparent 72%),
+    radial-gradient(92% 100% at 50% 100%,rgba(146,118,255,.26),transparent 78%)}
 /* cadre de verre autour de la maquette, comme un bezel */
 .mockframe{position:relative;border-radius:34px;padding:11px;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
@@ -190,13 +291,8 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   transform:rotateX(9deg);transform-origin:top center;
   transition:transform .8s cubic-bezier(.16,1,.3,1)}
 .mockwrap:hover .mockframe{transform:rotateX(2deg)}
-/* filet spéculaire sur l'arête haute + halo qui déborde au-dessus */
-.mockframe::before{content:'';position:absolute;left:14%;right:14%;top:0;height:1px;z-index:2;
-  pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(233,229,255,.9) 22%,#fff 50%,rgba(233,229,255,.9) 78%,transparent)}
-.mockframe::after{content:'';position:absolute;left:20%;right:20%;top:-34px;height:66px;z-index:0;
-  pointer-events:none;filter:blur(20px);
-  background:radial-gradient(52% 62% at 50% 100%,rgba(199,187,255,.6),transparent 72%)}
+/* pas d'effet lumineux sur la bordure haute elle-même : la lumière vient
+   uniquement de la diffusion .proj au-dessus et de l'aura enveloppante */
 .mock{border-radius:24px;overflow:hidden}
 .mtop{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);
   background:rgba(255,255,255,.08)}
@@ -232,19 +328,30 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   transition:height 1.1s cubic-bezier(.16,1,.3,1)}
 .bars i.hi{background:linear-gradient(180deg,#C4B5FD,#6366F1);box-shadow:0 0 22px rgba(167,139,250,.75)}
 
-/* ---- logos ---- */
-.strip{padding:56px 26px 10px;text-align:center}
-.strip .t{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:26px}
-.logos{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;opacity:.62}
-.logos span{font-family:'Sora';font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:var(--mut)}
+/* ---- bande métiers ----
+   Une phrase, pas une grille : les métiers s'énumèrent au fil du texte,
+   détachés en clair sur une conjonction discrète. Aucun retour à la ligne
+   ne peut isoler le dernier. */
+.strip{padding:56px 26px 10px;text-align:center;position:relative;z-index:1}
+.strip .t{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:18px}
+.phrase{max-width:730px;margin:0 auto;font-size:1.05rem;font-weight:300;line-height:1.78;
+  color:rgba(255,255,255,.4);text-wrap:balance}
+.phrase b{font-weight:500;color:rgba(255,255,255,.62)}
 
 /* ---- section head ---- */
 .shead{text-align:center;max-width:720px;margin:0 auto 58px}
-.shead .lab{display:inline-block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+.lab{display:inline-block;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
   color:#fff;border:1px solid var(--edge);border-radius:100px;padding:5px 15px;margin-bottom:20px;
-  background:rgba(255,255,255,.14);box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
+  background:rgba(255,255,255,.14);box-shadow:0 1px 0 rgba(255,255,255,.4) inset;width:fit-content}
 .shead h2{font-size:clamp(1.65rem,3.3vw,2.45rem);margin-bottom:14px}
 .shead p{color:var(--mut);font-weight:300}
+/* variante éditoriale : titre à gauche, paragraphe calé en bas de la colonne
+   droite — casse le rituel « tout centré » qui uniformisait les sections */
+.shead.gauche{text-align:left;max-width:none;margin:0 0 64px;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:18px 64px;align-items:end}
+.shead.gauche .lab{grid-column:1/-1;margin-bottom:4px}
+.shead.gauche h2{margin-bottom:0}
+.shead.gauche p{max-width:430px;justify-self:end;padding-bottom:6px}
 
 /* ---- bento services ---- */
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
@@ -252,6 +359,13 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .bcard{grid-column:span 2;padding:30px 28px 32px;overflow:hidden;--mx:50%;--my:50%;
   transition:background .45s ease,border-color .45s ease,box-shadow .45s ease}
 .bcard.wide{grid-column:span 3}
+/* Grille volontairement asymétrique : la carte maîtresse (sites) domine en
+   largeur, les autres restent denses. Même verre neutre pour les cinq —
+   la hiérarchie passe par la taille, pas par la couleur. */
+.bcard:nth-child(1){grid-column:span 4;padding:38px 36px 40px}
+.bcard:nth-child(1) h3{font-size:1.5rem}
+.bcard:nth-child(1) p{font-size:.99rem;max-width:56ch}
+.bcard:nth-child(2){grid-column:span 2}
 /* filet lumineux sur l'arête, allumé sous le curseur */
 .bcard::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;
   opacity:0;transition:opacity .4s ease;padding:1px;
@@ -279,9 +393,22 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   background:radial-gradient(ellipse at center,rgba(167,139,250,.55),transparent 68%);filter:blur(20px)}
 .bcard:hover .spark{opacity:1}
 
+/* ---- méthode : intro sticky à gauche, frise à droite ---- */
+.msplit{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px 80px;align-items:start}
+.mintro{position:sticky;top:130px}
+.mintro h2{font-size:clamp(1.65rem,3.3vw,2.45rem);margin-bottom:16px}
+.mintro p{color:var(--mut);font-weight:300;max-width:400px}
+/* le délai est LA promesse de l'agence : il a droit à un vrai poids visuel */
+.mjours{display:flex;align-items:baseline;gap:16px;margin-top:36px;padding-top:28px;
+  border-top:1px solid var(--line)}
+.mjours b{font-family:'Sora';font-size:3.4rem;font-weight:600;letter-spacing:-.05em;line-height:1;
+  background:linear-gradient(100deg,#DCD5FF,#A78BFA 50%,#6EA8FE);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.mjours span{color:var(--mut);font-size:.92rem;font-weight:300;max-width:210px}
+
 /* ---- méthode : frise pilotée par le défilement ---- */
 /* --tlp (0 → 1) est écrit par le script au fil du scroll */
-.tl{max-width:840px;margin:0 auto;position:relative;--tlp:0}
+.tl{position:relative;--tlp:0}
 /* rail éteint */
 .tl::before{content:'';position:absolute;left:19px;top:12px;bottom:12px;width:1px;
   background:linear-gradient(180deg,transparent,var(--line2) 12%,var(--line2) 88%,transparent)}
@@ -298,7 +425,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   opacity:calc(var(--tlp) * 4);transition:opacity .3s ease}
 .tl.termine .tlfill::after{opacity:0}
 
-.tnode{display:grid;grid-template-columns:40px 1fr;gap:24px;padding-bottom:38px;
+.tnode{display:grid;grid-template-columns:40px 1fr;gap:24px;padding-bottom:46px;
   opacity:.34;transition:opacity .55s ease}
 .tnode:last-child{padding-bottom:0}
 .tnode.atteint{opacity:1}
@@ -309,7 +436,9 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .tnode.atteint .tdot{background:linear-gradient(140deg,#7C6BF5,#4F80F0);border-color:transparent;
   transform:scale(1.08);
   box-shadow:0 0 0 5px rgba(124,107,245,.16),0 10px 28px -8px rgba(124,107,245,.95)}
-.tbody{padding:20px 24px;border-radius:22px;
+/* les étapes sont des blocs ouverts, sans boîte : la frise respire là où le
+   reste de la page est en panneaux — c'est voulu, ne pas re-vitrer */
+.tbody{padding:5px 0 0;
   transform:translateX(-14px);transition:transform .6s cubic-bezier(.16,1,.3,1)}
 .tnode.atteint .tbody{transform:none}
 @media(prefers-reduced-motion:reduce){
@@ -318,9 +447,9 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   .tbody{transform:none}
 }
 .tbody .h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
-.tbody h3{font-size:1.06rem}
+.tbody h3{font-size:1.14rem}
 .tbody .t{font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:100px;padding:3px 11px}
-.tbody p{color:var(--mut);font-size:.94rem;font-weight:300}
+.tbody p{color:var(--mut);font-size:.94rem;font-weight:300;max-width:58ch}
 
 /* ---- travaux ---- */
 .works{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -340,33 +469,50 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .wkpi b{display:block;font-family:'Sora';font-size:1.32rem;font-weight:600;letter-spacing:-.03em}
 .wkpi span{font-size:10.5px;color:var(--faint)}
 
-/* ---- secteurs ---- */
-.secteurs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.secteur{padding:26px 24px 28px;transition:background .45s ease,border-color .45s ease}
-.secteur:hover{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
-  border-color:var(--edge2)}
-.secteur .ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;margin-bottom:17px;
-  background:linear-gradient(150deg,rgba(255,255,255,.4),rgba(255,255,255,.12));border:1px solid var(--edge2);
-  box-shadow:0 1px 0 rgba(255,255,255,.55) inset}
+/* ---- secteurs : tuiles horizontales, plates et denses ----
+   Volontairement à l'opposé des panneaux de verre : encre + filet, icône à
+   gauche, flèche en coin. Huit métiers d'égale importance = liste, pas vitrine. */
+.secteurs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;position:relative;z-index:1}
+/* dépoli réel (backdrop-filter) : c'est lui qui écrase les formes néon
+   placées derrière et donne l'épaisseur de verre aux tuiles */
+.secteur{display:flex;gap:20px;align-items:flex-start;padding:24px 54px 26px 24px;
+  position:relative;border-radius:18px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 1px 0 rgba(255,255,255,.26) inset;
+  transition:background .35s ease,border-color .35s ease}
+.secteur:hover{background:rgba(255,255,255,.1);border-color:var(--line2)}
+.secteur .ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(150deg,rgba(255,255,255,.3),rgba(255,255,255,.08));border:1px solid var(--edge);
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset}
 .secteur .ico svg{width:19px;height:19px;stroke:#DCD5FF;fill:none;stroke-width:1.7;
   stroke-linecap:round;stroke-linejoin:round}
-.secteur h3{font-size:1.06rem;margin-bottom:9px}
-.secteur p{color:var(--mut);font-size:.9rem;font-weight:300}
-.secteur .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:15px}
-.secteur .tags b{font-size:10px;font-weight:400;color:#fff;border:1px solid var(--edge);
-  background:rgba(255,255,255,.13);padding:4px 9px;border-radius:100px}
-.secteur .voir{display:block;margin-top:16px;font-size:12px;color:var(--glow);opacity:.75;transition:.3s}
+.secteur h3{font-size:1.02rem;margin-bottom:7px}
+.secteur p{color:var(--mut);font-size:.89rem;font-weight:300}
+.secteur .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
+.secteur .tags b{font-size:10px;font-weight:400;color:var(--mut);border:1px solid var(--line);
+  background:none;padding:3px 9px;border-radius:100px}
+.secteur .voir{position:absolute;top:22px;right:22px;font-size:16px;color:var(--glow);
+  opacity:.4;transition:opacity .3s ease,transform .3s ease}
 .secteur:hover .voir{opacity:1;transform:translateX(3px)}
-@media(max-width:1040px){.secteurs{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.secteurs{grid-template-columns:1fr}}
+@media(max-width:860px){.secteurs{grid-template-columns:1fr}}
 
 /* ---- offres ---- */
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
 .plan{padding:32px 28px 30px;display:flex;flex-direction:column}
-.plan.feat{background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.13));
-  border-color:var(--edge2);
-  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 -1px 0 rgba(255,255,255,.2) inset,
-    0 46px 96px -30px rgba(10,5,26,.95)}
+/* les formules d'appoint s'assourdissent pour laisser la vedette dominer */
+.plan:not(.feat){background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.035))}
+/* la formule vedette quitte le verre : panneau d'encre violette surélevé,
+   halo intérieur, seul vrai point chaud de la section */
+.plan.feat{background:linear-gradient(168deg,#2A1760 0%,#1B0F42 48%,#130A2E 100%);
+  border-color:rgba(167,139,250,.6);overflow:hidden;
+  margin-top:-20px;padding-top:38px;padding-bottom:36px;
+  box-shadow:0 0 0 1px rgba(196,181,253,.22),0 1px 0 rgba(255,255,255,.3) inset,
+    0 40px 90px -24px rgba(109,74,236,.6)}
+.plan.feat::before{content:'';position:absolute;left:50%;top:-34%;width:360px;height:300px;
+  transform:translateX(-50%);pointer-events:none;filter:blur(34px);
+  background:radial-gradient(circle,rgba(139,111,255,.5),transparent 66%)}
+.plan.feat .price{font-size:2.7rem}
 .plan .pn{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
 .plan .pn span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 .plan .pn em{font-style:normal;font-size:10.5px;background:linear-gradient(100deg,#7C6BF5,#4F80F0);
@@ -379,21 +525,25 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .plan li::before{content:'✓';color:#C4B5FD;font-size:12px;font-weight:700;margin-top:1px}
 .plan .btn{width:100%}
 
-/* ---- faq ---- */
-.faq{max-width:840px;margin:0 auto}
-details{margin-bottom:12px;border-radius:20px;overflow:hidden;
-  background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.06));
-  backdrop-filter:blur(12px) saturate(160%);
-  border:1px solid var(--edge);box-shadow:0 1px 0 rgba(255,255,255,.4) inset;transition:.3s}
-details[open]{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
-  border-color:var(--edge2)}
-summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;gap:16px;align-items:center;
-  font-family:'Sora';font-weight:500;font-size:1rem;letter-spacing:-.02em}
+/* ---- faq : intro sticky à gauche, questions en liste à filets à droite ----
+   Pas de boîtes ici : après les panneaux des offres, l'accordéon nu repose
+   l'œil et se lit comme un sommaire. */
+.fsplit{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px 80px;align-items:start}
+.fintro{position:sticky;top:130px}
+.fintro h2{font-size:clamp(1.65rem,3.3vw,2.45rem);margin-bottom:16px}
+.fintro p{color:var(--mut);font-weight:300;max-width:360px;margin-bottom:28px}
+details{border-bottom:1px solid rgba(255,255,255,.13);transition:border-color .3s ease}
+details:first-child{border-top:1px solid rgba(255,255,255,.13)}
+details[open]{border-bottom-color:rgba(167,139,250,.45)}
+summary{list-style:none;cursor:pointer;padding:22px 4px;display:flex;gap:16px;align-items:center;
+  font-family:'Sora';font-weight:500;font-size:1rem;letter-spacing:-.02em;
+  color:var(--mut);transition:color .25s ease}
+summary:hover,details[open] summary{color:#fff}
 summary::-webkit-details-marker{display:none}
 summary .pm{margin-left:auto;width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;
   border:1px solid var(--edge2);color:#fff;font-size:15px;font-weight:400;transition:.3s}
 details[open] summary .pm{transform:rotate(45deg);background:#fff;color:#3B1F7A;border-color:transparent}
-details p{padding:0 24px 22px 24px;color:var(--mut);font-weight:300;font-size:.95rem}
+details p{padding:0 44px 24px 4px;color:var(--mut);font-weight:300;font-size:.95rem;max-width:64ch}
 
 /* ---- contact ---- */
 .cgrid{display:grid;grid-template-columns:.9fr 1.1fr;gap:26px;align-items:start}
@@ -502,8 +652,7 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
    panneaux de verre l'éclaircissent, ce qui le détache du reste de la page */
 footer{position:relative;z-index:1;padding:66px 0 30px;
   border-top:1px solid rgba(167,139,250,.22);
-  background:linear-gradient(180deg,rgba(26,13,62,.62) 0%,rgba(10,5,26,.88) 55%,rgba(6,3,17,.94) 100%);
-  backdrop-filter:blur(12px) saturate(150%);
+  background:#000;
   box-shadow:0 1px 0 rgba(196,181,253,.14) inset}
 .fg{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:40px;margin-bottom:26px}
 .fg h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:16px;font-weight:500}
@@ -541,11 +690,18 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 
   /* grilles */
   .bento{grid-template-columns:repeat(2,1fr)}
-  .bcard,.bcard.wide{grid-column:span 1}
+  .bcard,.bcard.wide,.bcard:nth-child(1),.bcard:nth-child(2){grid-column:span 1}
+  .bcard:nth-child(1){padding:30px 28px 32px}
+  .bcard:nth-child(1) h3{font-size:1.3rem}
   .works{grid-template-columns:repeat(2,1fr)}
   .plans{grid-template-columns:1fr}
+  .plan.feat{margin-top:0}
   .cgrid{grid-template-columns:1fr}
   .fg{grid-template-columns:1fr 1fr}
+
+  /* les splits sticky passent en une colonne */
+  .msplit,.fsplit{grid-template-columns:1fr;gap:44px}
+  .mintro,.fintro{position:static}
 
   /* la maquette perd sa colonne latérale, illisible à cette largeur */
   .mbody{grid-template-columns:1fr}
@@ -553,6 +709,8 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 }
 
 @media(max-width:860px){
+  .shead.gauche{grid-template-columns:1fr;align-items:start;gap:14px}
+  .shead.gauche p{justify-self:start;padding-bottom:0}
   .links{display:none}
   .burger{display:flex}
   /* sans ses liens, la pilule se réduirait à la largeur de son contenu :
@@ -586,8 +744,9 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .bars{height:88px}
 
   /* frise : la colonne de pastilles se resserre */
-  .tnode{gap:16px;padding-bottom:30px}
-  .tbody{padding:17px 19px}
+  .tnode{gap:16px;padding-bottom:34px}
+  .tbody{padding:4px 0 0}
+  .mjours b{font-size:2.7rem}
 
   /* densité des blocs */
   .bcard{padding:26px 22px 28px}
@@ -595,8 +754,8 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .plan{padding:28px 23px 26px}
   .cinfo{padding:28px 24px}
   form{padding:24px 21px}
-  summary{padding:18px 20px;font-size:.98rem}
-  details p{padding:0 20px 20px}
+  summary{padding:18px 2px;font-size:.98rem}
+  details p{padding:0 34px 20px 2px}
   .bigcta{padding:52px 22px}
 
   /* wordmark du footer : plus haut pour rester lisible une fois étroit */
@@ -611,7 +770,18 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @media(max-width:760px){
   .grain{display:none}
   .beam{display:none}
+  /* les lumières de section aussi : grandes surfaces floutées, trop chères
+     pour un GPU de téléphone */
+  #services::before,#methode::before,#secteurs .neons,#offres::before,
+  #faq::before,#contact::before{display:none}
+  /* plus rien à flouter derrière les tuiles : dépoli coupé, pur gain GPU */
+  .secteur{backdrop-filter:none}
   .heroglow{filter:blur(44px)}
+  .proj{top:-120px;height:140px}
+  /* pas d'animation sur téléphone : la lueur chevauche le cadre en
+     backdrop-filter, qui devrait re-filtrer à chaque frame */
+  .proj i{filter:blur(18px);animation:none}
+  .mockwrap::before{inset:-60px -40px -50px;filter:blur(34px)}
   .glass{backdrop-filter:blur(10px) saturate(150%);}
   .nav{backdrop-filter:blur(10px) saturate(150%);}
   .mockframe{backdrop-filter:blur(8px) saturate(150%);}
@@ -643,7 +813,6 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .mock{border-radius:16px}
   .kpi{padding:12px 13px}
   .tnode{gap:13px}
-  .tbody{padding:15px 16px}
   .bcard{padding:22px 19px 24px}
   .plan{padding:24px 20px 22px}
   .cinfo,form{padding:22px 18px}
@@ -664,14 +833,13 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @supports (-webkit-backdrop-filter: blur(1px)) {
   .nav{-webkit-backdrop-filter:blur(16px) saturate(112%)}
   .glass{-webkit-backdrop-filter:blur(14px) saturate(160%)}
+  .secteur{-webkit-backdrop-filter:blur(22px) saturate(150%)}
   .mockframe{-webkit-backdrop-filter:blur(12px) saturate(160%)}
-  details{-webkit-backdrop-filter:blur(12px) saturate(160%)}
-  footer{-webkit-backdrop-filter:blur(12px) saturate(150%)}
 
   @media(max-width:760px){
     .glass{-webkit-backdrop-filter:blur(10px) saturate(150%)}
     .nav{-webkit-backdrop-filter:blur(10px) saturate(150%)}
     .mockframe{-webkit-backdrop-filter:blur(8px) saturate(150%)}
-    details{-webkit-backdrop-filter:blur(10px)}
+    .secteur{-webkit-backdrop-filter:none}
   }
 }

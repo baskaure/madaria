@@ -14,14 +14,22 @@ import { secteurs } from '../data/secteurs';
       concrets de ces métiers et construisons ce qui fait vraiment gagner des clients.
     </SectionHead>
 
+    <!-- Formes néon derrière les tuiles de verre : bâton incliné, anneau,
+         cône — le dépoli des tuiles les floute, les interstices les révèlent -->
+    <div class="neons" aria-hidden="true">
+      <i class="n1"></i><i class="n2"></i><i class="n3"></i>
+    </div>
+
     <div class="secteurs">
       {secteurs.map((s) => (
-        <a class="glass secteur rv" href={`/site-internet/${s.slug}/`}>
+        <a class="secteur rv" href={`/site-internet/${s.slug}/`}>
           <div class="ico"><Icon name={s.icon} /></div>
-          <h3>{s.nom}</h3>
-          <p>{s.text}</p>
-          <div class="tags">{s.besoins.map((b) => <b>{b}</b>)}</div>
-          <span class="voir">Voir la page métier →</span>
+          <div class="sbody">
+            <h3>{s.nom}</h3>
+            <p>{s.text}</p>
+            <div class="tags">{s.besoins.map((b) => <b>{b}</b>)}</div>
+          </div>
+          <span class="voir" aria-hidden="true">→</span>
         </a>
       ))}
     </div>

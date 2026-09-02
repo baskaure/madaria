@@ -1,24 +1,30 @@
 ---
-import SectionHead from './SectionHead.astro';
 import { etapes } from '../data/methode';
 ---
 
 <section id="methode">
-  <div class="wrap">
-    <SectionHead label="Méthode">
-      <Fragment slot="titre">
+  <div class="wrap msplit">
+    <div class="mintro rv">
+      <div class="lab">Méthode</div>
+      <h2>
         Votre site internet en quatre étapes.<br /><span class="grad">Sept jours.</span>
-      </Fragment>
-      Un cadre clair, un point chaque jour, un accès permanent à l'avancement. Vous savez toujours
-      où en est votre projet.
-    </SectionHead>
+      </h2>
+      <p>
+        Un cadre clair, un point chaque jour, un accès permanent à l'avancement. Vous savez
+        toujours où en est votre projet.
+      </p>
+      <div class="mjours">
+        <b>J+7</b>
+        <span>votre site est en ligne, formation comprise</span>
+      </div>
+    </div>
 
     <div class="tl">
       <div class="tlfill"></div>
       {etapes.map((e) => (
         <div class="tnode">
           <div class="tdot">{e.num}</div>
-          <div class="glass tbody">
+          <div class="tbody">
             <div class="h">
               <h3>{e.titre}</h3>
               <span class="t">{e.delai}</span>
