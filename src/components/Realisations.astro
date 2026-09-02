@@ -1,0 +1,193 @@
+---
+import SectionHead from './SectionHead.astro';
+import { realisations } from '../data/realisations';
+
+/** MP4 et WebM passent par <video>, tout le reste (GIF, WebP animé) par <img>. */
+const estVideo = (fichier?: string) => !!fichier && /\.(mp4|webm)$/i.test(fichier);
+
+/**
+ * Cartes visibles d'emblée : la mise en avant, puis deux rangées pleines.
+ * Onze captures d'affilée transformaient la section en catalogue — on montre
+ * de quoi juger, le reste attend un clic. Même repli que les métiers.
+ */
+const VISIBLES = 5;
+const caches = realisations.length - VISIBLES;
+const libelleOuvrir = `Voir les ${caches} autres réalisations`;
+---
+
+<section id="realisations">
+  <div class="wrap">
+    <SectionHead label="Réalisations" align="gauche">
+      <Fragment slot="titre">
+        Des sites déjà en ligne,<br />
+        <span class="grad">et ce qu'ils ont changé</span>.
+      </Fragment>
+      Passez la souris sur une carte pour voir le site en mouvement — sur mobile,
+      l'aperçu se lance tout seul.
+    </SectionHead>
+
+    <div class="reals" id="grille-reals">
+      {realisations.map((r, i) => {
+        const Balise = r.url ? 'a' : 'article';
+        return (
+          <Balise
+            class:list={['real', 'rv', { extra: i >= VISIBLES }]}
+            href={r.url}
+            target={r.url ? '_blank' : undefined}
+            rel={r.url ? 'noopener' : undefined}
+          >
+            <div class={`vue t-${r.teinte}`}>
+              {/* Barre de navigateur : signale qu'on regarde un site, pas une photo.
+                  Elle est au-dessus de l'écran dans le flux, pas par-dessus :
+                  posée en absolu elle rognait le bas de la capture. */}
+              <span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>
+
+              {/* L'écran porte le ratio exact des médias (1024 × 500), pour qu'ils
+                  s'affichent entiers, sans rognage ni déformation. */}
+              <div class="ecran">
+                {r.poster && (
+                  <img class="fixe" src={r.poster} alt={`Le site de ${r.nom}`} loading="lazy" decoding="async" />
+                )}
+
+                {/* L'aperçu n'est téléchargé qu'à la première activation (data-src) */}
+                {r.apercu && (estVideo(r.apercu)
+                  ? <video class="anim" data-src={r.apercu} muted loop playsinline preload="none" aria-hidden="true"></video>
+                  : <img class="anim" data-src={r.apercu} alt="" aria-hidden="true" loading="lazy" />)}
+
+                {r.apercu && (
+                  <span class="apercu" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
+                    Aperçu
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div class="rmeta">
+              <div class="rtete">
+                <h3>{r.nom}</h3>
+                {r.url && <span class="rlien" aria-hidden="true">↗</span>}
+              </div>
+              <span class="rsect">{r.secteur}</span>
+              <ul>{r.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </Balise>
+        );
+      })}
+    </div>
+
+    {caches > 0 && (
+      <button
+        type="button"
+        class="btn btn-g deplier"
+        id="voir-reals"
+        aria-expanded="false"
+        aria-controls="grille-reals"
+        data-ouvrir={libelleOuvrir}
+        data-fermer="Réduire la liste"
+      >
+        {libelleOuvrir}
+      </button>
+    )}
+  </div>
+</section>
+
+<script>
+  /* Repli des réalisations au-delà des cinq premières. Calqué sur les métiers,
+     à une différence près : ici chaque carte dépliée porte une vidéo, et le
+     script d'aperçu ci-dessous observe déjà toutes les cartes, masquées
+     comprises — une carte repliée mesure zéro, elle ne déclenche donc aucun
+     téléchargement tant qu'elle n'est pas dépliée. */
+  const deplier = document.getElementById('voir-reals');
+  const grilleReals = document.getElementById('grille-reals');
+
+  deplier?.addEventListener('click', () => {
+    const ouvert = grilleReals?.classList.toggle('ouvert') ?? false;
+    deplier.setAttribute('aria-expanded', String(ouvert));
+    deplier.textContent = ouvert
+      ? (deplier.dataset.fermer ?? 'Réduire la liste')
+      : (deplier.dataset.ouvrir ?? 'Voir plus');
+
+    // En repliant, la page se raccourcit sous le curseur : on remonte au
+    // bouton pour ne pas être projeté au milieu de la section suivante.
+    if (!ouvert) deplier.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+
+  /**
+   * Lecture de l'aperçu animé.
+   * Au pointeur fin (souris), c'est le survol qui déclenche. Au doigt, il n'y a
+   * pas de survol : la carte s'anime quand elle occupe le centre de l'écran.
+   * Dans les deux cas le média n'est chargé qu'au moment où on en a besoin.
+   */
+  const cartes = Array.from(document.querySelectorAll<HTMLElement>('.real'));
+  if (cartes.length) {
+    const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const souris = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    const media = (carte: HTMLElement) =>
+      carte.querySelector<HTMLVideoElement | HTMLImageElement>('.anim');
+
+    const jouer = (carte: HTMLElement) => {
+      const m = media(carte);
+      if (!m || calme) return;
+      // premier passage : on branche la source, d'où le téléchargement différé
+      if (!m.getAttribute('src') && m.dataset.src) m.setAttribute('src', m.dataset.src);
+      carte.classList.add('joue');
+      if (m instanceof HTMLVideoElement) m.play().catch(() => {});
+    };
+
+    const arreter = (carte: HTMLElement) => {
+      const m = media(carte);
+      if (!m) return;
+      carte.classList.remove('joue');
+      if (m instanceof HTMLVideoElement) {
+        m.pause();
+        m.currentTime = 0;
+      }
+    };
+
+    if (souris) {
+      cartes.forEach((c) => {
+        c.addEventListener('mouseenter', () => jouer(c));
+        c.addEventListener('mouseleave', () => arreter(c));
+        c.addEventListener('focusin', () => jouer(c));
+        c.addEventListener('focusout', () => arreter(c));
+      });
+    } else if (!calme) {
+      /**
+       * Au doigt, il n'y a pas de survol : c'est la carte la plus visible qui
+       * joue, et elle seule. Une seule vidéo à la fois signifie un seul
+       * téléchargement à la fois — sur données mobiles, ça compte.
+       */
+      const visibilite = new Map<HTMLElement, number>();
+      let active: HTMLElement | null = null;
+
+      const arbitrer = () => {
+        let gagnante: HTMLElement | null = null;
+        // il faut être franchement à l'écran pour déclencher
+        let meilleure = 0.4;
+        visibilite.forEach((ratio, carte) => {
+          if (ratio > meilleure) {
+            meilleure = ratio;
+            gagnante = carte;
+          }
+        });
+        if (gagnante === active) return;
+        if (active) arreter(active);
+        active = gagnante;
+        if (active) jouer(active);
+      };
+
+      const observateur = new IntersectionObserver(
+        (entrees) => {
+          entrees.forEach((e) => visibilite.set(e.target as HTMLElement, e.intersectionRatio));
+          arbitrer();
+        },
+        // Plusieurs seuils plutôt qu'un seul : une carte plus haute que l'écran
+        // n'atteindrait jamais un seuil unique élevé, et ne démarrerait jamais.
+        { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1] },
+      );
+      cartes.forEach((c) => observateur.observe(c));
+    }
+  }
+</script>

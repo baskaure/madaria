@@ -4,3 +4,9 @@ dist/
 .env
 .env.production
 .DS_Store
+
+# Captures sources (des centaines de Mo de GIF) : seuls les MP4 et WebP générés
+# dans public/realisations/ sont versionnés. Les deux orthographes coexistent
+# sur le disque, on ignore les deux.
+medias-source/
+medias-sources/

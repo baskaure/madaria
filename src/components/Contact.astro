@@ -2,9 +2,10 @@
 import { contact, budgets } from '../data/site';
 
 const champs = [
-  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Jean Dupont', required: true },
-  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'jean@entreprise.fr', required: true },
-  { id: 'n-soc', name: 'societe', label: 'Société', type: 'text', placeholder: 'Entreprise SARL', required: false },
+  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Jean Dupont', required: true, auto: 'name' },
+  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'jean@entreprise.fr', required: true, auto: 'email' },
+  { id: 'n-tel', name: 'telephone', label: 'Téléphone', type: 'tel', placeholder: '06 12 34 56 78', required: false, auto: 'tel' },
+  { id: 'n-soc', name: 'societe', label: 'Société', type: 'text', placeholder: 'Entreprise SARL', required: false, auto: 'organization' },
 ];
 
 const coordonnees = [
@@ -50,11 +51,20 @@ const coordonnees = [
       {champs.map((c) => (
         <div class="f">
           <label for={c.id}>{c.label}</label>
-          <input id={c.id} name={c.name} type={c.type} placeholder={c.placeholder} required={c.required} />
+          <input
+            id={c.id}
+            name={c.name}
+            type={c.type}
+            placeholder={c.placeholder}
+            required={c.required}
+            autocomplete={c.auto}
+          />
         </div>
       ))}
 
-      <div class="f">
+      {/* pleine largeur : avec quatre champs à mi-largeur au-dessus, le budget
+          resterait seul sur sa ligne */}
+      <div class="f full">
         <label for="n-bud">Budget</label>
         <select id="n-bud" name="budget">
           {budgets.map((b) => <option>{b}</option>)}
@@ -101,6 +111,13 @@ const coordonnees = [
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
       dire('Adresse email invalide.', false);
+      return;
+    }
+    // Le téléphone reste facultatif : on ne le vérifie que s'il est renseigné,
+    // et assez largement pour accepter les formats français et internationaux.
+    const tel = String(data.get('telephone') ?? '').trim();
+    if (tel && !/^\+?[\d\s().-]{9,20}$/.test(tel)) {
+      dire('Numéro de téléphone invalide.', false);
       return;
     }
 

@@ -9,6 +9,7 @@ export const site = {
 export const nav = [
   { href: '#services', label: 'Services' },
   { href: '#methode', label: 'Méthode' },
+  { href: '#realisations', label: 'Réalisations' },
   { href: '#secteurs', label: 'Secteurs' },
   { href: '#offres', label: 'Offres' },
   { href: '#faq', label: 'FAQ' },
@@ -56,6 +57,7 @@ export const footerColumns = [
     title: 'Agence',
     links: [
       { href: '#methode', label: 'Méthode' },
+      { href: '#realisations', label: 'Réalisations' },
       { href: '#secteurs', label: 'Secteurs' },
       { href: '#offres', label: 'Offres' },
       { href: '#faq', label: 'FAQ' },
