@@ -9,10 +9,10 @@ interface Props {
 
 const {
   // Title pensé pour la requête « création de site internet » : mot-clé en tête,
-  // différenciateur (7 jours), marque en fin. 56 caractères.
-  // Marque volontairement absente : Google la place lui-même en tête du
-  // résultat. Le suffixe « | Madaria » ne faisait que consommer des caractères.
-  title = 'Création de site internet en 7 jours — Lyon & France',
+  // différenciateur (7 jours), marque en fin. 53 caractères.
+  // La marque est OBLIGATOIRE dans le title : sans elle le site a décroché
+  // sur la requête « madaria » (sept. 2026). Ne plus la retirer.
+  title = 'Création de site internet à Lyon en 7 jours | Madaria',
   description = "Agence de création de site internet à Lyon : site sur-mesure livré en 7 jours, dès 690 € HT, partout en France. Maquette offerte, devis gratuit sous 24 h.",
 } = Astro.props;
 
