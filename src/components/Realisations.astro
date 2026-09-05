@@ -1,79 +1,136 @@
 ---
+/**
+ * Réalisations — calquées sur le portfolio Kingdom Ads : chaque carte est un
+ * cadre de navigateur dont la page entière défile au survol, le téléphone
+ * surgit dans le coin, et un clic ouvre la fiche (captures bureau + mobile,
+ * palette, lien). Filtres par secteur, vue grille ou liste, lien profond
+ * `#projet-<id>`.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
 import SectionHead from './SectionHead.astro';
-import { realisations } from '../data/realisations';
+import { realisations, secteurs } from '../data/realisations';
 
-/** MP4 et WebM passent par <video>, tout le reste (GIF, WebP animé) par <img>. */
-const estVideo = (fichier?: string) => !!fichier && /\.(mp4|webm)$/i.test(fichier);
+const DOSSIER = path.resolve('public/realisations/shots');
+const existe = (id: string, vue: string) => fs.existsSync(path.join(DOSSIER, `${id}-${vue}.webp`));
+const shot = (id: string, vue: string) => `/realisations/shots/${id}-${vue}.webp`;
+const hote = (url?: string) => {
+  try {
+    return url ? new URL(url).host.replace(/^www\./, '') : '';
+  } catch {
+    return '';
+  }
+};
+
+/** Données enrichies, partagées entre le rendu et le script de la fiche. */
+const projets = realisations.map((r, i) => ({
+  ...r,
+  n: String(i + 1).padStart(2, '0'),
+  hote: hote(r.url),
+  // captures présentes sur le disque au moment du build
+  complet: existe(r.id, 'full'),
+  mobile: existe(r.id, 'mobile'),
+}));
+
+const filtres = secteurs
+  .map((s) => ({ s, n: projets.filter((p) => p.secteur === s).length }))
+  .filter((f) => f.n > 0);
 
 /**
- * Cartes visibles d'emblée : la mise en avant, puis deux rangées pleines.
- * Onze captures d'affilée transformaient la section en catalogue — on montre
- * de quoi juger, le reste attend un clic. Même repli que les métiers.
+ * Repli : les cartes à partir de Kami (deux rangées pleines avant) attendent
+ * un clic sur « voir plus ». Un filtre actif déplie tout, sinon il cacherait
+ * des résultats.
  */
-const VISIBLES = 5;
-const caches = realisations.length - VISIBLES;
+const REPLI_A_PARTIR_DE = 'kami';
+const debutRepli = projets.findIndex((p) => p.id === REPLI_A_PARTIR_DE);
+const caches = debutRepli > -1 ? projets.length - debutRepli : 0;
 const libelleOuvrir = `Voir les ${caches} autres réalisations`;
+
+// `</` fermerait le <script> JSON : on l'échappe
+const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
 ---
 
 <section id="realisations">
   <div class="wrap">
     <SectionHead label="Réalisations" align="gauche">
       <Fragment slot="titre">
-        Des sites déjà en ligne,<br />
-        <span class="grad">et ce qu'ils ont changé</span>.
+        Des sites déjà livrés,<br />
+        <span class="grad">chacun avec sa propre voix</span>.
       </Fragment>
-      Passez la souris sur une carte pour voir le site en mouvement — sur mobile,
-      l'aperçu se lance tout seul.
+      Passez la souris sur une carte pour faire défiler le site, cliquez pour
+      ouvrir la fiche : captures bureau et mobile, palette, lien vers le site.
     </SectionHead>
 
+    <div class="rbar rv">
+      <div class="filtres" id="filtres-reals" role="group" aria-label="Filtrer par secteur">
+        <button type="button" class="chip on" data-filtre="tous" aria-pressed="true">
+          Tous <span class="nb">{projets.length}</span>
+        </button>
+        {filtres.map((f) => (
+          <button type="button" class="chip" data-filtre={f.s} aria-pressed="false">
+            {f.s} <span class="nb">{f.n}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="vues" role="group" aria-label="Affichage">
+        <button type="button" class="on" data-vue="grille" aria-pressed="true">
+          <svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect width="6" height="6" rx="1"/><rect x="8" width="6" height="6" rx="1"/><rect y="8" width="6" height="6" rx="1"/><rect x="8" y="8" width="6" height="6" rx="1"/></svg>
+          Grille
+        </button>
+        <button type="button" data-vue="liste" aria-pressed="false">
+          <svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect y="1" width="14" height="2" rx="1"/><rect y="6" width="14" height="2" rx="1"/><rect y="11" width="14" height="2" rx="1"/></svg>
+          Liste
+        </button>
+      </div>
+    </div>
+
     <div class="reals" id="grille-reals">
-      {realisations.map((r, i) => {
-        const Balise = r.url ? 'a' : 'article';
-        return (
-          <Balise
-            class:list={['real', 'rv', { extra: i >= VISIBLES }]}
-            href={r.url}
-            target={r.url ? '_blank' : undefined}
-            rel={r.url ? 'noopener' : undefined}
-          >
-            <div class={`vue t-${r.teinte}`}>
-              {/* Barre de navigateur : signale qu'on regarde un site, pas une photo.
-                  Elle est au-dessus de l'écran dans le flux, pas par-dessus :
-                  posée en absolu elle rognait le bas de la capture. */}
-              <span class="chrome" aria-hidden="true"><i></i><i></i><i></i></span>
-
-              {/* L'écran porte le ratio exact des médias (1024 × 500), pour qu'ils
-                  s'affichent entiers, sans rognage ni déformation. */}
-              <div class="ecran">
-                {r.poster && (
-                  <img class="fixe" src={r.poster} alt={`Le site de ${r.nom}`} loading="lazy" decoding="async" />
-                )}
-
-                {/* L'aperçu n'est téléchargé qu'à la première activation (data-src) */}
-                {r.apercu && (estVideo(r.apercu)
-                  ? <video class="anim" data-src={r.apercu} muted loop playsinline preload="none" aria-hidden="true"></video>
-                  : <img class="anim" data-src={r.apercu} alt="" aria-hidden="true" loading="lazy" />)}
-
-                {r.apercu && (
-                  <span class="apercu" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg>
-                    Aperçu
-                  </span>
-                )}
+      {projets.map((p, i) => (
+        <article
+          class:list={['real', { vedette: p.vedette, extra: debutRepli > -1 && i >= debutRepli }]}
+          data-secteur={p.secteur}
+          data-id={p.id}
+          data-i={i}
+          style={`--accent:${p.accent}`}
+        >
+          <button type="button" class="rmedia" aria-label={`Ouvrir la fiche du projet ${p.nom}`}>
+            <div class="cadre">
+              <div class="barre" aria-hidden="true"><i></i><i></i><i></i><span>{p.hote || p.activite}</span></div>
+              <div class:list={['ecran', { fixe: !p.complet }]}>
+                {/* Page entière : elle défile au survol. Sans capture entière,
+                    la vue bureau reste fixe. */}
+                <img
+                  class="pleine"
+                  src={shot(p.id, p.complet ? 'full' : 'desktop')}
+                  alt={`Capture du site ${p.nom}`}
+                  loading="lazy"
+                  decoding="async"
+                  width={p.complet ? 900 : 1200}
+                  height={p.complet ? 2625 : 750}
+                />
               </div>
             </div>
+            {p.mobile && (
+              <img class="tel" src={shot(p.id, 'mobile')} alt="" loading="lazy" decoding="async" width="390" height="844" />
+            )}
+            <span class="rhint" aria-hidden="true">Ouvrir la fiche ↗</span>
+          </button>
 
-            <div class="rmeta">
-              <div class="rtete">
-                <h3>{r.nom}</h3>
-                {r.url && <span class="rlien" aria-hidden="true">↗</span>}
-              </div>
-              <span class="rsect">{r.secteur}</span>
-              <ul>{r.points.map((p) => <li>{p}</li>)}</ul>
+          <div class="rmeta">
+            <div class="rtop">
+              <span class="mono num">{p.n}</span>
+              <span class="mono">{p.secteur} · {p.ville}</span>
             </div>
-          </Balise>
-        );
-      })}
+            <h3>
+              {p.nom}
+              {p.url && <span class="live" title="En ligne"></span>}
+            </h3>
+            <p>{p.accroche}</p>
+            <ul class="tags">{p.tags.slice(0, 3).map((t) => <li>{t}</li>)}</ul>
+          </div>
+        </article>
+      ))}
     </div>
 
     {caches > 0 && (
@@ -89,105 +146,321 @@ const libelleOuvrir = `Voir les ${caches} autres réalisations`;
         {libelleOuvrir}
       </button>
     )}
+
+    <div class="rliste" id="liste-reals" hidden>
+      {projets.map((p, i) => (
+        <button type="button" class="rrow" data-secteur={p.secteur} data-id={p.id} data-i={i} style={`--accent:${p.accent}`}>
+          <span class="mono num">{p.n}</span>
+          <span class="rnom">{p.nom}</span>
+          <span class="ract">{p.activite}</span>
+          <span class="rville">{p.secteur} · {p.ville}</span>
+          <span class="mono rannee">{p.annee}</span>
+          <span class="rfleche" aria-hidden="true">→</span>
+        </button>
+      ))}
+    </div>
+
+    <p class="rvide" id="vide-reals" hidden>Aucun projet dans ce secteur pour l'instant.</p>
   </div>
+
+  {/* aperçu flottant qui suit le curseur en vue liste */}
+  <div class="rpeek" id="peek-reals" aria-hidden="true"><img alt="" width="640" height="400" /></div>
 </section>
 
+<dialog class="rmodal" id="modal-reals" aria-labelledby="rm-titre">
+  <div class="rm-inner">
+    <div class="rm-bar">
+      <span class="mono" id="rm-index"></span>
+      <div class="rm-nav">
+        <button type="button" class="rm-btn" id="rm-prec" aria-label="Projet précédent">←</button>
+        <button type="button" class="rm-btn" id="rm-suiv" aria-label="Projet suivant">→</button>
+        <button type="button" class="rm-btn" id="rm-fermer" aria-label="Fermer la fiche">✕</button>
+      </div>
+    </div>
+    <div class="rm-grid">
+      <aside class="rm-aside">
+        <span class="lab" id="rm-secteur"></span>
+        <h2 id="rm-titre"></h2>
+        <p class="rm-accroche" id="rm-accroche"></p>
+        <p class="rm-desc" id="rm-desc"></p>
+        <dl class="rm-meta" id="rm-meta"></dl>
+        <ul class="tags" id="rm-tags"></ul>
+        <div class="rm-palette" id="rm-palette"></div>
+        <div class="rm-actions" id="rm-actions"></div>
+      </aside>
+      <div class="rm-shots">
+        <div class="cadre rm-big">
+          <div class="barre" aria-hidden="true"><i></i><i></i><i></i><span id="rm-url"></span></div>
+          <div class="ecran rm-scroll"><img id="rm-full" alt="" decoding="async" /></div>
+        </div>
+        <div class="tel-cadre" id="rm-tel">
+          <div class="encoche"></div>
+          <img id="rm-mobile" alt="" decoding="async" width="390" height="844" />
+        </div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script type="application/json" id="reals-data" set:html={donnees} />
+
 <script>
-  /* Repli des réalisations au-delà des cinq premières. Calqué sur les métiers,
-     à une différence près : ici chaque carte dépliée porte une vidéo, et le
-     script d'aperçu ci-dessous observe déjà toutes les cartes, masquées
-     comprises — une carte repliée mesure zéro, elle ne déclenche donc aucun
-     téléchargement tant qu'elle n'est pas dépliée. */
-  const deplier = document.getElementById('voir-reals');
-  const grilleReals = document.getElementById('grille-reals');
+  interface Projet {
+    id: string;
+    nom: string;
+    client: string;
+    activite: string;
+    secteur: string;
+    ville: string;
+    annee: string;
+    url?: string;
+    type: string;
+    tags: string[];
+    accent: string;
+    palette: [string, string, string];
+    accroche: string;
+    description: string;
+    n: string;
+    hote: string;
+    complet: boolean;
+    mobile: boolean;
+  }
 
-  deplier?.addEventListener('click', () => {
-    const ouvert = grilleReals?.classList.toggle('ouvert') ?? false;
-    deplier.setAttribute('aria-expanded', String(ouvert));
-    deplier.textContent = ouvert
-      ? (deplier.dataset.fermer ?? 'Réduire la liste')
-      : (deplier.dataset.ouvrir ?? 'Voir plus');
+  const P: Projet[] = JSON.parse(document.getElementById('reals-data')?.textContent ?? '[]');
+  const shot = (id: string, vue: string) => `/realisations/shots/${id}-${vue}.webp`;
+  const $ = <T extends Element = HTMLElement>(sel: string, racine: ParentNode = document) =>
+    racine.querySelector<T>(sel);
+  const esc = (s: string) =>
+    s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c);
 
-    // En repliant, la page se raccourcit sous le curseur : on remonte au
-    // bouton pour ne pas être projeté au milieu de la section suivante.
-    if (!ouvert) deplier.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  });
+  const grille = $('#grille-reals');
+  const liste = $('#liste-reals');
+  const vide = $('#vide-reals');
+  const filtres = $('#filtres-reals');
+  const modal = $<HTMLDialogElement>('#modal-reals');
+  const peek = $('#peek-reals');
+  const peekImg = peek ? $<HTMLImageElement>('img', peek) : null;
 
-  /**
-   * Lecture de l'aperçu animé.
-   * Au pointeur fin (souris), c'est le survol qui déclenche. Au doigt, il n'y a
-   * pas de survol : la carte s'anime quand elle occupe le centre de l'écran.
-   * Dans les deux cas le média n'est chargé qu'au moment où on en a besoin.
-   */
-  const cartes = Array.from(document.querySelectorAll<HTMLElement>('.real'));
-  if (cartes.length) {
+  if (P.length && grille && liste && vide && filtres && modal) {
+    const cartes = Array.from(grille.querySelectorAll<HTMLElement>('.real'));
+    const lignes = Array.from(liste.querySelectorAll<HTMLElement>('.rrow'));
     const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const souris = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-    const media = (carte: HTMLElement) =>
-      carte.querySelector<HTMLVideoElement | HTMLImageElement>('.anim');
+    /* ---------- apparition des cartes ---------- */
+    if (!calme) {
+      const io = new IntersectionObserver(
+        (entrees) => {
+          entrees.forEach((e) => {
+            if (!e.isIntersecting) return;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px' },
+      );
+      cartes.forEach((c, i) => {
+        c.style.animationDelay = `${(i % 3) * 80}ms`;
+        io.observe(c);
+      });
+    } else {
+      cartes.forEach((c) => c.classList.add('in'));
+    }
 
-    const jouer = (carte: HTMLElement) => {
-      const m = media(carte);
-      if (!m || calme) return;
-      // premier passage : on branche la source, d'où le téléchargement différé
-      if (!m.getAttribute('src') && m.dataset.src) m.setAttribute('src', m.dataset.src);
-      carte.classList.add('joue');
-      if (m instanceof HTMLVideoElement) m.play().catch(() => {});
-    };
-
-    const arreter = (carte: HTMLElement) => {
-      const m = media(carte);
-      if (!m) return;
-      carte.classList.remove('joue');
-      if (m instanceof HTMLVideoElement) {
-        m.pause();
-        m.currentTime = 0;
+    /* ---------- repli « voir plus » ---------- */
+    const deplier = $<HTMLButtonElement>('#voir-reals');
+    let deplie = false;
+    const majRepli = () => {
+      // un filtre actif déplie tout : le repli ne doit jamais cacher un résultat
+      grille.classList.toggle('ouvert', deplie || filtre !== 'tous');
+      if (deplier) {
+        deplier.hidden = filtre !== 'tous' || !liste.hidden;
+        deplier.setAttribute('aria-expanded', String(deplie));
+        deplier.textContent = deplie
+          ? (deplier.dataset.fermer ?? 'Réduire la liste')
+          : (deplier.dataset.ouvrir ?? 'Voir plus');
       }
     };
+    deplier?.addEventListener('click', () => {
+      deplie = !deplie;
+      majRepli();
+      // en repliant, la page se raccourcit sous le curseur : on revient au bouton
+      if (!deplie) deplier.scrollIntoView({ block: 'center', behavior: calme ? 'auto' : 'smooth' });
+    });
 
-    if (souris) {
-      cartes.forEach((c) => {
-        c.addEventListener('mouseenter', () => jouer(c));
-        c.addEventListener('mouseleave', () => arreter(c));
-        c.addEventListener('focusin', () => jouer(c));
-        c.addEventListener('focusout', () => arreter(c));
+    /* ---------- filtres ---------- */
+    let filtre = 'tous';
+    const appliquer = (f: string) => {
+      filtre = f;
+      majRepli();
+      filtres.querySelectorAll<HTMLElement>('.chip').forEach((c) => {
+        const on = c.dataset.filtre === f;
+        c.classList.toggle('on', on);
+        c.setAttribute('aria-pressed', String(on));
       });
-    } else if (!calme) {
-      /**
-       * Au doigt, il n'y a pas de survol : c'est la carte la plus visible qui
-       * joue, et elle seule. Une seule vidéo à la fois signifie un seul
-       * téléchargement à la fois — sur données mobiles, ça compte.
-       */
-      const visibilite = new Map<HTMLElement, number>();
-      let active: HTMLElement | null = null;
-
-      const arbitrer = () => {
-        let gagnante: HTMLElement | null = null;
-        // il faut être franchement à l'écran pour déclencher
-        let meilleure = 0.4;
-        visibilite.forEach((ratio, carte) => {
-          if (ratio > meilleure) {
-            meilleure = ratio;
-            gagnante = carte;
+      let n = 0;
+      [...cartes, ...lignes].forEach((el) => {
+        const visible = f === 'tous' || el.dataset.secteur === f;
+        el.hidden = !visible;
+        if (visible && el.classList.contains('real')) {
+          n++;
+          if (!calme) {
+            // rejoue l'animation d'entrée
+            el.classList.remove('in');
+            void el.offsetWidth;
+            el.classList.add('in');
           }
-        });
-        if (gagnante === active) return;
-        if (active) arreter(active);
-        active = gagnante;
-        if (active) jouer(active);
-      };
+        }
+      });
+      vide.hidden = n > 0;
+    };
+    filtres.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLElement>('.chip');
+      if (chip?.dataset.filtre) appliquer(chip.dataset.filtre);
+    });
 
-      const observateur = new IntersectionObserver(
-        (entrees) => {
-          entrees.forEach((e) => visibilite.set(e.target as HTMLElement, e.intersectionRatio));
-          arbitrer();
+    /* ---------- grille / liste ---------- */
+    const vues = $('.vues');
+    vues?.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLElement>('button');
+      if (!b) return;
+      vues.querySelectorAll('button').forEach((x) => {
+        const on = x === b;
+        x.classList.toggle('on', on);
+        x.setAttribute('aria-pressed', String(on));
+      });
+      const enListe = b.dataset.vue === 'liste';
+      grille.hidden = enListe;
+      liste.hidden = !enListe;
+      majRepli();
+      try {
+        localStorage.setItem('madaria-vue-reals', b.dataset.vue ?? 'grille');
+      } catch {}
+    });
+    try {
+      if (localStorage.getItem('madaria-vue-reals') === 'liste') {
+        vues?.querySelector<HTMLElement>('[data-vue="liste"]')?.click();
+      }
+    } catch {}
+
+    /* ---------- aperçu flottant (vue liste, souris seulement) ---------- */
+    if (peek && peekImg && souris) {
+      let px = 0, py = 0, tx = 0, ty = 0, raf = 0;
+      const suivre = () => {
+        raf = 0;
+        px += (tx - px) * 0.18;
+        py += (ty - py) * 0.18;
+        peek.style.left = `${px}px`;
+        peek.style.top = `${py}px`;
+        if (Math.abs(tx - px) > 0.5 || Math.abs(ty - py) > 0.5) raf = requestAnimationFrame(suivre);
+      };
+      addEventListener(
+        'mousemove',
+        (e) => {
+          tx = e.clientX;
+          ty = e.clientY;
+          if (!raf) raf = requestAnimationFrame(suivre);
         },
-        // Plusieurs seuils plutôt qu'un seul : une carte plus haute que l'écran
-        // n'atteindrait jamais un seuil unique élevé, et ne démarrerait jamais.
-        { threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1] },
+        { passive: true },
       );
-      cartes.forEach((c) => observateur.observe(c));
+      lignes.forEach((l) => {
+        l.addEventListener('mouseenter', () => {
+          const p = P[Number(l.dataset.i)];
+          if (!p) return;
+          peekImg.src = shot(p.id, 'thumb');
+          peek.classList.add('on');
+        });
+        l.addEventListener('mouseleave', () => peek.classList.remove('on'));
+      });
+    }
+
+    /* ---------- fiche projet ---------- */
+    let courant = -1;
+    const visibles = () => P.map((_, i) => i).filter((i) => filtre === 'tous' || P[i].secteur === filtre);
+
+    const ouvrir = (i: number, ancre = true) => {
+      const p = P[i];
+      if (!p) return;
+      courant = i;
+      modal.style.setProperty('--accent', p.accent);
+      $('#rm-index')!.textContent = `${p.n} / ${String(P.length).padStart(2, '0')} — ${p.type}`;
+      $('#rm-secteur')!.textContent = p.secteur;
+      $('#rm-titre')!.textContent = p.nom;
+      $('#rm-accroche')!.textContent = p.accroche;
+      $('#rm-desc')!.textContent = p.description;
+      $('#rm-meta')!.innerHTML = (
+        [
+          ['Client', p.client],
+          ['Activité', p.activite],
+          ['Ville', p.ville],
+          ['Année', p.annee],
+          ['Format', p.type],
+        ] as const
+      )
+        .map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`)
+        .join('');
+      $('#rm-tags')!.innerHTML = p.tags.map((t) => `<li>${esc(t)}</li>`).join('');
+      $('#rm-palette')!.innerHTML =
+        p.palette.map((c) => `<i style="background:${esc(c)}" title="${esc(c)}"></i>`).join('') +
+        '<span class="mono">Palette</span>';
+      $('#rm-actions')!.innerHTML = p.url
+        ? `<a class="btn btn-p" href="${esc(p.url)}" target="_blank" rel="noopener">Voir le site ↗</a>`
+        : '<span class="btn btn-g rm-off">Site livré · lien sur demande</span>';
+      $('#rm-url')!.textContent = p.hote || `${p.nom} — ${p.activite}`;
+
+      const full = $<HTMLImageElement>('#rm-full')!;
+      full.src = shot(p.id, p.complet ? 'full' : 'desktop');
+      full.alt = p.complet ? `Page complète du site ${p.nom}` : `Vue bureau du site ${p.nom}`;
+      const tel = $('#rm-tel')!;
+      tel.hidden = !p.mobile;
+      if (p.mobile) $<HTMLImageElement>('#rm-mobile')!.src = shot(p.id, 'mobile');
+      $('.rm-scroll', modal)!.scrollTop = 0;
+
+      if (!modal.open) modal.showModal();
+      document.documentElement.classList.add('fiche-ouverte');
+      if (ancre) history.replaceState(null, '', `#projet-${p.id}`);
+      // préchargement des voisins
+      [i - 1, i + 1].forEach((j) => {
+        if (P[j]) new Image().src = shot(P[j].id, P[j].complet ? 'full' : 'desktop');
+      });
+    };
+
+    const pas = (d: number) => {
+      const v = visibles();
+      if (!v.length) return;
+      const pos = v.indexOf(courant);
+      ouvrir(v[(pos + d + v.length) % v.length]);
+    };
+
+    cartes.forEach((c) => $('.rmedia', c)?.addEventListener('click', () => ouvrir(Number(c.dataset.i))));
+    lignes.forEach((l) => l.addEventListener('click', () => ouvrir(Number(l.dataset.i))));
+    $('#rm-prec')?.addEventListener('click', () => pas(-1));
+    $('#rm-suiv')?.addEventListener('click', () => pas(1));
+    $('#rm-fermer')?.addEventListener('click', () => modal.close());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.close();
+    });
+    modal.addEventListener('close', () => {
+      document.documentElement.classList.remove('fiche-ouverte');
+      if (location.hash.startsWith('#projet-')) history.replaceState(null, '', location.pathname + location.search);
+    });
+    addEventListener('keydown', (e) => {
+      if (!modal.open) return;
+      if (e.key === 'ArrowRight') pas(1);
+      if (e.key === 'ArrowLeft') pas(-1);
+    });
+
+    /* ---------- lien profond ---------- */
+    const m = location.hash.match(/^#projet-(.+)$/);
+    if (m) {
+      const i = P.findIndex((p) => p.id === m[1]);
+      if (i > -1) {
+        if (P[i] && cartes[i]?.classList.contains('extra')) {
+          deplie = true;
+          majRepli();
+        }
+        setTimeout(() => ouvrir(i, false), 200);
+      }
     }
   }
 </script>

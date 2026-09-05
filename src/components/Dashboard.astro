@@ -21,18 +21,45 @@ import { vitrine as vedette } from '../data/realisations';
       </div>
 
       <div class="mshot">
-        {/* Visuel principal de la page : chargé sans délai, dimensions posées
-            pour qu'il ne fasse pas sauter la mise en page. */}
-        <img
-          src={vedette.poster}
-          alt={`Site internet réalisé pour ${vedette.nom}`}
-          width="1600"
-          height="782"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        />
+        {/* La page du site qui défile, en boucle et sans son. Le poster
+            s'affiche en attendant la vidéo, et reste seul si l'utilisateur
+            préfère moins d'animations (voir le script plus bas). */}
+        <video
+          id="vitrine-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          disablepictureinpicture
+          disableremoteplayback
+          preload="auto"
+          poster={vedette.poster}
+          width={vedette.largeur}
+          height={vedette.hauteur}
+          aria-label={`Site internet réalisé pour ${vedette.nom} : la page défile`}
+        >
+          <source src={vedette.video.webm} type="video/webm" />
+          <source src={vedette.video.mp4} type="video/mp4" />
+          <img
+            src={vedette.poster}
+            alt={`Site internet réalisé pour ${vedette.nom}`}
+            width={vedette.largeur}
+            height={vedette.hauteur}
+            loading="eager"
+            decoding="async"
+          />
+        </video>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Moins d'animations demandé : on laisse le poster, la vidéo ne démarre pas.
+  const v = document.getElementById('vitrine-video') as HTMLVideoElement | null;
+  if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay');
+    v.pause();
+    v.currentTime = 0;
+  }
+</script>
