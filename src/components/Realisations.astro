@@ -267,6 +267,18 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       cartes.forEach((c) => c.classList.add('in'));
     }
 
+    /* ---------- écran tactile : le rendu se lance quand la carte est devant les yeux ---------- */
+    // Sans survol possible, la classe `.actif` reproduit l'état :hover (défilement
+    // de la page, téléphone, halo) dès que la carte occupe l'essentiel de l'écran,
+    // et le retire quand elle en sort, pour rejouer au prochain passage.
+    if (matchMedia('(hover: none)').matches) {
+      const ioTactile = new IntersectionObserver(
+        (entrees) => entrees.forEach((e) => e.target.classList.toggle('actif', e.isIntersecting)),
+        { threshold: 0.6 },
+      );
+      cartes.forEach((c) => ioTactile.observe(c));
+    }
+
     /* ---------- repli « voir plus » ---------- */
     const deplier = $<HTMLButtonElement>('#voir-reals');
     let deplie = false;

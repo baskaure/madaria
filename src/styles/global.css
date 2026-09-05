@@ -537,7 +537,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .rmedia::before{content:'';position:absolute;inset:-2px;border-radius:20px;z-index:-1;opacity:0;
   background:radial-gradient(60% 60% at 50% 100%,color-mix(in srgb,var(--accent) 50%,transparent),transparent 70%);
   filter:blur(24px);transition:opacity .5s}
-.real:hover .rmedia::before,.rmedia:focus-visible::before{opacity:1}
+.real:hover .rmedia::before,.real.actif .rmedia::before,.rmedia:focus-visible::before{opacity:1}
 .rmedia:focus-visible{outline:2px solid var(--glow);outline-offset:4px}
 
 /* cadre de navigateur, partagé par les cartes, l'aperçu flottant et la fiche */
@@ -555,18 +555,20 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 /* vue bureau seule (pas de capture entière) : elle remplit l'écran, sans défiler */
 .ecran.fixe .pleine{height:100%;object-fit:cover;object-position:top center}
 .real .cadre{transition:transform .6s cubic-bezier(.16,1,.3,1),border-color .4s}
-.real:hover .cadre{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 55%,rgba(255,255,255,.16))}
-/* le défilement : de la tête au pied de la page, en 7 s, à vitesse constante */
-.real:hover .ecran:not(.fixe) .pleine{transform:translateY(calc(-100% + 100cqh));transition-duration:7s;transition-timing-function:linear}
+.real:hover .cadre,.real.actif .cadre{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 55%,rgba(255,255,255,.16))}
+/* le défilement : de la tête au pied de la page, en 7 s, à vitesse constante.
+   `.actif` = même état que le survol, posé par script quand la carte est
+   devant les yeux sur un écran tactile (pas de survol possible). */
+.real:hover .ecran:not(.fixe) .pleine,.real.actif .ecran:not(.fixe) .pleine{transform:translateY(calc(-100% + 100cqh));transition-duration:7s;transition-timing-function:linear}
 .tel{position:absolute;right:4%;bottom:-6%;width:22%;height:auto;border-radius:14px;border:2px solid #1B1626;
   box-shadow:0 30px 50px -20px rgba(0,0,0,.9);opacity:0;transform:translateY(16px) rotate(4deg);
   transition:transform .6s cubic-bezier(.16,1,.3,1),opacity .4s;pointer-events:none}
-.real:hover .tel{opacity:1;transform:translateY(0) rotate(-3deg)}
+.real:hover .tel,.real.actif .tel{opacity:1;transform:translateY(0) rotate(-3deg)}
 .real.vedette .tel{width:16%}
 .rhint{position:absolute;left:14px;bottom:14px;z-index:2;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   padding:6px 10px;border-radius:100px;background:rgba(8,4,18,.8);backdrop-filter:blur(8px);color:#fff;
   opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.16,1,.3,1)}
-.real:hover .rhint{opacity:1;transform:none}
+.real:hover .rhint,.real.actif .rhint{opacity:1;transform:none}
 
 .rmeta{display:flex;flex-direction:column;gap:7px;padding:0 4px}
 .rtop{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -654,7 +656,7 @@ html.fiche-ouverte{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){
   .real.in,.rmodal[open]{animation:none}
-  .real:hover .ecran:not(.fixe) .pleine{transition-duration:.01s}
+  .real:hover .ecran:not(.fixe) .pleine,.real.actif .ecran:not(.fixe) .pleine{transition-duration:.01s}
 }
 
 /* ---- travaux ---- */
