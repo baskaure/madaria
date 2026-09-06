@@ -31,6 +31,11 @@ for (const [file, html] of pages) {
 const home = pages.get(path.join(root,'index.html'));
 const video = home.match(/<video\b[^>]*>[\s\S]*?<\/video>/)?.[0];
 assert.ok(video,'Vidéo présente');
+const poster = attr(video.split('>')[0],'poster');
+assert.ok([...home.matchAll(/<link\b[^>]*>/g)].some(([tag]) =>
+  attr(tag,'rel') === 'preload' && attr(tag,'as') === 'image' &&
+  attr(tag,'href') === poster && attr(tag,'fetchpriority') === 'high'
+), 'Poster principal préchargé en priorité');
 assert.ok(!/<source\b[^>]*\ssrc=/.test(video),'Aucune source préchargée');
 assert.equal(attr(video.split('>')[0],'preload'),'none','Chargement vidéo différé');
 for (const source of video.matchAll(/<source\b[^>]*>/g)) {

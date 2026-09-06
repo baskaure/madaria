@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { questions } from '../data/faq';
+import { vitrine } from '../data/realisations';
 import Background from '../components/Background.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
@@ -26,7 +27,7 @@ const faqLd = {
 };
 ---
 
-<Base>
+<Base preloadImage={vitrine.poster}>
   <Background />
   <Header />
 
