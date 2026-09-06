@@ -1098,7 +1098,8 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 #nav-sentinel{position:absolute;top:0;left:0;width:1px;height:24px;pointer-events:none}
 #contact, [id="tarifs"], #devis{scroll-margin-top:110px}
 .rv{opacity:1;transform:none}
-.rv.rv-pending{opacity:0;transform:translateY(10px)}
+/* Le masquage hors écran est immédiat ; la transition revient à l'apparition. */
+.rv.rv-pending{opacity:0;transform:translateY(10px);transition:none}
 #services::before,#methode::before,#faq::before,#realisations::before,
 #offres::before,#contact-section::before,#secteurs .neons i,.proj i{animation:none}
 .tlfill{display:none}

@@ -8,6 +8,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import SectionHead from './SectionHead.astro';
 import { realisations, secteurs } from '../data/realisations';
 interface Props { complet?: boolean; }
@@ -18,6 +20,12 @@ const ordonnes = [...selection.map(id => realisations.find(p => p.id === id)!), 
 const DOSSIER = path.resolve('public/realisations/shots');
 const existe = (id: string, vue: string) => fs.existsSync(path.join(DOSSIER, `${id}-${vue}.webp`));
 const shot = (id: string, vue: string) => `/realisations/shots/${id}-${vue}.webp`;
+const captures = import.meta.glob<ImageMetadata>('../../public/realisations/shots/*-{thumb,mobile}.webp', {
+  eager: true, import: 'default',
+});
+const capture = (id: string, vue: string) => captures[`../../public/realisations/shots/${id}-${vue}.webp`];
+const tailleCarte = (vedette?: boolean) =>
+  `(max-width: 760px) calc(100vw - 52px), (max-width: 1040px) calc((100vw - 74px) / 2), ${vedette ? '(max-width: 1240px) calc((100vw - 63px) * 2 / 3), 786px' : '(max-width: 1240px) calc((100vw - 96px) / 3), 382px'}`;
 const hote = (url?: string) => {
   try {
     return url ? new URL(url).host.replace(/^www\./, '') : '';
@@ -102,9 +110,13 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
               <div class:list={['ecran', { fixe: !p.complet }]}>
                 {/* Page entière : elle défile au survol. Sans capture entière,
                     la vue bureau reste fixe. */}
-                <img
+                <Image
                   class="pleine"
-                  src={shot(p.id, 'thumb')}
+                  src={capture(p.id, 'thumb')}
+                  widths={[320, 480, 640]}
+                  sizes={tailleCarte(p.vedette)}
+                  format="webp"
+                  quality={90}
                   data-full={p.complet ? shot(p.id, 'full') : undefined}
                   alt={`Capture du site ${p.nom}`}
                   loading="lazy"
@@ -115,7 +127,9 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
               </div>
             </div>
             {p.mobile && (
-              <img class="tel" src={shot(p.id, 'mobile')} alt="" loading="lazy" decoding="async" width="390" height="844" />
+              <Image class="tel" src={capture(p.id, 'mobile')} widths={[96, 192, 390]}
+                sizes={p.vedette ? '(min-width: 1041px) 126px, (min-width: 761px) 76px, 16vw' : '(min-width: 1041px) 84px, (min-width: 761px) 106px, 22vw'}
+                format="webp" quality={90} alt="" loading="lazy" decoding="async" width="390" height="844" />
             )}
             <span class="rhint" aria-hidden="true">Ouvrir la fiche ↗</span>
           </a>
@@ -277,7 +291,12 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
     if (souris && !calme) cartes.forEach(card => {
       card.addEventListener('pointerenter', () => {
         const img = card.querySelector<HTMLImageElement>('img[data-full]');
-        if (img?.dataset.full) { img.src = img.dataset.full; delete img.dataset.full; }
+        if (img?.dataset.full) {
+          img.removeAttribute('srcset');
+          img.removeAttribute('sizes');
+          img.src = img.dataset.full;
+          delete img.dataset.full;
+        }
       }, { once: true });
     });
 
