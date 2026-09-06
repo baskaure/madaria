@@ -57,8 +57,12 @@ export interface Realisation {
  * de la page qui défile, en lecture automatique et silencieuse. Deux encodages
  * (WebM VP9 léger, MP4 H.264 pour Safari) et un poster tiré de la première
  * image, affiché avant la lecture et à sa place quand l'utilisateur préfère
- * moins d'animations. L'enregistrement d'origine est conservé dans
- * `medias-en-reserve/klientmap-vitrine-source.mp4`.
+ * moins d'animations. L'enregistrement d'origine (écran complet 1920 × 1080,
+ * avec barre de menus, onglets et barre d'adresse) est conservé dans
+ * `medias-en-reserve/klientmap-vitrine-source.mp4` ; les fichiers publiés en
+ * sont tirés, recadrés sur la page seule et ramenés à 30 images/s :
+ *
+ *   ffmpeg -i source.mp4 -vf "crop=1900:938:0:142,scale=1264:624,fps=30" -an …
  */
 export const vitrine = {
   nom: 'KlientMap',
