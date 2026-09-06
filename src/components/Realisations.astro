@@ -286,19 +286,47 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       cartes.forEach((c) => c.classList.add('in'));
     }
 
-    // La capture complète ne charge qu'au survol avec une souris.
-    // Sur tactile et en mode sans mouvement, la miniature reste fixe.
-    if (souris && !calme) cartes.forEach(card => {
-      card.addEventListener('pointerenter', () => {
+    /* ---------- écran tactile : le rendu se lance quand la carte est devant les yeux ---------- */
+    // Sans survol possible, la classe `.actif` reproduit l'état :hover (défilement
+    // de la page, téléphone, halo) dès que la carte occupe l'essentiel de l'écran,
+    // et le retire quand elle en sort, pour rejouer au prochain passage.
+    // La carte affiche une vignette légère ; la capture page entière (plus
+    // lourde) ne se charge qu'au moment où le défilement va servir : au survol
+    // avec une souris, ou quand la carte passe devant les yeux sur tactile.
+    const chargerComplete = (card: HTMLElement) =>
+      new Promise<void>((fini) => {
         const img = card.querySelector<HTMLImageElement>('img[data-full]');
-        if (img?.dataset.full) {
-          img.removeAttribute('srcset');
-          img.removeAttribute('sizes');
-          img.src = img.dataset.full;
-          delete img.dataset.full;
-        }
-      }, { once: true });
-    });
+        if (!img?.dataset.full) return fini();
+        img.removeAttribute('srcset');
+        img.removeAttribute('sizes');
+        img.addEventListener('load', () => fini(), { once: true });
+        img.addEventListener('error', () => fini(), { once: true });
+        img.src = img.dataset.full;
+        delete img.dataset.full;
+      });
+
+    if (matchMedia('(hover: none)').matches && !calme) {
+      const ioTactile = new IntersectionObserver(
+        (entrees) =>
+          entrees.forEach((e) => {
+            const c = e.target as HTMLElement;
+            c.dataset.vu = e.isIntersecting ? '1' : '';
+            if (!e.isIntersecting) {
+              c.classList.remove('actif');
+              return;
+            }
+            // le défilement démarre une fois la page entière chargée, et
+            // seulement si la carte est toujours à l'écran à ce moment-là
+            chargerComplete(c).then(() => {
+              if (c.dataset.vu) c.classList.add('actif');
+            });
+          }),
+        { threshold: 0.6 },
+      );
+      cartes.forEach((c) => ioTactile.observe(c));
+    }
+
+    if (souris && !calme) cartes.forEach((card) => card.addEventListener('pointerenter', () => chargerComplete(card), { once: true }));
 
     /* ---------- repli « voir plus » ---------- */
     const deplier = $<HTMLButtonElement>('#voir-reals');
