@@ -1051,8 +1051,9 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .nav{gap:10px;padding:7px 7px 7px 16px}
   .nav-actions{gap:10px}
   .mmenu{padding-left:18px;padding-right:18px}
-  .brand{font-size:11.5px;letter-spacing:.11em;gap:8px}
-  .brand svg{width:18px}
+  /* la marque garde sa taille de bureau : réduite, elle devenait illisible à côté du bouton */
+  .brand{font-size:13px;letter-spacing:.14em;gap:9px}
+  .brand svg{width:21px}
   .nav .btn-p{padding:10px 14px;font-size:12.5px}
   .burger{width:35px;height:35px}
 
@@ -1153,8 +1154,8 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 @media(max-width:460px){
   .nav{gap:6px;padding-left:12px}
   .nav .btn-p{font-size:11px;padding:10px 11px}
-  .brand{font-size:10.5px;gap:5px}
-  .brand svg{width:15px}
+  .brand{font-size:12.5px;letter-spacing:.12em;gap:7px}
+  .brand svg{width:19px}
   .nav-actions{gap:8px}
   .hero .lead{margin-bottom:28px}
   .hero .badge{margin-bottom:24px}
