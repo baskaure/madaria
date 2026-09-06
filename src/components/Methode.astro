@@ -38,38 +38,33 @@ import { etapes } from '../data/methode';
 </section>
 
 <script>
+  // Frise pilotée par le défilement : --tlp (0 → 1) est la part du rail déjà
+  // passée sous la ligne de lecture (deux tiers de l'écran) ; le trait lumineux
+  // se remplit d'autant, et chaque étape s'allume quand la tête du trait
+  // atteint son losange. Tout est recalculé dans les deux sens du défilement.
   const tl = document.querySelector<HTMLElement>('.tl');
-  const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  if (tl && !reduit) {
-    const noeuds = Array.from(tl.querySelectorAll<HTMLElement>('.tnode'));
-    let planifie = false;
-
-    const actualiser = () => {
-      planifie = false;
+  const nodes = Array.from(document.querySelectorAll<HTMLElement>('.tnode'));
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (tl && !calme) {
+    let raf = 0;
+    const maj = () => {
+      raf = 0;
       const r = tl.getBoundingClientRect();
-      // ligne de lecture : un peu sous le milieu de l'écran
-      const ligne = window.innerHeight * 0.62;
-      const p = Math.max(0, Math.min(1, (ligne - r.top) / (r.height || 1)));
-      tl.style.setProperty('--tlp', String(p));
+      const repere = innerHeight * 0.66;
+      const p = Math.min(1, Math.max(0, (repere - r.top) / r.height));
+      tl.style.setProperty('--tlp', p.toFixed(3));
       tl.classList.toggle('termine', p >= 1);
-
-      for (const n of noeuds) {
-        const dot = n.querySelector<HTMLElement>('.tdot');
-        if (!dot) continue;
-        const d = dot.getBoundingClientRect();
-        n.classList.toggle('atteint', d.top + d.height / 2 <= ligne);
-      }
+      // hauteur du trait en pixels, même formule que le CSS : 8px de marge puis (100% - 16px) × p
+      const trait = 8 + (r.height - 16) * p;
+      nodes.forEach((n) => n.classList.toggle('atteint', n.offsetTop + 16 <= trait));
     };
-
-    const demander = () => {
-      if (planifie) return;
-      planifie = true;
-      requestAnimationFrame(actualiser);
+    const demande = () => {
+      if (!raf) raf = requestAnimationFrame(maj);
     };
-
-    actualiser();
-    window.addEventListener('scroll', demander, { passive: true });
-    window.addEventListener('resize', demander, { passive: true });
+    addEventListener('scroll', demande, { passive: true });
+    addEventListener('resize', demande);
+    maj();
+  } else {
+    nodes.forEach((n) => n.classList.add('atteint'));
   }
 </script>

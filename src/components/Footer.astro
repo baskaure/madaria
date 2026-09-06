@@ -22,7 +22,7 @@ const annee = new Date().getFullYear();
 
       {footerColumns.map((col) => (
         <div>
-          <h4>{col.title}</h4>
+          <h2 class="footer-title">{col.title}</h2>
           <ul>
             {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
           </ul>

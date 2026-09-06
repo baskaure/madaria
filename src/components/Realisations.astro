@@ -10,6 +10,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import SectionHead from './SectionHead.astro';
 import { realisations, secteurs } from '../data/realisations';
+interface Props { complet?: boolean; }
+const { complet = false } = Astro.props;
+const selection = ['kami', 'aurore-piercing', 'recharge-clim'];
+const ordonnes = [...selection.map(id => realisations.find(p => p.id === id)!), ...realisations.filter(p => !selection.includes(p.id))];
 
 const DOSSIER = path.resolve('public/realisations/shots');
 const existe = (id: string, vue: string) => fs.existsSync(path.join(DOSSIER, `${id}-${vue}.webp`));
@@ -23,7 +27,7 @@ const hote = (url?: string) => {
 };
 
 /** Données enrichies, partagées entre le rendu et le script de la fiche. */
-const projets = realisations.map((r, i) => ({
+const projets = ordonnes.map((r, i) => ({
   ...r,
   n: String(i + 1).padStart(2, '0'),
   hote: hote(r.url),
@@ -41,8 +45,7 @@ const filtres = secteurs
  * un clic sur « voir plus ». Un filtre actif déplie tout, sinon il cacherait
  * des résultats.
  */
-const REPLI_A_PARTIR_DE = 'kami';
-const debutRepli = projets.findIndex((p) => p.id === REPLI_A_PARTIR_DE);
+const debutRepli = complet ? -1 : 3;
 const caches = debutRepli > -1 ? projets.length - debutRepli : 0;
 const libelleOuvrir = `Voir les ${caches} autres réalisations`;
 
@@ -57,11 +60,10 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
         Des sites déjà livrés,<br />
         <span class="grad">chacun avec sa propre voix</span>.
       </Fragment>
-      Passez la souris sur une carte pour faire défiler le site, cliquez pour
-      ouvrir la fiche : captures bureau et mobile, palette, lien vers le site.
+      Découvrez les projets : leur univers, les fonctionnalités réalisées et les captures du site. Chaque fiche donne accès au projet détaillé.
     </SectionHead>
 
-    <div class="rbar rv">
+    <div class:list={['rbar', 'rv', { 'home-filters': !complet }]}>
       <div class="filtres" id="filtres-reals" role="group" aria-label="Filtrer par secteur">
         <button type="button" class="chip on" data-filtre="tous" aria-pressed="true">
           Tous <span class="nb">{projets.length}</span>
@@ -94,7 +96,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
           data-i={i}
           style={`--accent:${p.accent}`}
         >
-          <button type="button" class="rmedia" aria-label={`Ouvrir la fiche du projet ${p.nom}`}>
+          <a href={`/realisations/${p.id}/`} class="rmedia" aria-label={`Découvrir le projet ${p.nom}`}>
             <div class="cadre">
               <div class="barre" aria-hidden="true"><i></i><i></i><i></i><span>{p.hote || p.activite}</span></div>
               <div class:list={['ecran', { fixe: !p.complet }]}>
@@ -102,12 +104,13 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
                     la vue bureau reste fixe. */}
                 <img
                   class="pleine"
-                  src={shot(p.id, p.complet ? 'full' : 'desktop')}
+                  src={shot(p.id, 'thumb')}
+                  data-full={p.complet ? shot(p.id, 'full') : undefined}
                   alt={`Capture du site ${p.nom}`}
                   loading="lazy"
                   decoding="async"
-                  width={p.complet ? 900 : 1200}
-                  height={p.complet ? 2625 : 750}
+                  width="640"
+                  height="400"
                 />
               </div>
             </div>
@@ -115,7 +118,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
               <img class="tel" src={shot(p.id, 'mobile')} alt="" loading="lazy" decoding="async" width="390" height="844" />
             )}
             <span class="rhint" aria-hidden="true">Ouvrir la fiche ↗</span>
-          </button>
+          </a>
 
           <div class="rmeta">
             <div class="rtop">
@@ -123,7 +126,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
               <span class="mono">{p.secteur} · {p.ville}</span>
             </div>
             <h3>
-              {p.nom}
+              <a href={`/realisations/${p.id}/`}>{p.nom}</a>
               {p.url && <span class="live" title="En ligne"></span>}
             </h3>
             <p>{p.accroche}</p>
@@ -160,6 +163,8 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       ))}
     </div>
 
+    {!complet && <p class="all-projects"><a class="text-link" href="/realisations/">Explorer toutes les réalisations →</a></p>}
+    <noscript><style>.reals .real.extra{display:flex!important}.rbar,.deplier{display:none!important}</style></noscript>
     <p class="rvide" id="vide-reals" hidden>Aucun projet dans ce secteur pour l'instant.</p>
   </div>
 
@@ -267,17 +272,14 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       cartes.forEach((c) => c.classList.add('in'));
     }
 
-    /* ---------- écran tactile : le rendu se lance quand la carte est devant les yeux ---------- */
-    // Sans survol possible, la classe `.actif` reproduit l'état :hover (défilement
-    // de la page, téléphone, halo) dès que la carte occupe l'essentiel de l'écran,
-    // et le retire quand elle en sort, pour rejouer au prochain passage.
-    if (matchMedia('(hover: none)').matches) {
-      const ioTactile = new IntersectionObserver(
-        (entrees) => entrees.forEach((e) => e.target.classList.toggle('actif', e.isIntersecting)),
-        { threshold: 0.6 },
-      );
-      cartes.forEach((c) => ioTactile.observe(c));
-    }
+    // La capture complète ne charge qu'au survol avec une souris.
+    // Sur tactile et en mode sans mouvement, la miniature reste fixe.
+    if (souris && !calme) cartes.forEach(card => {
+      card.addEventListener('pointerenter', () => {
+        const img = card.querySelector<HTMLImageElement>('img[data-full]');
+        if (img?.dataset.full) { img.src = img.dataset.full; delete img.dataset.full; }
+      }, { once: true });
+    });
 
     /* ---------- repli « voir plus » ---------- */
     const deplier = $<HTMLButtonElement>('#voir-reals');
@@ -318,8 +320,6 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
           n++;
           if (!calme) {
             // rejoue l'animation d'entrée
-            el.classList.remove('in');
-            void el.offsetWidth;
             el.classList.add('in');
           }
         }
@@ -350,7 +350,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       } catch {}
     });
     try {
-      if (localStorage.getItem('madaria-vue-reals') === 'liste') {
+      if (!$('.home-filters') && localStorage.getItem('madaria-vue-reals') === 'liste') {
         vues?.querySelector<HTMLElement>('[data-vue="liste"]')?.click();
       }
     } catch {}
@@ -362,13 +362,14 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
         raf = 0;
         px += (tx - px) * 0.18;
         py += (ty - py) * 0.18;
-        peek.style.left = `${px}px`;
-        peek.style.top = `${py}px`;
+        peek.style.setProperty('--peek-x', `${px}px`);
+        peek.style.setProperty('--peek-y', `${py}px`);
         if (Math.abs(tx - px) > 0.5 || Math.abs(ty - py) > 0.5) raf = requestAnimationFrame(suivre);
       };
       addEventListener(
         'mousemove',
         (e) => {
+          if (liste.hidden || !peek.classList.contains('on')) return;
           tx = e.clientX;
           ty = e.clientY;
           if (!raf) raf = requestAnimationFrame(suivre);
@@ -418,6 +419,8 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       $('#rm-actions')!.innerHTML = p.url
         ? `<a class="btn btn-p" href="${esc(p.url)}" target="_blank" rel="noopener">Voir le site ↗</a>`
         : '<span class="btn btn-g rm-off">Site livré · lien sur demande</span>';
+      $('#rm-actions')!.insertAdjacentHTML('beforeend',
+        `<a class="btn btn-g" href="/realisations/${esc(p.id)}/">Le projet détaillé →</a><a class="text-link" href="/?projet=${esc(p.id)}#contact">Je souhaite un projet similaire</a>`);
       $('#rm-url')!.textContent = p.hote || `${p.nom} — ${p.activite}`;
 
       const full = $<HTMLImageElement>('#rm-full')!;
@@ -431,10 +434,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       if (!modal.open) modal.showModal();
       document.documentElement.classList.add('fiche-ouverte');
       if (ancre) history.replaceState(null, '', `#projet-${p.id}`);
-      // préchargement des voisins
-      [i - 1, i + 1].forEach((j) => {
-        if (P[j]) new Image().src = shot(P[j].id, P[j].complet ? 'full' : 'desktop');
-      });
+
     };
 
     const pas = (d: number) => {
@@ -444,7 +444,12 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
       ouvrir(v[(pos + d + v.length) % v.length]);
     };
 
-    cartes.forEach((c) => $('.rmedia', c)?.addEventListener('click', () => ouvrir(Number(c.dataset.i))));
+    cartes.forEach(c => $('.rmedia', c)?.addEventListener('click', event => {
+      const e = event as MouseEvent;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      ouvrir(Number(c.dataset.i));
+    }));
     lignes.forEach((l) => l.addEventListener('click', () => ouvrir(Number(l.dataset.i))));
     $('#rm-prec')?.addEventListener('click', () => pas(-1));
     $('#rm-suiv')?.addEventListener('click', () => pas(1));

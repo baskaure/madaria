@@ -4,6 +4,9 @@ import Background from '../../components/Background.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Icon from '../../components/Icon.astro';
+import Contact from '../../components/Contact.astro';
+import OfferTerms from '../../components/OfferTerms.astro';
+import { realisations } from '../../data/realisations';
 import { secteurs } from '../../data/secteurs';
 import { offres } from '../../data/offres';
 import { contact } from '../../data/site';
@@ -56,6 +59,8 @@ const ld = {
   ],
 };
 
+const projetsMetier: Record<string, string[]> = { restaurant: ['kami', 'munda-kfe'], perceur: ['aurore-piercing'], 'btp-artisan': ['recharge-clim'] };
+const exemples = realisations.filter(r => (projetsMetier[s.slug] ?? []).includes(r.id));
 const autres = secteurs.filter((x) => x.slug !== s.slug);
 ---
 
@@ -74,8 +79,8 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
         <h1>{s.h1} <span class="grad">à Lyon et partout en France</span></h1>
         {s.intro.map((p) => <p class="chapo">{p}</p>)}
         <div class="hcta">
-          <a href="#devis" class="btn btn-p">Devis en 24 h</a>
-          <a href="/#offres" class="btn btn-g">Voir les tarifs</a>
+          <a href="#contact" class="btn btn-p">Devis en 24 h</a>
+          <a href="#tarifs" class="btn btn-g">Voir les tarifs</a>
         </div>
       </div>
 
@@ -98,11 +103,11 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
             <h2>Ce que nous <span class="grad">livrons</span></h2>
             <p class="chapo">
               Chaque site est construit sur mesure, sans thème acheté ni constructeur générique, et
-              livré en sept jours. La maquette est offerte et comprise dans le prix : vous validez
+              livré selon le calendrier convenu. Pour une vitrine, le planning de sept jours démarre après cadrage et réception des éléments nécessaires. La maquette est incluse dans la prestation : vous validez
               le design avant la moindre ligne de code.
             </p>
             <div class="hcta">
-              <a href="#devis" class="btn btn-p">Demander un devis</a>
+              <a href="#contact" class="btn btn-p">Demander un devis</a>
             </div>
           </div>
           <ul class="glass livrables rv">
@@ -111,7 +116,8 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
         </div>
       </section>
 
-      <section class="bloc">
+      {exemples.length > 0 && <section class="bloc"><h2>Des projets <span class="grad">dans votre univers</span></h2><div class="case-grid">{exemples.map(p => <a class="case-card" href={`/realisations/${p.id}/`}><img src={`/realisations/shots/${p.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu de ${p.nom}`} /><h3>{p.nom}</h3><p>{p.accroche}</p><span class="text-link">Découvrir le projet →</span></a>)}</div></section>}
+      <section class="bloc" id="tarifs">
         <h2>Combien coûte un site internet pour{' '}
           <span class="grad">{s.singulier}</span> ?</h2>
         <div class="plans deux">
@@ -124,10 +130,11 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
               <div class="price">{o.prix}{o.unite && <sup>{o.unite}</sup>}</div>
               <p class="d">{o.accroche}</p>
               <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
-              <a href="#devis" class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
+              <a href={`?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
             </div>
           ))}
         </div>
+        <OfferTerms />
       </section>
 
       <section class="bloc">
@@ -142,20 +149,6 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
         </div>
       </section>
 
-      <section class="bloc" id="devis">
-        <div class="glass bigcta rv">
-          <h2>Parlons de votre projet</h2>
-          <p>
-            Devis chiffré sous 24 heures, sans engagement. Décrivez-nous votre activité, nous vous
-            disons ce qui est faisable, à quel prix et en combien de temps.
-          </p>
-          <div class="row">
-            <a href={`mailto:${contact.email}`} class="btn btn-p">{contact.email}</a>
-            <a href={`tel:${contact.telLien}`} class="btn btn-g">{contact.tel}</a>
-          </div>
-        </div>
-      </section>
-
       <section class="bloc">
         <h2>Autres métiers accompagnés</h2>
         <div class="liens-metiers">
@@ -167,6 +160,7 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
         </div>
       </section>
     </div>
+    <Contact secteur={s.nom} />
   </main>
 
   <Footer />

@@ -1,5 +1,6 @@
 ---
 import SectionHead from './SectionHead.astro';
+import OfferTerms from './OfferTerms.astro';
 import { offres } from '../data/offres';
 ---
 
@@ -9,8 +10,7 @@ import { offres } from '../data/offres';
       <Fragment slot="titre">
         Le prix de votre site internet,<br />annoncé <span class="grad">avant</span> de commencer.
       </Fragment>
-      La maquette est offerte et comprise dans le prix : vous voyez votre site avant qu'une ligne
-      de code soit écrite. Aucun coût caché, ce qui est dans le devis est dans la livraison.
+      Maquette incluse et validée avant développement. Le devis précise les pages, les options et les frais récurrents éventuels.
     </SectionHead>
 
     <div class="plans">
@@ -25,9 +25,10 @@ import { offres } from '../data/offres';
           </div>
           <p class="d">{o.accroche}</p>
           <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
-          <a href="#contact" class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
+          <a href={`/?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
         </div>
       ))}
     </div>
+    <OfferTerms />
   </div>
 </section>

@@ -1,0 +1,28 @@
+---
+import fs from 'node:fs';
+import Editorial from '../../layouts/Editorial.astro';
+import Contact from '../../components/Contact.astro';
+import { realisations } from '../../data/realisations';
+export function getStaticPaths(){ return realisations.map(p=>({params:{projet:p.id},props:{p}})); }
+const {p} = Astro.props;
+const hasFull = fs.existsSync(`public/realisations/shots/${p.id}-full.webp`);
+const hasMobile = fs.existsSync(`public/realisations/shots/${p.id}-mobile.webp`);
+const metiers: Record<string,string> = {'kami':'restaurant','munda-kfe':'restaurant','aurore-piercing':'perceur','recharge-clim':'btp-artisan'};
+const related = realisations.filter(r=>r.id!==p.id && r.secteur===p.secteur).slice(0,2);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Accueil',item:'https://madaria.fr/'},{'@type':'ListItem',position:2,name:'Réalisations',item:'https://madaria.fr/realisations/'},{'@type':'ListItem',position:3,name:p.nom,item:url}]};
+---
+<Editorial title={`${p.nom} — ${p.type} réalisé par Madaria`} description={`${p.nom} : ${p.accroche} Découvrez le projet ${p.type.toLowerCase()}, ses fonctionnalités et ses captures, réalisé par Madaria.`}>
+  <nav class="ariane" aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>/</span><a href="/realisations/">Réalisations</a><span>/</span><span aria-current="page">{p.nom}</span></nav>
+  <div class="editorial-hero case-hero"><div><span class="lab">{p.secteur} · {p.annee}</span><h1>{p.nom}</h1><p class="chapo">{p.accroche}</p><p>{p.activite} · {p.ville}</p><div class="hcta"><a class="btn btn-p" href="#contact">Je souhaite un projet similaire</a>{p.url && <a class="btn btn-g" href={p.url} target="_blank" rel="noopener noreferrer">Voir le site ↗</a>}</div></div>
+    <img src={`/realisations/shots/${p.id}-desktop.webp`} width="1200" height="750" alt={`Vue du site ${p.nom} sur ordinateur`} fetchpriority="high" />
+  </div>
+  <section class="editorial-section editorial-split"><div><span class="lab">Le projet en bref</span><h2>Un site pensé pour <span class="grad">son activité</span></h2><p>{p.description}</p><p class="form-help">Présentation du projet réalisé en {p.annee}. Les captures documentent cette version du site.</p></div><div class="glass case-scope"><h3>Dans ce projet</h3><ul>{p.tags.map(t=><li>{t}</li>)}</ul><p class="mono">{p.type}</p>{!p.url && <p class="form-help">Les captures présentent la réalisation. Le lien du site peut être demandé lors de notre échange.</p>}</div></section>
+  <section class="editorial-section"><h2>Le site <span class="grad">en images</span></h2>
+    <div class="case-captures"><figure><a href={`/realisations/shots/${p.id}-${hasFull?'full':'desktop'}.webp`} target="_blank" rel="noopener"><img src={`/realisations/shots/${p.id}-${hasFull?'full':'desktop'}.webp`} width={hasFull?900:1200} height={hasFull?2625:750} loading="lazy" alt={`Capture ${hasFull?'complète':'bureau'} du site ${p.nom}`} /></a><figcaption>Version ordinateur · ouvrir l’image pour l’agrandir</figcaption></figure>{hasMobile && <figure class="case-mobile"><img src={`/realisations/shots/${p.id}-mobile.webp`} width="390" height="844" loading="lazy" alt={`Version mobile du site ${p.nom}`} /><figcaption>Version mobile</figcaption></figure>}</div>
+  </section>
+  <section class="editorial-section"><h2>Et pour <span class="grad">votre projet</span> ?</h2><p>Nous définissons un périmètre adapté à votre activité et à vos contenus. Ce projet sert d’exemple ; votre devis précise vos pages, vos fonctionnalités et votre calendrier.</p><div class="hcta"><a class="btn btn-g" href={p.id==='klientmap'?'/services/automatisation/':'/services/creation-site-internet/'}>Découvrir la prestation</a>{metiers[p.id] && <a class="btn btn-g" href={`/site-internet/${metiers[p.id]}/`}>Les besoins de votre métier</a>}</div></section>
+  {related.length>0 && <section class="editorial-section"><h2>D’autres réalisations</h2><div class="case-grid">{related.map(r=><a class="case-card" href={`/realisations/${r.id}/`}><img src={`/realisations/shots/${r.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu de ${r.nom}`} /><h3>{r.nom}</h3><p>{r.accroche}</p></a>)}</div></section>}
+  <Contact slot="contact" projet={p.nom} />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Editorial>

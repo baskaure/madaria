@@ -16,11 +16,11 @@ export const etapes: Etape[] = [
     num: '02',
     titre: 'Design',
     delai: 'Jour 2 → 3',
-    text: "Maquette sur-mesure offerte et comprise dans le prix : vous validez le design avant la moindre ligne de code. Deux tours de retours inclus, sans surcoût.",
+    text: "Maquette sur-mesure incluse : vous validez le design avant la moindre ligne de code. Deux tours de retours inclus, sans surcoût.",
   },
   {
     num: '03',
-    titre: 'Build',
+    titre: 'Développement',
     delai: 'Jour 3 → 6',
     text: "Développement, intégration des contenus, automatisations, tests sur tous les écrans et navigateurs. Préproduction accessible en continu.",
   },

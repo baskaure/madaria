@@ -30,10 +30,11 @@ export const contact = {
 } as const;
 
 export const budgets = [
-  '1 500 – 3 000 €',
-  '3 000 – 6 000 €',
-  '6 000 – 15 000 €',
-  '15 000 € et plus',
+  '690 – 1 490 € HT',
+  '1 500 – 3 000 € HT',
+  '3 000 – 6 000 € HT',
+  '6 000 – 15 000 € HT',
+  '15 000 € HT et plus',
   'Je ne sais pas encore',
 ] as const;
 
@@ -52,8 +53,8 @@ export const footerColumns = [
   {
     title: 'Services',
     links: [
-      { href: '/#services', label: 'Sites internet' },
-      { href: '/#services', label: 'Automatisations' },
+      { href: '/services/creation-site-internet/', label: 'Sites internet' },
+      { href: '/services/automatisation/', label: 'Automatisations' },
       { href: '/#services', label: 'Développement' },
       { href: '/#services', label: 'SEO' },
     ],
@@ -61,7 +62,7 @@ export const footerColumns = [
   {
     title: 'Agence',
     links: [
-      { href: '/#methode', label: 'Méthode' },
+      { href: '/#agence', label: 'Votre interlocuteur' },
       { href: '/#realisations', label: 'Réalisations' },
       { href: '/#secteurs', label: 'Secteurs' },
       { href: '/#offres', label: 'Offres' },
@@ -73,7 +74,7 @@ export const footerColumns = [
     links: [
       { href: 'mailto:contact@madaria.fr', label: 'contact@madaria.fr' },
       { href: '/#contact', label: 'Demander un devis' },
-      { href: '/#contact', label: 'Réserver un appel' },
+      { href: '/#contact', label: 'Demander un appel' },
     ],
   },
 ] as const;

@@ -1,0 +1,43 @@
+---
+import Editorial from '../../layouts/Editorial.astro';
+import Contact from '../../components/Contact.astro';
+import OfferTerms from '../../components/OfferTerms.astro';
+import { prestations } from '../../data/prestations';
+import { realisations } from '../../data/realisations';
+import { offres, offresStructurees } from '../../data/offres';
+export function getStaticPaths() { return prestations.map(p => ({params: {service:p.slug},props:{p}})); }
+const {p} = Astro.props;
+const web = p.slug === 'creation-site-internet';
+const exemples = realisations.filter(r => p.projets.includes(r.id));
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {'@context':'https://schema.org','@graph':[
+  {'@type':'Service',name:p.titre,description:p.description,url,provider:{'@id':'https://madaria.fr/#organisation'},areaServed:'France',...(web ? {offers:offresStructurees}: {})},
+  {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Accueil',item:'https://madaria.fr/'},{'@type':'ListItem',position:2,name:p.titre,item:url}]},
+]};
+---
+<Editorial title={p.meta} description={p.description}>
+  <nav class="ariane" aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>/</span><span aria-current="page">{web ? 'Sites internet' : 'Automatisation'}</span></nav>
+  <div class="editorial-hero">
+    <span class="lab">{web ? 'Votre présence en ligne' : 'Vos outils, connectés'}</span>
+    <h1>{p.titre}<span class="grad">, avec Madaria.</span></h1>
+    <p class="chapo">{p.intro}</p><p>{p.audience}</p>
+    <div class="hcta"><a class="btn btn-p" href="#contact">Demander un devis</a><a class="btn btn-g" href="#exemples">Voir un projet</a></div>
+  </div>
+  <section class="editorial-section"><h2>Partir de <span class="grad">votre besoin</span></h2>
+    <div class="editorial-grid">{p.sections.map((s,i) => <article><span class="mono">0{i+1}</span><h3>{s.titre}</h3><p>{s.texte}</p></article>)}</div>
+  </section>
+  <section class="editorial-section editorial-split"><div><span class="lab">Le périmètre</span><h2>Ce que nous <span class="grad">préparons ensemble</span></h2><p>Un devis précise les livrables, les accès nécessaires, les validations et le calendrier. Vous savez ce qui est prévu avant le démarrage.</p></div>
+    <ul class="glass livrables">{p.livrables.map(l=><li>{l}</li>)}</ul>
+  </section>
+  <section class="editorial-section" id="exemples"><h2>{web ? 'Des sites réalisés' : 'Un exemple d’outil métier'}</h2>
+    {!web && <p>KlientMap illustre un outil qui regroupe recherche, qualification et suivi de prospects. Les flux décrits plus haut sont des exemples à cadrer selon votre organisation.</p>}
+    <div class="case-grid">{exemples.map(r=><a class="case-card" href={`/realisations/${r.id}/`}><img src={`/realisations/shots/${r.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu du projet ${r.nom}`} /><span class="mono">{r.type}</span><h3>{r.nom}</h3><p>{r.accroche}</p><span class="text-link">Découvrir le projet →</span></a>)}</div>
+  </section>
+  <section class="editorial-section" id="tarifs"><h2>{web ? 'Choisir votre point de départ' : 'Un périmètre, un devis'}</h2>
+    {web ? <div class="plans deux">{offres.slice(0,2).map(o=><article class="glass plan"><h3>{o.nom}</h3><div class="price">{o.prix}<sup>{o.unite}</sup></div><p>{o.accroche}</p><ul>{o.inclus.map(i=><li>{i}</li>)}</ul><a class="btn btn-p" href={`?offre=${o.id}#contact`} data-offre={o.id}>{o.cta}</a></article>)}</div> : <p>La réalisation est chiffrée sur devis. Les abonnements aux outils, les opérations de maintenance et les évolutions éventuelles sont distingués du coût initial.</p>}
+    {web && <OfferTerms />}
+  </section>
+  <section class="editorial-section"><h2>Vos questions</h2><div class="faq">{p.questions.map(q=><details><summary>{q.q}<span class="pm">+</span></summary><p>{q.r}</p></details>)}</div></section>
+  <Contact slot="contact" secteur={web ? 'Création ou refonte de site' : 'Automatisation'} />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Editorial>

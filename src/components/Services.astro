@@ -23,28 +23,9 @@ import { services } from '../data/services';
           <h3>{s.title}</h3>
           <p>{s.text}</p>
           <div class="tags">{s.tags.map((t) => <b>{t}</b>)}</div>
+          {s.href && <a class="text-link" href={s.href}>Découvrir la prestation →</a>}
         </div>
       ))}
     </div>
   </div>
 </section>
-
-<script>
-  // Le curseur allume l'arête de la carte et déplace la lueur intérieure.
-  document.querySelectorAll<HTMLElement>('.bcard').forEach((card) => {
-    const spark = card.querySelector<HTMLElement>('.spark');
-
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      card.style.setProperty('--mx', `${x}px`);
-      card.style.setProperty('--my', `${y}px`);
-      if (spark) {
-        spark.style.left = `${x - 120}px`;
-        spark.style.right = 'auto';
-        spark.style.width = '240px';
-      }
-    });
-  });
-</script>

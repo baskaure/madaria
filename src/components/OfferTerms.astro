@@ -1,0 +1,7 @@
+---
+import { conditionsOffres } from '../data/offres';
+---
+<details class="offer-terms">
+  <summary>Délais, périmètre et frais récurrents <span class="pm">+</span></summary>
+  {conditionsOffres.map(texte => <p>{texte}</p>)}
+</details>

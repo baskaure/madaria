@@ -7,7 +7,7 @@ import { nav, contact } from '../data/site';
 <a class="skip" href="#contenu">Aller au contenu</a>
 
 <header>
-  <nav class="nav">
+  <nav class="nav" aria-label="Navigation principale">
     <a class="brand" href="/#top">
       <Logo />
       MADARIA
@@ -18,7 +18,7 @@ import { nav, contact } from '../data/site';
     </div>
 
     <div class="nav-actions">
-      <a href="/#contact" class="btn btn-p">Démarrer</a>
+      <a href="/#contact" class="btn btn-p">Devis en 24 h</a>
       <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
         <i></i><i></i>
       </button>
@@ -27,12 +27,12 @@ import { nav, contact } from '../data/site';
 </header>
 
 <div class="mmenu" id="mmenu">
-  <nav class="mmenu-links">
+  <nav class="mmenu-links" aria-label="Navigation mobile">
     {nav.map((item) => <a href={item.href}>{item.label}</a>)}
   </nav>
 
   <div class="mmenu-bas">
-    <a href="/#contact" class="btn btn-p">Démarrer un projet</a>
+    <a href="/#contact" class="btn btn-p">Demander un devis</a>
     <div class="mmenu-coord">
       <a href={`mailto:${contact.email}`}>{contact.email}</a>
       <a href={`tel:${contact.telLien}`}>{contact.tel}</a>
@@ -42,29 +42,37 @@ import { nav, contact } from '../data/site';
 
 <script>
   const burger = document.getElementById('burger');
-  const mmenu = document.getElementById('mmenu');
-
-  if (burger && mmenu) {
-    const setOpen = (open: boolean) => {
-      mmenu.classList.toggle('open', open);
+  const menu = document.getElementById('mmenu');
+  if (burger && menu) {
+    const background = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip'));
+    const setOpen = (open: boolean, restore = true) => {
+      menu.classList.toggle('open', open);
       burger.classList.toggle('open', open);
       document.body.classList.toggle('locked', open);
       burger.setAttribute('aria-expanded', String(open));
       burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+      background.forEach(el => { el.inert = open; });
+      if (!open && restore) burger.focus();
     };
-
-    burger.addEventListener('click', () => setOpen(!mmenu.classList.contains('open')));
-    mmenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
+    burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
+    menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', e => {
+      if (burger.getAttribute('aria-expanded') !== 'true') return;
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false); }
+      if (e.key === 'Tab') {
+        const targets = [burger, ...Array.from(menu.querySelectorAll<HTMLElement>('a[href]'))];
+        const index = targets.indexOf(document.activeElement as HTMLElement);
+        e.preventDefault();
+        targets[(index + (e.shiftKey ? -1 : 1) + targets.length) % targets.length].focus();
+      }
+    });
+    matchMedia('(min-width: 861px)').addEventListener('change', e => {
+      if (e.matches) setOpen(false, false);
     });
   }
-
-  // La nav se densifie dès qu'on quitte le haut de page.
   const header = document.querySelector('header');
-  if (header) {
-    const sync = () => header.classList.toggle('scrolled', window.scrollY > 24);
-    sync();
-    window.addEventListener('scroll', sync, { passive: true });
-  }
+  const sentinel = document.getElementById('nav-sentinel');
+  if (header && sentinel) new IntersectionObserver(entries => {
+    header.classList.toggle('scrolled', !entries[0]?.isIntersecting);
+  }).observe(sentinel);
 </script>

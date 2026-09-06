@@ -16,6 +16,7 @@ const { text = 'MADARIA' } = Astro.props;
   const canvas = document.getElementById('pw-canvas') as HTMLCanvasElement | null;
 
   if (host && canvas) {
+    const start = () => {
     const ctx = canvas.getContext('2d')!;
 
     // ---- réglages ----
@@ -108,7 +109,9 @@ const { text = 'MADARIA' } = Astro.props;
     let tNow = 0;
     let t0 = performance.now();
     let visible = true;
-    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reduit = motion.matches;
+    let frame = 0;
 
     /** Échantillonne la luminance du mot pour savoir quelles particules l'habillent. */
     const construireMasque = (w: number, h: number) => {
@@ -227,12 +230,13 @@ const { text = 'MADARIA' } = Astro.props;
     let survol = false;
 
     const boucle = (now: number) => {
-      if (!reduit && visible) {
+      frame = 0;
+      if (!reduit && visible && !document.hidden) {
         lampe += ((survol ? 1 : 0) - lampe) * 0.12; // fondu entrée / sortie
         tNow = ((now - t0) / 1000) % DUR;
         dessiner(tNow * SPEED);
       }
-      requestAnimationFrame(boucle);
+      if (!reduit && visible && !document.hidden) frame = requestAnimationFrame(boucle);
     };
 
     host.addEventListener('pointermove', (e) => {
@@ -255,7 +259,7 @@ const { text = 'MADARIA' } = Astro.props;
 
     reconstruire();
     dessiner(0);
-    requestAnimationFrame(boucle);
+    if (!reduit) frame = requestAnimationFrame(boucle);
 
     let lastW = host.clientWidth;
     let lastH = host.clientHeight;
@@ -273,13 +277,31 @@ const { text = 'MADARIA' } = Astro.props;
         const on = !!entries[0]?.isIntersecting;
         if (on === visible) return;
         visible = on;
-        if (visible) t0 = performance.now() - tNow * 1000;
+        if (visible) {
+          t0 = performance.now() - tNow * 1000;
+          if (!reduit && !document.hidden && !frame) frame = requestAnimationFrame(boucle);
+        } else { cancelAnimationFrame(frame); frame = 0; }
       },
       { rootMargin: '120px' },
     ).observe(canvas);
 
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) t0 = performance.now() - tNow * 1000;
+      if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
+      else {
+        t0 = performance.now() - tNow * 1000;
+        if (visible && !reduit && !frame) frame = requestAnimationFrame(boucle);
+      }
     });
+    motion.addEventListener('change', e => {
+      reduit = e.matches;
+      cancelAnimationFrame(frame); frame = 0;
+      if (!reduit && visible && !document.hidden) frame = requestAnimationFrame(boucle);
+      else dessiner(tNow * SPEED);
+    });
+    };
+    const activation = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) { activation.disconnect(); start(); }
+    }, { rootMargin: '120px' });
+    activation.observe(host);
   }
 </script>

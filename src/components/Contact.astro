@@ -1,152 +1,141 @@
 ---
 import { contact, budgets } from '../data/site';
-
+import { realisations } from '../data/realisations';
+import { offres } from '../data/offres';
+interface Props { secteur?: string; projet?: string; }
+const { secteur = '', projet = '' } = Astro.props;
 const champs = [
-  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Jean Dupont', required: true, auto: 'name' },
-  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'jean@entreprise.fr', required: true, auto: 'email' },
-  { id: 'n-tel', name: 'telephone', label: 'Téléphone', type: 'tel', placeholder: '06 12 34 56 78', required: false, auto: 'tel' },
-  { id: 'n-soc', name: 'societe', label: 'Société', type: 'text', placeholder: 'Entreprise SARL', required: false, auto: 'organization' },
-];
-
-const coordonnees = [
-  { label: 'Mail', valeur: contact.email, lien: `mailto:${contact.email}` },
-  { label: 'Téléphone', valeur: contact.tel, lien: `tel:${contact.telLien}` },
-  { label: 'Zone', valeur: contact.zone },
+  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Votre nom', required: true, auto: 'name' },
+  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'vous@entreprise.fr', required: true, auto: 'email' },
+  { id: 'n-tel', name: 'telephone', label: 'Téléphone (facultatif)', type: 'tel', placeholder: '06 12 34 56 78', required: false, auto: 'tel' },
+  { id: 'n-soc', name: 'societe', label: 'Société (facultatif)', type: 'text', placeholder: 'Votre entreprise', required: false, auto: 'organization' },
 ];
 ---
-
-<section id="contact">
+<section id="contact-section">
   <div class="wrap cgrid">
     <div class="glass cinfo rv">
+      <span class="lab">Votre projet commence ici</span>
       <h2>Parlons de votre projet.<br /><span class="grad">Le devis est offert.</span></h2>
-      <p>
-        Un échange de 30 minutes, sans engagement, pour évaluer ce qui est faisable, à quel prix et
-        en combien de temps. Nous sommes basés à Lyon et accompagnons des clients partout en France.
-      </p>
-      {coordonnees.map((c) => (
-        <div class="crow">
-          <span>{c.label}</span>
-          {c.lien ? <a href={c.lien}>{c.valeur}</a> : <span>{c.valeur}</span>}
-        </div>
-      ))}
-      <div class="crow">
-        <span>Délai</span><span style="color:#6EE7A8">{contact.delai}</span>
-      </div>
+      <p>Décrivez votre besoin. Nous revenons vers vous sous 24 h pour préciser le périmètre, le budget et le calendrier.</p>
+      <div class="crow"><span>Mail</span><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
+      <div class="crow"><span>Téléphone</span><a href={`tel:${contact.telLien}`}>{contact.tel}</a></div>
+      <div class="crow"><span>Zone</span><span>{contact.zone}</span></div>
+      <p>Vous échangez directement avec Aurélien Branco, fondateur de Madaria.</p>
     </div>
-
-    <form
-      class="glass rv"
-      id="form"
-      name="contact"
-      method="POST"
-      action="/"
-      data-netlify="true"
-      data-netlify-honeypot="bot-field"
-      novalidate
-    >
-      <input type="hidden" name="form-name" value="contact" />
-      <p class="pot" hidden aria-hidden="true">
-        <label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
-      </p>
-      {champs.map((c) => (
-        <div class="f">
-          <label for={c.id}>{c.label}</label>
-          <input
-            id={c.id}
-            name={c.name}
-            type={c.type}
-            placeholder={c.placeholder}
-            required={c.required}
-            autocomplete={c.auto}
-          />
-        </div>
-      ))}
-
-      {/* pleine largeur : avec quatre champs à mi-largeur au-dessus, le budget
-          resterait seul sur sa ligne */}
+    <form class="glass" id="contact" name="contact" method="POST" action="/merci/"
+      data-projets={JSON.stringify(realisations.map(p => ({ id: p.id, nom: p.nom })))} data-netlify="true" data-netlify-honeypot="bot-field" aria-labelledby="form-title">
       <div class="f full">
-        <label for="n-bud">Budget</label>
-        <select id="n-bud" name="budget">
-          {budgets.map((b) => <option>{b}</option>)}
+        <h2 id="form-title" class="form-title">Décrivez votre projet</h2>
+        <p class="form-help">Les champs marqués * sont obligatoires.</p>
+        <p class="form-context" id="form-project-context" hidden></p>
+        {(secteur || projet) && <p class="form-context">{projet ? `À propos du projet ${projet}` : `Votre métier : ${secteur}`}</p>}
+      </div>
+      <input type="hidden" name="form-name" value="contact" />
+      <input type="hidden" name="secteur" value={secteur} />
+      <input type="hidden" name="projet" value={projet} />
+      <p class="pot" hidden aria-hidden="true"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+      {champs.map(c => <div class="f">
+        <label for={c.id}>{c.label}{c.required ? ' *' : ''}</label>
+        <input id={c.id} name={c.name} type={c.type} placeholder={c.placeholder} required={c.required}
+          autocomplete={c.auto} maxlength="200" aria-describedby="fmsg" />
+      </div>)}
+      <div class="f full">
+        <label for="n-offre">Offre envisagée (facultatif)</label>
+        <select id="n-offre" name="offre">
+          <option value="">À définir ensemble</option>
+          {offres.map(o => <option value={o.id}>{o.nom} — {o.prix}{o.unite ? ` ${o.unite}` : ''}</option>)}
         </select>
       </div>
-
       <div class="f full">
-        <label for="n-msg">Votre projet</label>
-        <textarea
-          id="n-msg"
-          name="message"
-          placeholder="Décrivez en quelques lignes ce que vous voulez construire…"
-          required></textarea>
+        <label for="n-bud">Budget (facultatif)</label>
+        <select id="n-bud" name="budget"><option value="">Choisir un budget</option>{budgets.map(b => <option>{b}</option>)}</select>
       </div>
-
       <div class="f full">
-        <button type="submit" class="btn btn-p">Envoyer la demande</button>
-        <div class="fmsg" id="fmsg" role="status" aria-live="polite"></div>
+        <label for="n-msg">Votre projet *</label>
+        <textarea id="n-msg" name="message" placeholder="Votre activité, ce que vous souhaitez créer et votre échéance…" required maxlength="10000" aria-describedby="fmsg"></textarea>
+      </div>
+      <div class="f full">
+        <p class="form-help" id="form-privacy">Madaria utilise ces informations pour répondre à votre demande et établir un devis. <a href="/confidentialite/">Utilisation des données et vos droits</a>.</p>
+        <button type="submit" class="btn btn-p">Envoyer ma demande de devis</button>
+        <div class="fmsg" id="fmsg" role="status" aria-live="polite" aria-atomic="true"></div>
       </div>
     </form>
   </div>
 </section>
-
 <script>
-  const form = document.getElementById('form') as HTMLFormElement | null;
-  const msg = document.getElementById('fmsg');
-
-  const dire = (texte: string, ok: boolean) => {
-    if (!msg) return;
-    msg.style.color = ok ? '#6EE7A8' : '#FCA5A5';
-    msg.textContent = texte;
-  };
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = new FormData(form);
-    const nom = String(data.get('nom') ?? '').trim();
-    const email = String(data.get('email') ?? '').trim();
-    const message = String(data.get('message') ?? '').trim();
-
-    if (!nom || !email || !message) {
-      dire('Nom, email et description sont requis.', false);
-      return;
+  const form = document.querySelector<HTMLFormElement>('form[name="contact"]');
+  if (form) {
+    const msg = form.querySelector<HTMLElement>('#fmsg')!;
+    const offre = form.querySelector<HTMLSelectElement>('#n-offre')!;
+    const selectionner = (value: string | null) => {
+      if (value && Array.from(offre.options).some(o => o.value === value)) offre.value = value;
+    };
+    const params = new URLSearchParams(location.search);
+    selectionner(params.get('offre'));
+    const projet = params.get('projet');
+    const references: {id: string; nom: string}[] = JSON.parse(form.dataset.projets ?? '[]');
+    const reference = references.find(p => p.id === projet);
+    if (reference) {
+      (form.elements.namedItem('projet') as HTMLInputElement).value = reference.nom;
+      const contexte = form.querySelector<HTMLElement>('#form-project-context')!;
+      contexte.hidden = false;
+      contexte.textContent = `Projet de référence : ${reference.nom}`;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
-      dire('Adresse email invalide.', false);
-      return;
-    }
-    // Le téléphone reste facultatif : on ne le vérifie que s'il est renseigné,
-    // et assez largement pour accepter les formats français et internationaux.
-    const tel = String(data.get('telephone') ?? '').trim();
-    if (tel && !/^\+?[\d\s().-]{9,20}$/.test(tel)) {
-      dire('Numéro de téléphone invalide.', false);
-      return;
-    }
-
-    const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-
-    // En développement, le serveur répond 200 au POST sans rien traiter :
-    // afficher un succès ici serait mensonger. Seul le site déployé enregistre.
-    if (import.meta.env.DEV) {
-      dire('Mode développement : rien n’est envoyé. Testez sur le site déployé.', false);
-      return;
-    }
-
-    if (bouton) bouton.disabled = true;
-    dire('Envoi en cours…', true);
-
-    try {
-      // Netlify Forms : POST url-encodé vers la page elle-même.
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
-      });
-      if (!res.ok) throw new Error(String(res.status));
-      dire('Demande envoyée — réponse sous 24 h. Merci !', true);
-      form.reset();
-    } catch {
-      dire("L'envoi a échoué. Écrivez-nous directement : contact@madaria.fr", false);
-    } finally {
-      if (bouton) bouton.disabled = false;
-    }
-  });
+    document.querySelectorAll<HTMLAnchorElement>('a[data-offre]').forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      selectionner(a.dataset.offre ?? null);
+      const url = new URL(location.href);
+      url.searchParams.set('offre', offre.value);
+      url.hash = 'contact';
+      history.replaceState(null, '', url);
+      form.scrollIntoView({ behavior: 'instant', block: 'start' });
+      offre.focus({ preventScroll: true });
+    }));
+    const dire = (text: string, ok: boolean) => {
+      msg.dataset.state = ok ? 'ok' : 'error';
+      msg.textContent = text;
+    };
+    form.addEventListener('invalid', e => {
+      const input = e.target as HTMLInputElement;
+      input.setAttribute('aria-invalid', 'true');
+      dire('Vérifiez les champs signalés avant d’envoyer votre demande.', false);
+    }, true);
+    form.addEventListener('input', e => {
+      const input = e.target as HTMLInputElement;
+      input.removeAttribute('aria-invalid');
+      input.setCustomValidity?.('');
+      if (msg.dataset.state === 'error') msg.textContent = '';
+    });
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      for (const name of ['nom', 'message']) {
+        const field = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
+        if (!field.value.trim()) {
+          field.setCustomValidity('Veuillez renseigner ce champ.');
+          field.reportValidity();
+          field.focus();
+          return;
+        }
+      }
+      if (import.meta.env.DEV || ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
+        dire('Aperçu local : aucune demande n’est envoyée. La réception se vérifie sur Netlify après déploiement.', false);
+        return;
+      }
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      button.disabled = true;
+      form.setAttribute('aria-busy', 'true');
+      dire('Envoi en cours…', true);
+      try {
+        const body = new URLSearchParams();
+        new FormData(form).forEach((value, key) => body.append(key, String(value)));
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+        if (!res.ok) throw new Error(String(res.status));
+        location.assign('/merci/');
+      } catch {
+        dire('L’envoi a échoué. Votre texte est conservé. Réessayez ou écrivez à contact@madaria.fr.', false);
+        button.disabled = false;
+        form.removeAttribute('aria-busy');
+      }
+    });
+  }
 </script>

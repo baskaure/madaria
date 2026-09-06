@@ -1,5 +1,6 @@
 ---
 import Dashboard from './Dashboard.astro';
+import { prixEntree } from '../data/offres';
 ---
 
 <div class="wrap hero">
@@ -16,13 +17,14 @@ import Dashboard from './Dashboard.astro';
 
   <p class="lead">
     Madaria conçoit vos <b>sites internet</b>, <b>automatisations</b> et <b>outils métier</b>.
-    Qualité d'agence, tarifs qui n'ont rien à voir.
+    Un interlocuteur direct, du premier échange à la mise en ligne.
   </p>
 
   <div class="hcta">
     <a href="#contact" class="btn btn-p">Devis en 24 h</a>
-    <a href="#secteurs" class="btn btn-g">Votre métier</a>
+    <a href="#realisations" class="btn btn-g">Voir les réalisations</a>
   </div>
 
+  <p class="hero-note">Sites vitrines dès {prixEntree} € HT · Périmètre et calendrier fixés au devis.</p>
   <Dashboard />
 </div>

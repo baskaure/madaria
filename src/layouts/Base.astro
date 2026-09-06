@@ -1,10 +1,12 @@
 ---
 import '../styles/global.css';
+import { offresStructurees, prixEntree } from '../data/offres';
 import { site, contact } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -14,12 +16,13 @@ const {
   // La marque est OBLIGATOIRE dans le title : sans elle le site a décroché
   // sur la requête « madaria » (sept. 2026). Ne plus la retirer.
   title = 'Création de site internet en 7 jours — Lyon & France | Madaria',
-  description = "Agence de création de site internet à Lyon : site sur-mesure livré en 7 jours, dès 690 € HT, partout en France. Maquette offerte, devis gratuit sous 24 h.",
+  description = `Agence web à Lyon et partout en France : site vitrine dès ${prixEntree} € HT, maquette incluse et devis sous 24 h. Planning de 7 jours selon périmètre.`,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
-const majISO = new Date().toISOString().slice(0, 10);
+
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -74,22 +77,7 @@ const jsonLd = {
         'SEO',
         'Développement web',
       ],
-      makesOffer: [
-        {
-          '@type': 'Offer',
-          name: 'Site vitrine — formule Vitrine',
-          price: '690',
-          priceCurrency: 'EUR',
-          description: "Site vitrine sur-mesure jusqu'à 5 pages, livré en 7 jours.",
-        },
-        {
-          '@type': 'Offer',
-          name: 'Site complet — formule Visibilité',
-          price: '1490',
-          priceCurrency: 'EUR',
-          description: 'Site complet avec SEO technique, référencement local et rédaction des contenus.',
-        },
-      ],
+      makesOffer: offresStructurees,
     },
     {
       '@type': 'Person',
@@ -121,7 +109,7 @@ const jsonLd = {
       name: title,
       description,
       inLanguage: 'fr-FR',
-      dateModified: majISO,
+
       isPartOf: { '@id': 'https://madaria.fr/#site' },
       about: { '@id': 'https://madaria.fr/#organisation' },
     },
@@ -136,7 +124,7 @@ const jsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
     <link rel="canonical" href={canonical} />
     <!-- Google cherche /favicon.ico en priorité ; le SVG sert aux navigateurs
          modernes, les PNG couvrent le reste. -->
@@ -178,7 +166,8 @@ const jsonLd = {
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body>
+  <body id="top">
+    <div id="nav-sentinel" aria-hidden="true"></div>
     <slot />
 
     <script>

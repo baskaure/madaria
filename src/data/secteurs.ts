@@ -1,3 +1,4 @@
+import { prixEntree } from './offres';
 import type { IconName } from '../components/icons';
 
 export type Secteur = {
@@ -33,7 +34,7 @@ export const secteurs: Secteur[] = [
     text: "Un site qui remplit le fauteuil : réservation en ligne, tarifs à jour et visibilité sur les recherches de proximité.",
     besoins: ['Réservation', 'Google Maps', 'Galerie'],
     metaTitle: 'Création de site internet pour barbier à Lyon | Madaria',
-    metaDesc: "Site internet pour barbier avec réservation en ligne, livré en 7 jours dès 690 € HT. Référencement local pour être trouvé dans votre quartier.",
+    metaDesc: `Site internet pour barbier avec réservation en ligne, vitrine dès ${prixEntree} € HT, intégrations sur devis. Référencement local pour être trouvé dans votre quartier.`,
     h1: 'Création de site internet pour barbier',
     intro: [
       "Un barbershop se choisit à trois rues près. Vos futurs clients tapent « barbier » sur leur téléphone, regardent les trois premiers résultats, et réservent chez celui qui leur simplifie la vie. Si votre salon n'apparaît pas, ou qu'il faut appeler pendant que vous avez les mains prises, le rendez-vous part chez le voisin.",
@@ -72,7 +73,7 @@ export const secteurs: Secteur[] = [
       },
       {
         q: 'Combien de temps pour mettre mon salon en ligne ?',
-        r: "Sept jours. Le premier jour est consacré au cadrage, vous validez la maquette en début de semaine, et votre site est en ligne le septième jour, réservation comprise.",
+        r: "Le planning de sept jours concerne une vitrine après cadrage et réception des contenus. Une intégration de réservation dépend de votre outil : son périmètre, ses coûts et son délai sont précisés au devis.",
       },
     ],
   },
@@ -85,7 +86,7 @@ export const secteurs: Secteur[] = [
     text: "Prise de rendez-vous sans appel téléphonique, présentation de l'équipe et des prestations, avis clients mis en avant.",
     besoins: ['Prise de RDV', 'Prestations', 'Avis'],
     metaTitle: 'Création de site internet pour coiffeur à Lyon | Madaria',
-    metaDesc: "Site internet pour salon de coiffure avec prise de rendez-vous en ligne, livré en 7 jours dès 690 € HT. Référencement local inclus.",
+    metaDesc: `Site internet pour salon de coiffure avec prise de rendez-vous en ligne, vitrine dès ${prixEntree} € HT, intégrations sur devis. Accompagnement local selon formule.`,
     h1: 'Création de site internet pour salon de coiffure',
     intro: [
       "Le téléphone qui sonne pendant une couleur, c'est un client mal servi d'un côté et un rendez-vous mal noté de l'autre. Un site de salon bien conçu absorbe ces appels : il montre vos prestations, vos tarifs, votre équipe, et laisse le client choisir son créneau tout seul.",
@@ -137,7 +138,7 @@ export const secteurs: Secteur[] = [
     text: "Un portfolio qui met vos pièces en valeur et un formulaire de projet qui filtre les demandes sérieuses.",
     besoins: ['Portfolio', 'Demande de projet', 'Acompte'],
     metaTitle: 'Création de site internet pour tatoueur à Lyon | Madaria',
-    metaDesc: "Site internet pour tatoueur : portfolio haute qualité, formulaire de projet et acompte en ligne. Livré en 7 jours dès 690 € HT.",
+    metaDesc: `Site internet pour tatoueur : portfolio haute qualité, formulaire de projet et acompte en ligne. Vitrine dès ${prixEntree} € HT, options sur devis.`,
     h1: 'Création de site internet pour tatoueur',
     intro: [
       "Instagram vous a apporté vos premiers clients, mais il ne vous appartient pas : l'algorithme décide qui voit vos pièces, le format écrase vos images, et vos demandes se noient dans les messages privés. Un site vous rend la maîtrise de votre travail et de vos prises de contact.",
@@ -146,7 +147,7 @@ export const secteurs: Secteur[] = [
     enjeux: [
       {
         titre: 'Un portfolio à la hauteur du travail',
-        text: "Vos photos méritent mieux qu'une compression de réseau social. Nous les affichons en haute définition, organisées par style, avec un chargement instantané — condition indispensable pour que le visiteur reste et fasse défiler.",
+        text: "Vos photos méritent mieux qu'une compression de réseau social. Nous les affichons en haute définition, organisées par style, avec un chargement rapide — condition indispensable pour que le visiteur reste et fasse défiler.",
       },
       {
         titre: 'Filtrer les demandes en amont',
@@ -189,7 +190,7 @@ export const secteurs: Secteur[] = [
     text: "Catalogue des poses et des bijoux, prise de rendez-vous, et les documents d'information remis avant la séance.",
     besoins: ['Catalogue', 'Prise de RDV', 'Documents'],
     metaTitle: 'Création de site internet pour perceur à Lyon | Madaria',
-    metaDesc: "Site internet pour perceur : catalogue des poses, prise de rendez-vous et documents d'information. Livré en 7 jours dès 690 € HT.",
+    metaDesc: `Site internet pour perceur : catalogue des poses, prise de rendez-vous et documents d'information. Vitrine dès ${prixEntree} € HT, options sur devis.`,
     h1: 'Création de site internet pour perceur',
     intro: [
       "Le piercing se décide vite mais se renseigne longuement : quelle pose, quel bijou, quelle cicatrisation, quel prix, quelles conditions pour les mineurs. Chaque question sans réponse sur votre site devient un appel — ou un client qui va voir ailleurs.",
@@ -198,7 +199,7 @@ export const secteurs: Secteur[] = [
     enjeux: [
       {
         titre: 'Un catalogue clair des poses',
-        text: "Chaque emplacement a son prix, son temps de cicatrisation et ses contraintes. Les présenter de façon lisible, avec des photos, transforme les curieux en clients décidés et supprime la moitié de vos appels.",
+        text: "Chaque emplacement a son prix, son temps de cicatrisation et ses contraintes. Les présenter de façon lisible, avec des photos, transforme les curieux en clients décidés et peut réduire les questions répétitives.",
       },
       {
         titre: 'Rassurer sur l’hygiène et le cadre légal',
@@ -241,7 +242,7 @@ export const secteurs: Secteur[] = [
     text: "Carte toujours à jour, réservation en ligne et commande à emporter, sans commission prélevée par une plateforme.",
     besoins: ['Carte', 'Réservation', 'Click & collect'],
     metaTitle: 'Création de site internet pour restaurant à Lyon | Madaria',
-    metaDesc: "Site internet pour restaurant : carte à jour, réservation et commande à emporter sans commission. Livré en 7 jours dès 690 € HT.",
+    metaDesc: `Site internet pour restaurant : carte à jour, réservation et commande à emporter selon votre outil. Vitrine dès ${prixEntree} € HT, options sur devis.`,
     h1: 'Création de site internet pour restaurant',
     intro: [
       "Les plateformes de livraison et de réservation prélèvent une commission sur chaque couvert. C'est un loyer que vous payez pour parler à vos propres clients. Un site qui vous appartient transforme cette dépense récurrente en investissement fait une fois.",
@@ -293,7 +294,7 @@ export const secteurs: Secteur[] = [
     text: "Vos soins présentés clairement, réservation par créneaux, cartes cadeaux et relances automatiques entre deux séances.",
     besoins: ['Soins', 'Créneaux', 'Cartes cadeaux'],
     metaTitle: 'Création de site internet pour institut de beauté à Lyon | Madaria',
-    metaDesc: "Site internet pour institut de beauté : réservation en ligne, cartes cadeaux et relances automatiques. Livré en 7 jours dès 690 € HT.",
+    metaDesc: `Site internet pour institut de beauté : réservation en ligne, cartes cadeaux et relances automatiques. Vitrine dès ${prixEntree} € HT, options sur devis.`,
     h1: 'Création de site internet pour institut de beauté',
     intro: [
       "L'esthétique vit de la fidélité : une cliente satisfaite revient toutes les quatre à six semaines, pendant des années. Le problème n'est pas de la convaincre une fois, mais de ne pas la perdre entre deux rendez-vous.",
@@ -345,7 +346,7 @@ export const secteurs: Secteur[] = [
     text: "Catalogue de sessions, inscription en ligne, informations de financement et suivi des candidatures.",
     besoins: ['Catalogue', 'Inscription', 'Financement'],
     metaTitle: 'Création de site internet pour organisme de formation | Madaria',
-    metaDesc: "Site internet pour organisme de formation : catalogue de sessions, inscription en ligne et informations de financement. Livré en 7 jours.",
+    metaDesc: `Site internet pour organisme de formation : catalogue de sessions, inscription en ligne et informations de financement. Périmètre et calendrier sur devis.`,
     h1: 'Création de site internet pour organisme de formation',
     intro: [
       "Un candidat en formation compare, hésite, et surtout se demande comment financer. Si votre site ne répond pas clairement à cette question, il ira chercher un organisme qui le fait — même si votre programme est meilleur.",
@@ -397,7 +398,7 @@ export const secteurs: Secteur[] = [
     text: "Vos chantiers en photos, demande de devis structurée et référencement local pour être trouvé dans votre zone.",
     besoins: ['Réalisations', 'Devis en ligne', 'SEO local'],
     metaTitle: 'Création de site internet pour artisan et BTP à Lyon | Madaria',
-    metaDesc: "Site internet pour artisan du bâtiment : galerie de chantiers, demande de devis et référencement local. Livré en 7 jours dès 690 € HT.",
+    metaDesc: `Site internet pour artisan du bâtiment : galerie de chantiers, demande de devis et référencement local. Vitrine dès ${prixEntree} € HT, options sur devis.`,
     h1: 'Création de site internet pour artisan et entreprise du bâtiment',
     intro: [
       "Dans le bâtiment, la confiance se gagne avant le premier rendez-vous. Un particulier qui cherche un artisan compare trois entreprises, regarde les chantiers réalisés, vérifie les assurances, et appelle celle qui inspire le plus de sérieux.",
@@ -436,7 +437,7 @@ export const secteurs: Secteur[] = [
       },
       {
         q: 'Le site peut-il couvrir plusieurs zones d’intervention ?',
-        r: "Oui, et c'est même recommandé : nous créons une entrée par zone ou par commune, ce qui multiplie vos chances d'apparaître sur les recherches locales de chacune d'elles.",
+        r: "Oui. Nous présentons vos zones d’intervention et créons des pages locales lorsqu’elles apportent des informations spécifiques : prestations, chantiers ou contraintes locales. Nous évitons de dupliquer le même contenu pour chaque commune.",
       },
     ],
   },

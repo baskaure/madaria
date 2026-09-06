@@ -21,9 +21,10 @@ import { vitrine as vedette } from '../data/realisations';
       </div>
 
       <div class="mshot">
-        {/* La page du site qui défile, en boucle et sans son. Le poster
-            s'affiche en attendant la vidéo, et reste seul si l'utilisateur
-            préfère moins d'animations (voir le script plus bas). */}
+        {/* La page du site qui défile, en boucle et sans son. Lecture automatique
+            quand le cadre est à l'écran, pause dès qu'il le quitte (voir script).
+            Le poster tient la place avant le premier plan et reste seul si
+            l'utilisateur préfère moins d'animations. */}
         <video
           id="vitrine-video"
           autoplay
@@ -52,14 +53,32 @@ import { vitrine as vedette } from '../data/realisations';
       </div>
     </div>
   </div>
+  <div class="demo-actions">
+    <a class="text-link" href="/realisations/klientmap/">Découvrir le projet KlientMap →</a>
+  </div>
 </div>
 
 <script>
-  // Moins d'animations demandé : on laisse le poster, la vidéo ne démarre pas.
-  const v = document.getElementById('vitrine-video') as HTMLVideoElement | null;
-  if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    v.removeAttribute('autoplay');
-    v.pause();
-    v.currentTime = 0;
+  // La vidéo ne tourne que lorsqu'on la regarde : pause quand le cadre sort de
+  // l'écran, quand l'onglet passe en arrière-plan, ou si l'utilisateur préfère
+  // moins d'animations (le poster reste alors affiché).
+  const video = document.querySelector<HTMLVideoElement>('#vitrine-video');
+  if (video) {
+    const calme = matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = true;
+    const maj = () => {
+      if (calme.matches || !visible || document.hidden) video.pause();
+      else video.play().catch(() => {});
+    };
+    if (calme.matches) video.removeAttribute('autoplay');
+    new IntersectionObserver(
+      (entrees) => {
+        visible = entrees.some((e) => e.isIntersecting);
+        maj();
+      },
+      { threshold: 0.2 },
+    ).observe(video);
+    document.addEventListener('visibilitychange', maj);
+    calme.addEventListener('change', maj);
   }
 </script>

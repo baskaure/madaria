@@ -4,7 +4,6 @@ import { questions } from '../data/faq';
 import Background from '../components/Background.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import Logos from '../components/Logos.astro';
 import Services from '../components/Services.astro';
 import Methode from '../components/Methode.astro';
 import Realisations from '../components/Realisations.astro';
@@ -12,7 +11,7 @@ import Secteurs from '../components/Secteurs.astro';
 import Offres from '../components/Offres.astro';
 import Faq from '../components/Faq.astro';
 import Contact from '../components/Contact.astro';
-import CtaFinal from '../components/CtaFinal.astro';
+import Agence from '../components/Agence.astro';
 import Footer from '../components/Footer.astro';
 
 // Données structurées FAQ, générées depuis la même source que l'affichage.
@@ -33,15 +32,15 @@ const faqLd = {
 
   <main id="contenu">
     <Hero />
-    <Logos />
+    <Realisations />
+    <Offres />
     <Services />
     <Methode />
-    <Realisations />
+    <Agence />
     <Secteurs />
-    <Offres />
     <Faq />
     <Contact />
-    <CtaFinal />
+
   </main>
 
   <Footer />

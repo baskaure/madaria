@@ -1,6 +1,8 @@
 import type { APIRoute } from 'astro';
 import { secteurs } from '../data/secteurs';
-import { offres } from '../data/offres';
+import { realisations } from '../data/realisations';
+import { prestations } from '../data/prestations';
+import { offres, prixEntree, conditionsOffres } from '../data/offres';
 import { services } from '../data/services';
 import { questions } from '../data/faq';
 import { contact } from '../data/site';
@@ -18,7 +20,7 @@ export const GET: APIRoute = () => {
   l.push('# Madaria');
   l.push('');
   l.push(
-    "> Agence digitale basée à Lyon (France), spécialisée dans la création de sites internet sur-mesure livrés en 7 jours, à partir de 690 € HT. Également : automatisation de tâches métier et développement d'outils sur-mesure. Intervient partout en France, 100 % à distance.",
+    `> Agence digitale basée à Lyon (France), spécialisée dans les sites vitrines à partir de ${prixEntree} € HT, avec un planning de 7 jours selon périmètre et réception des éléments nécessaires. Également : automatisation et outils métier sur devis. Intervient partout en France, à distance.`,
   );
   l.push('');
 
@@ -30,8 +32,8 @@ export const GET: APIRoute = () => {
   l.push('- Zone desservie : Lyon et toute la France, à distance');
   l.push('- Activité : création de sites internet, automatisation, développement sur-mesure');
   l.push('- Délai de livraison : 7 jours pour un site vitrine');
-  l.push('- Prix d’entrée : 690 € HT');
-  l.push('- Maquette : offerte et comprise dans le prix, validée avant tout développement');
+  l.push(`- Prix d’entrée : ${prixEntree} € HT`);
+  l.push('- Maquette : incluse dans la prestation, validée avant tout développement');
   l.push(`- Contact : ${contact.email} · ${contact.tel}`);
   l.push('- Devis : gratuit, chiffré sous 24 heures, sans engagement');
   l.push('');
@@ -47,7 +49,13 @@ export const GET: APIRoute = () => {
     l.push('');
   }
 
+  for (const condition of conditionsOffres) l.push(condition);
+  l.push('');
+  l.push('## Réalisations');
+  for (const p of realisations) l.push(`- [${p.nom}](${BASE}/realisations/${p.id}/) : ${p.accroche}`);
+  l.push('');
   l.push('## Services');
+  for (const p of prestations) l.push(`- [${p.titre}](${BASE}/services/${p.slug}/)`);
   l.push('');
   for (const s of services) l.push(`- **${s.title}** : ${s.text}`);
   l.push('');

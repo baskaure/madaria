@@ -1,17 +1,18 @@
+import { offres, prixEntree } from './offres';
 export type Question = { q: string; r: string };
 
 export const questions: Question[] = [
   {
     q: 'Combien de temps pour un site ?',
-    r: "Une semaine pour un site vitrine, du cadrage à la mise en ligne. Comptez deux à trois semaines pour un e-commerce ou une application métier avec back-office. Le planning est fixé dès le cadrage et nous le tenons.",
+    r: "Sept jours pour un site vitrine après validation du périmètre et réception des contenus et accès nécessaires, avec vos retours aux dates convenues. Pour un e-commerce ou une application métier, le calendrier dépend des fonctionnalités et des intégrations : il est fixé au devis.",
   },
   {
     q: 'Je peux modifier mon site moi-même ?',
-    r: "Oui. Chaque site est livré avec une interface d'administration simple et une session de formation enregistrée. Vous restez autonome sur vos contenus.",
+    r: "Les contenus que vous souhaitez modifier sont définis au cadrage. Nous précisons au devis l’interface d’édition et la formation prévues. Un back-office métier avec comptes clients ou base de données relève d’un périmètre sur-mesure.",
   },
   {
     q: "Concrètement, qu'est-ce qu'une automatisation ?",
-    r: "Un formulaire rempli qui crée la fiche client, envoie le devis, programme la relance et met à jour votre tableau de bord — sans intervention humaine. En moyenne, nos clients récupèrent 6 à 10 heures par semaine.",
+    r: "Un formulaire rempli qui crée la fiche client, envoie le devis, programme la relance et met à jour votre tableau de bord — sans intervention humaine. Nous identifions avec vous les tâches à automatiser et mesurons le temps économisé une fois le flux en place.",
   },
   {
     q: 'À qui appartient le site une fois livré ?',
@@ -23,7 +24,7 @@ export const questions: Question[] = [
   },
   {
     q: "Combien coûte la création d'un site internet ?",
-    r: "Chez nous, un site vitrine sur-mesure démarre à 690 € HT et un site complet avec référencement à 1 490 € HT. À titre de comparaison, une agence lyonnaise classique facture généralement entre 2 000 et 5 000 € pour une prestation équivalente. Le devis est chiffré sous 24 heures et le prix annoncé est celui que vous payez : la maquette est comprise, il n'y a pas de frais cachés.",
+    r: `Chez nous, un site vitrine sur-mesure démarre à ${prixEntree} € HT et un site complet avec référencement à ${offres[1].prix} € HT. Le devis est chiffré sous 24 heures et le prix annoncé est celui que vous payez : la maquette est incluse et les options ainsi que les éventuels frais récurrents sont précisés avant engagement.`,
   },
   {
     q: 'Travaillez-vous uniquement à Lyon ?',
