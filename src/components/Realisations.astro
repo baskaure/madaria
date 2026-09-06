@@ -358,6 +358,11 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
     /* ---------- aperçu flottant (vue liste, souris seulement) ---------- */
     if (peek && peekImg && souris) {
       let px = 0, py = 0, tx = 0, ty = 0, raf = 0;
+      const masquer = () => {
+        peek.classList.remove('on');
+        cancelAnimationFrame(raf);
+        raf = 0;
+      };
       const suivre = () => {
         raf = 0;
         px += (tx - px) * 0.18;
@@ -377,14 +382,21 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
         { passive: true },
       );
       lignes.forEach((l) => {
-        l.addEventListener('mouseenter', () => {
+        l.addEventListener('mouseenter', (e) => {
           const p = P[Number(l.dataset.i)];
           if (!p) return;
           peekImg.src = shot(p.id, 'thumb');
+          px = tx = e.clientX;
+          py = ty = e.clientY;
+          suivre();
           peek.classList.add('on');
         });
-        l.addEventListener('mouseleave', () => peek.classList.remove('on'));
+        l.addEventListener('mouseleave', masquer);
       });
+      vues?.addEventListener('click', masquer);
+      filtres.addEventListener('click', masquer);
+      liste.addEventListener('click', masquer);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) masquer(); });
     }
 
     /* ---------- fiche projet ---------- */

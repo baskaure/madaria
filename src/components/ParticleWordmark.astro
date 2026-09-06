@@ -51,7 +51,8 @@ const { text = 'MADARIA' } = Astro.props;
 
     type Particule = {
       cx: number; cy: number; nx: number; ny: number;
-      format: string; size: number; offset: number; mask: number;
+      format: string; size: number; offset: number; mask: number; color: number[];
+      path: Path2D | null;
     };
 
     // ---- bruit et champ de mouvement ----
@@ -74,10 +75,7 @@ const { text = 'MADARIA' } = Astro.props;
 
     const champ = (p: Particule, t: number) => {
       const bande = 0.35 + 0.65 * Math.pow(0.5 + 0.5 * Math.sin(3 * p.nx - 0.5 * t), 2);
-      return {
-        a: 0.14 + 0.86 * bande * Math.pow(chute(p, t), 1.8),
-        p: 0.7 * p.offset,
-      };
+      return 0.14 + 0.86 * bande * Math.pow(chute(p, t), 1.8);
     };
 
     const melange = (v: number) => {
@@ -102,6 +100,7 @@ const { text = 'MADARIA' } = Astro.props;
     const RAYON = 150; // portée de l'illumination, en px
     let sourisX = -1e5;
     let sourisY = -1e5;
+    let clientX = 0, clientY = 0;
     let lampe = 0; // intensité lissée, 0 → 1
 
     let particules: Particule[] = [];
@@ -143,7 +142,7 @@ const { text = 'MADARIA' } = Astro.props;
     const reconstruire = () => {
       const w = host.clientWidth;
       const h = host.clientHeight;
-      if (!w || !h) return;
+      if (!w || !h || !masque) return;
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.max(1, Math.floor(w * dpr));
@@ -167,15 +166,24 @@ const { text = 'MADARIA' } = Astro.props;
           const plage = rand() < BIG_CHANCE ? SIZE_BIG : SIZE_SMALL;
           const px = ox + x * pas;
           const py = oy + y * pas;
+          const format = FORMATS[Math.floor(rand() * FORMATS.length)];
+          const size = (plage[0] + rand() * (plage[1] - plage[0])) * finesse;
+          const offset = rand();
+          const mask = echantillon ? echantillon(px, py) : 1;
+          // La géométrie reste fixe hors du halo : réutiliser le même cercle.
+          const path = format === 'dot' && mask > 0.005 ? new Path2D() : null;
+          path?.arc(px, py, size / 2, 0, TAU);
           particules.push({
             cx: px,
             cy: py,
             nx: cols > 1 ? x / (cols - 1) : 0.5,
             ny: rows > 1 ? y / (rows - 1) : 0.5,
-            format: FORMATS[Math.floor(rand() * FORMATS.length)],
-            size: (plage[0] + rand() * (plage[1] - plage[0])) * finesse,
-            offset: rand(),
-            mask: echantillon ? echantillon(px, py) : 1,
+            format,
+            size,
+            offset,
+            color: melange(0.7 * offset),
+            mask,
+            path,
           });
         }
       }
@@ -186,10 +194,6 @@ const { text = 'MADARIA' } = Astro.props;
       const portee = RAYON * RAYON;
 
       for (const p of particules) {
-        const f = champ(p, t);
-        let alpha = Math.max(0, Math.min(1, f.a));
-        if (p.mask < 1) alpha = p.mask * (0.3 + 0.7 * alpha);
-
         // proximité du curseur : décroissance quadratique jusqu'à RAYON
         let lueur = 0;
         if (lampe > 0.002) {
@@ -202,12 +206,17 @@ const { text = 'MADARIA' } = Astro.props;
           }
         }
 
+        // Hors du mot et du halo, le point est invisible : aucun bruit à calculer.
+        if (p.mask <= 0.005 && lueur === 0) continue;
+        let alpha = Math.max(0, Math.min(1, champ(p, t)));
+        if (p.mask < 1) alpha = p.mask * (0.3 + 0.7 * alpha);
+
         // les points du mot s'allument franchement, ceux du fond juste assez
         // pour dessiner un halo autour du curseur
         if (lueur > 0) alpha = Math.min(1, alpha + lueur * (0.25 + 0.75 * p.mask));
         if (alpha <= 0.005) continue;
 
-        let [r, g, b] = melange(f.p);
+        let [r, g, b] = p.color;
         if (lueur > 0) {
           const vers = lueur * 0.85;
           r += (255 - r) * vers;
@@ -219,6 +228,8 @@ const { text = 'MADARIA' } = Astro.props;
         const demi = d / 2;
         if (p.format === 'square') {
           ctx.fillRect(p.cx - demi, p.cy - demi, d, d);
+        } else if (lueur === 0 && p.path) {
+          ctx.fill(p.path);
         } else {
           ctx.beginPath();
           ctx.arc(p.cx, p.cy, demi, 0, TAU);
@@ -232,6 +243,11 @@ const { text = 'MADARIA' } = Astro.props;
     const boucle = (now: number) => {
       frame = 0;
       if (!reduit && visible && !document.hidden) {
+        if (survol) {
+          const r = host.getBoundingClientRect();
+          sourisX = clientX - r.left;
+          sourisY = clientY - r.top;
+        }
         lampe += ((survol ? 1 : 0) - lampe) * 0.12; // fondu entrée / sortie
         tNow = ((now - t0) / 1000) % DUR;
         dessiner(tNow * SPEED);
@@ -240,9 +256,8 @@ const { text = 'MADARIA' } = Astro.props;
     };
 
     host.addEventListener('pointermove', (e) => {
-      const r = host.getBoundingClientRect();
-      sourisX = e.clientX - r.left;
-      sourisY = e.clientY - r.top;
+      clientX = e.clientX;
+      clientY = e.clientY;
       survol = true;
     });
     host.addEventListener('pointerleave', () => {

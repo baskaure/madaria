@@ -27,20 +27,19 @@ import { vitrine as vedette } from '../data/realisations';
             l'utilisateur préfère moins d'animations. */}
         <video
           id="vitrine-video"
-          autoplay
           muted
           loop
           playsinline
           disablepictureinpicture
           disableremoteplayback
-          preload="auto"
+          preload="none"
           poster={vedette.poster}
           width={vedette.largeur}
           height={vedette.hauteur}
           aria-label={`Site internet réalisé pour ${vedette.nom} : la page défile`}
         >
-          <source src={vedette.video.webm} type="video/webm" />
-          <source src={vedette.video.mp4} type="video/mp4" />
+          <source data-src={vedette.video.webm} type="video/webm" />
+          <source data-src={vedette.video.mp4} type="video/mp4" />
           <img
             src={vedette.poster}
             alt={`Site internet réalisé pour ${vedette.nom}`}
@@ -65,12 +64,21 @@ import { vitrine as vedette } from '../data/realisations';
   const video = document.querySelector<HTMLVideoElement>('#vitrine-video');
   if (video) {
     const calme = matchMedia('(prefers-reduced-motion: reduce)');
-    let visible = true;
+    let visible = false;
+    let chargee = false;
     const maj = () => {
       if (calme.matches || !visible || document.hidden) video.pause();
-      else video.play().catch(() => {});
+      else {
+        if (!chargee) {
+          video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach(source => {
+            source.src = source.dataset.src!;
+          });
+          chargee = true;
+          video.load();
+        }
+        video.play().catch(() => {});
+      }
     };
-    if (calme.matches) video.removeAttribute('autoplay');
     new IntersectionObserver(
       (entrees) => {
         visible = entrees.some((e) => e.isIntersecting);

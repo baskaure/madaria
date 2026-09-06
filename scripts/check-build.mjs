@@ -31,7 +31,12 @@ for (const [file, html] of pages) {
 const home = pages.get(path.join(root,'index.html'));
 const video = home.match(/<video\b[^>]*>[\s\S]*?<\/video>/)?.[0];
 assert.ok(video,'Vidéo présente');
-assert.ok(!/<source\b/.test(video),'Aucune source préchargée');
+assert.ok(!/<source\b[^>]*\ssrc=/.test(video),'Aucune source préchargée');
+assert.equal(attr(video.split('>')[0],'preload'),'none','Chargement vidéo différé');
+for (const source of video.matchAll(/<source\b[^>]*>/g)) {
+  const src = attr(source[0],'data-src');
+  assert.ok(src && fs.existsSync(path.join(root,src)), 'Source vidéo différée disponible');
+}
 assert.ok(!/\sautoplay(?:\s|>|=)/.test(video),'Aucun autoplay');
 assert.ok(!attr(video.split('>')[0],'src'),'Pas de src vidéo avant action');
 assert.match(home,/<option value="">Choisir un budget<\/option>/);
