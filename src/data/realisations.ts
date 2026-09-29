@@ -52,31 +52,6 @@ export interface Realisation {
   vedette?: boolean;
 }
 
-/**
- * Site mis en vitrine dans le hero (`Dashboard.astro`) : enregistrement vidéo
- * de la page qui défile, en lecture automatique et silencieuse. Deux encodages
- * (WebM VP9 léger, MP4 H.264 pour Safari) et un poster tiré de la première
- * image, affiché avant la lecture et à sa place quand l'utilisateur préfère
- * moins d'animations. L'enregistrement d'origine (écran complet 1920 × 1080,
- * avec barre de menus, onglets et barre d'adresse) est conservé dans
- * `medias-en-reserve/klientmap-vitrine-source.mp4` ; les fichiers publiés en
- * sont tirés, recadrés sur la page seule et ramenés à 30 images/s :
- *
- *   ffmpeg -i source.mp4 -vf "crop=1900:938:0:142,scale=1264:624,fps=30" -an …
- */
-export const vitrine = {
-  nom: 'KlientMap',
-  secteur: 'Outil SaaS de prospection B2B',
-  poster: '/realisations/klientmap-vitrine.webp',
-  video: {
-    webm: '/realisations/klientmap-vitrine.webm',
-    mp4: '/realisations/klientmap-vitrine.mp4',
-  },
-  /** Dimensions des fichiers, posées sur la balise pour éviter tout saut de mise en page. */
-  largeur: 1264,
-  hauteur: 624,
-} as const;
-
 export const realisations: readonly Realisation[] = [
   {
     id: 'klientmap',

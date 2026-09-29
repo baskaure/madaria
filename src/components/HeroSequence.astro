@@ -1,0 +1,1041 @@
+---
+/**
+ * Séquence du hero : dans le cadre d'écran, un site se construit en une
+ * douzaine de secondes, pour montrer la promesse « en ligne en 7 jours ».
+ *
+ * Les quatre phases reprennent la méthode (`data/methode.ts`) :
+ *   Cadrage · Jour 1           carte de brief, trois champs tapés
+ *   Design · Jour 2 → 3        wireframe gris posé bloc par bloc, puis mis
+ *                              aux couleurs du client
+ *   Développement · Jour 3 → 6 extraits réels de son code pendant que la
+ *                              capture du site remplace la maquette
+ *   Mise en ligne · Jour 7     URL, badge « En ligne », puis la fin propre au
+ *                              projet (notification ou leads qui arrivent)
+ *
+ * Deux projets en boucle (`data/sequence.ts`), un onglet chacun. Tout est
+ * piloté par la Web Animations API : chaque élément reçoit UNE animation qui
+ * couvre toute la durée du projet (ses étapes en offsets), toutes démarrent
+ * ensemble. Mettre en pause, reprendre ou sauter à l'état final revient donc
+ * à agir sur la même horloge pour toutes.
+ *
+ * A remplacé la vitrine vidéo KlientMap le 29/09/2026 (source archivée dans
+ * `medias-en-reserve/`).
+ */
+import { projets } from '../data/sequence';
+import { etapes } from '../data/methode';
+
+const premier = projets[0];
+const pc = (v: number) => `${v}%`;
+const boite = (b: { x: number; y: number; w: number; h: number }) =>
+  `left:${pc(b.x)};top:${pc(b.y)};width:${pc(b.w)};height:${pc(b.h)}`;
+---
+
+<div class="mockwrap rv sq" data-sq>
+  <div class="proj" aria-hidden="true"><i></i></div>
+
+  <div class="mockframe">
+    <div class="mock glass">
+      {/* barre des cartes Réalisations (`.barre`) ; ses règles visent tout
+          `span` et tout `i` descendants, d'où les `em`/`b` à l'intérieur */}
+      <div class="barre">
+        <i></i><i></i><i></i>
+        <div class="sq-url">
+          <em class="sq-pre" data-u-pre>préproduction</em>
+          <em class="sq-prod" data-u-prod><b data-u-hote>{premier.url}</b><b data-u-chemin></b></em>
+        </div>
+        {/* phase en cours : dans la barre sur ordinateur, dans l'écran sur mobile */}
+        <p class="sq-phases" aria-hidden="true">
+          {etapes.map((e) => (
+            <em class="sq-phase" data-phase><b>{e.num}</b>{e.titre}<u>{e.delai}</u></em>
+          ))}
+        </p>
+        <b class="sq-live" data-live><em><s data-live-on></s></em>En ligne</b>
+      </div>
+      <div class="sq-jours" aria-hidden="true"><i data-avance></i></div>
+
+      <div class="sq-ecran" id="sq-ecran" role="tabpanel" aria-labelledby={`sq-onglet-${premier.id}`} data-ecran>
+        {projets.map((p, i) => (
+          <div
+            class="sq-projet"
+            data-projet={p.id}
+            data-nom={p.nom}
+            data-url={p.url}
+            data-chemin={p.chemin ?? ''}
+            data-fin={p.fin.type}
+            hidden={i !== 0}
+            style={p.couleurs}
+          >
+            <div class="sq-page" data-page>
+              {(['gris', 'couleur'] as const).map((couche) => (
+                <div class={`sq-wire sq-${couche}`} data-wire={couche} aria-hidden="true">
+                  {p.blocs.map((b) => <i class={`b-${b.role}`} style={boite(b)} />)}
+                </div>
+              ))}
+              <i class="sq-scan" data-scan aria-hidden="true" />
+              <img
+                class="sq-shot"
+                data-shot
+                src={p.capture.src}
+                srcset={`${p.capture.src1x} 1440w, ${p.capture.src} 2880w`}
+                sizes="(max-width: 760px) 200vw, min(1166px, 100vw)"
+                width="2880"
+                height="1440"
+                alt={p.capture.alt}
+                loading="lazy"
+                decoding="async"
+              />
+              {p.fin.type === 'leads' && (
+                <div class="sq-app" data-app>
+                  <img
+                    src={p.fin.src}
+                    srcset={`${p.fin.src1x} ${p.fin.largeur / 2}w, ${p.fin.src} ${p.fin.largeur}w`}
+                    sizes="(max-width: 760px) 200vw, min(1166px, 100vw)"
+                    width={p.fin.largeur}
+                    height={p.fin.hauteur}
+                    alt={p.fin.alt}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {p.fin.colonnes.map((c) => <i class="sq-vide" style={`${boite(c)};background:${c.fond}`} />)}
+                  {p.fin.cartes.map((c) => (
+                    <span
+                      class="sq-carte"
+                      data-carte={c.rang}
+                      style={`clip-path:inset(${c.y}% ${100 - c.x - c.w}% ${100 - c.y - c.h}% ${c.x}% round 0.6%)`}
+                      aria-hidden="true"
+                    >
+                      <img src={p.fin.src} srcset={`${p.fin.src1x} ${p.fin.largeur / 2}w, ${p.fin.src} ${p.fin.largeur}w`}
+                        sizes="(max-width: 760px) 200vw, min(1166px, 100vw)" width={p.fin.largeur} height={p.fin.hauteur}
+                        alt="" loading="lazy" decoding="async" />
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div class="sq-brief glass" data-brief>
+              <p class="sq-tete"><span>Brief</span><em>Appel de 15 min</em></p>
+              <dl>
+                {p.brief.map((c) => (
+                  <div class={c.mobile ? undefined : 'sq-opt'}>
+                    <dt>{c.label}</dt>
+                    <dd><span data-frappe style={`--n:${c.valeur.length}`}>{c.valeur}</span></dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            <div class="sq-code sq-sombre" data-code aria-hidden="true">
+              <p class="sq-tete"><span>{p.dossier}</span></p>
+              <div class="sq-code-vue">
+                <ol data-lignes>
+                  {p.code.map((l) => (
+                    <li class:list={[{ 'sq-fichier': !l.n, 'sq-opt': !l.mobile }]} data-ligne>
+                      <span>{l.n ?? ''}</span><code>{l.code}</code>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
+            {p.fin.type === 'notification' && (
+              <div class="sq-notif sq-sombre" data-notif>
+                <span class="sq-icone" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3.5 6.5l8.5 6.5 8.5-6.5" /></svg>
+                </span>
+                <span class="sq-notif-txt">
+                  <b>{p.fin.titre}</b>
+                  <span>{p.fin.detail}</span>
+                </span>
+                <em>À l'instant</em>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-actions sq-actions">
+    <div class="sq-onglets" role="tablist" aria-label="Projets présentés">
+      {projets.map((p, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`sq-onglet-${p.id}`}
+          aria-controls="sq-ecran"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-onglet={i}
+        >
+          <b>{p.nom}</b><em>Offre {p.offre}</em>
+        </button>
+      ))}
+    </div>
+    <button type="button" class="sq-pause" data-pause aria-pressed="false" aria-label="Mettre l'animation en pause">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sq-ico-pause" d="M9 6v12M15 6v12" /><path class="sq-ico-lire" d="M8 5.5v13l11-6.5z" /></svg>
+    </button>
+    <a class="text-link" data-lien href={`/realisations/${premier.id}/`}>Découvrir le projet {premier.nom} →</a>
+  </div>
+
+  <!-- sans JavaScript : l'état final du premier projet, immobile -->
+  <noscript><style>
+    .sq-shot,.sq-prod,.sq-prod b,.sq-live,.sq-live s,.sq-notif,.sq-phase:last-child{opacity:1!important;clip-path:none!important;transform:none!important}
+    .sq-pause{display:none!important}
+  </style></noscript>
+</div>
+
+<script>
+  type Etape = [number, Keyframe, string?];
+
+  const racine = document.querySelector<HTMLElement>('[data-sq]');
+
+  if (racine) {
+    const $ = <T extends Element = HTMLElement>(sel: string, dans: ParentNode = racine) => dans.querySelector<T>(sel);
+    const $$ = <T extends Element = HTMLElement>(sel: string, dans: ParentNode = racine) =>
+      Array.from(dans.querySelectorAll<T>(sel));
+
+    const calme = matchMedia('(prefers-reduced-motion: reduce)');
+    const etroit = matchMedia('(max-width: 760px)');
+    const projets = $$('[data-projet]');
+    const onglets = $$<HTMLButtonElement>('[data-onglet]');
+    const bouton = $<HTMLButtonElement>('[data-pause]')!;
+    const lien = $<HTMLAnchorElement>('[data-lien]')!;
+    const ecran = $('[data-ecran]')!;
+    const hote = $('[data-u-hote]')!;
+    const chemin = $('[data-u-chemin]')!;
+
+    // Repères de la séquence, en millisecondes. Mêmes pour les deux projets
+    // jusqu'à la mise en ligne ; seule la fin (notification ou leads) diffère.
+    const T = { design: 2400, dev: 5200, ligne: 8600, fin: 9900 } as const;
+    const FIN = { notification: 2500, leads: 3500 } as const;
+    const SORTIE = 600;
+    const SOUPLE = 'cubic-bezier(.16,1,.3,1)';
+    const RESSORT = 'cubic-bezier(.34,1.4,.5,1)';
+
+    /** Lignes réellement affichées (le mobile en masque une partie). */
+    const affiche = (els: HTMLElement[]) => els.filter((el) => getComputedStyle(el).display !== 'none');
+
+    let actif = 0;
+    let anims: Animation[] = [];
+    let arret = 0; // temps de l'état final (juste avant le fondu de sortie)
+    let visible = false;
+    let pauseVoulue = false;
+
+    function construire(i: number) {
+      anims.forEach((a) => a.cancel());
+      anims = [];
+      const p = projets[i];
+      const fin = p.dataset.fin as keyof typeof FIN;
+      const D = T.fin + FIN[fin] + SORTIE;
+      arret = D - SORTIE;
+
+      /** Une animation par élément sur toute la durée D ; les étapes deviennent des offsets. */
+      const piste = (el: Element | null, etapes: Etape[], easing = SOUPLE) => {
+        if (!el) return;
+        const pts = [...etapes];
+        if (pts[0][0] > 0) pts.unshift([0, pts[0][1]]);
+        if (pts[pts.length - 1][0] < D) pts.push([D, pts[pts.length - 1][1]]);
+        const a = el.animate(
+          pts.map(([t, k, e]) => ({ ...k, offset: Math.min(1, t / D), easing: e ?? easing })),
+          { duration: D, fill: 'both' },
+        );
+        a.pause();
+        anims.push(a);
+      };
+      const cache = { opacity: 0 };
+      const vu = { opacity: 1 };
+
+      // Horloge : un effet sans cible, dont la fin enchaîne sur l'autre projet.
+      const horloge = new Animation(new KeyframeEffect(null, null, { duration: D }));
+      horloge.onfinish = () => lancer((actif + 1) % projets.length);
+      anims.push(horloge);
+
+      // ---- repères communs : phase en cours, jours écoulés, barre d'adresse ----
+      const debuts = [0, T.design, T.dev, T.ligne, arret];
+      $$('[data-phase]').forEach((el, k) => {
+        const a = debuts[k], b = debuts[k + 1];
+        const bas = { opacity: 0, transform: 'translateY(40%)' };
+        const haut = { opacity: 0, transform: 'translateY(-40%)' };
+        const ici = { opacity: 1, transform: 'none' };
+        piste(el, k === 3
+          ? [[a, bas], [a + 350, ici], [arret, ici], [D, haut]]
+          : [[a, bas], [a + 350, ici], [b, ici], [b + 250, haut]]);
+      });
+      piste($('[data-avance]'), [[0, { transform: 'scaleX(0)' }], [T.ligne, { transform: 'scaleX(1)' }]], 'linear');
+      piste($('[data-u-pre]'), [[T.dev, cache], [T.dev + 250, vu], [T.ligne, vu], [T.ligne + 150, cache]]);
+      const typo = (el: HTMLElement, t: number, duree: number) => {
+        const n = Math.max(1, el.textContent!.length);
+        piste(el, [
+          [t, { clipPath: 'inset(0 100% 0 0)' }],
+          [t + duree, { clipPath: 'inset(0 0% 0 0)' }, 'linear'],
+        ], `steps(${n}, end)`);
+      };
+      piste($('[data-u-prod]'), [[T.ligne + 100, vu], [arret, vu], [D, cache]]);
+      typo(hote, T.ligne + 100, 600);
+      typo(chemin, T.fin, 300);
+      piste($('[data-live]'), [[T.ligne + 700, { opacity: 0.4 }], [T.ligne + 950, vu], [arret, vu], [D, { opacity: 0.4 }]]);
+      piste($('[data-live-on]'), [
+        [T.ligne + 700, { opacity: 0, transform: 'scale(.4)' }],
+        [T.ligne + 950, { opacity: 1, transform: 'scale(1.35)' }],
+        [T.ligne + 1300, { opacity: 1, transform: 'scale(1)' }],
+        [arret, { opacity: 1, transform: 'scale(1)' }],
+        [D, { opacity: 0, transform: 'scale(1)' }],
+      ]);
+
+      // ---- 1. Cadrage : la carte de brief, ses champs tapés un à un ----
+      const brief = $('[data-brief]', p);
+      piste(brief, [
+        [150, { opacity: 0, transform: 'translate(-50%, -46%) scale(.96)' }],
+        [600, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }],
+        [T.design, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }],
+        [T.design + 350, { opacity: 0, transform: 'translate(-50%, -56%) scale(.98)' }],
+      ]);
+      affiche($$('dl > div', brief)).forEach((champ, j) => typo($('[data-frappe]', champ)!, 700 + j * 550, 450));
+
+      // ---- 2. Design : blocs gris en cascade, puis balayage aux couleurs du client ----
+      $$('[data-wire="gris"] > i', p).forEach((b, j) => {
+        const t = T.design + 150 + Math.min(j, 18) * 55;
+        piste(b, [[t, { opacity: 0, transform: 'scale(.9)' }], [t + 380, { opacity: 1, transform: 'none' }]]);
+      });
+      piste($('[data-wire="gris"]', p), [[T.dev + 2600, vu], [T.dev + 2700, cache]]);
+      piste($('[data-wire="couleur"]', p), [
+        [T.design + 1700, { clipPath: 'inset(0 100% 0 0)' }],
+        [T.design + 2600, { clipPath: 'inset(0 0% 0 0)' }],
+      ], 'cubic-bezier(.65,0,.35,1)');
+
+      // ---- 3. Développement : la capture remplace la maquette, le code défile ----
+      const balaye = 'cubic-bezier(.45,0,.25,1)';
+      piste($('[data-shot]', p), [
+        [T.dev + 400, { clipPath: 'inset(0 0 100% 0)' }],
+        [T.dev + 3000, { clipPath: 'inset(0 0 0% 0)' }],
+      ], balaye);
+      piste($('[data-scan]', p), [
+        [T.dev + 300, { opacity: 0, top: '0%' }],
+        [T.dev + 400, { opacity: 1, top: '0%' }, balaye],
+        [T.dev + 3000, { opacity: 1, top: '100%' }],
+        [T.dev + 3150, { opacity: 0, top: '100%' }],
+      ], 'linear');
+
+      const code = $('[data-code]', p)!;
+      piste(code, [
+        [T.dev + 100, { opacity: 0, transform: 'translateY(8%)' }],
+        [T.dev + 450, { opacity: 1, transform: 'none' }],
+        [T.ligne - 300, { opacity: 1, transform: 'none' }],
+        [T.ligne, { opacity: 0, transform: 'translateY(-4%)' }],
+      ]);
+      const lignes = affiche($$('[data-ligne]', code));
+      const vues = Number(getComputedStyle(code).getPropertyValue('--lignes')) || 4;
+      const pas = 2700 / lignes.length;
+      // le panneau montre `vues` lignes : chaque ligne suivante le fait monter d'un cran
+      const cran = (k: number) => ({ transform: `translateY(${-k * 1.7}em)` });
+      const defile: Etape[] = [[0, cran(0)]];
+      lignes.forEach((l, j) => {
+        const t = T.dev + 400 + j * pas;
+        piste(l, [[t, { opacity: 0, transform: 'translateX(-.6em)' }], [t + 260, { opacity: 1, transform: 'none' }]]);
+        if (j >= vues) defile.push([t, cran(j - vues)], [t + 260, cran(j - vues + 1)]);
+      });
+      if (defile.length > 1) piste($('[data-lignes]', code), defile);
+
+      // ---- 4. Mise en ligne : la fin propre au projet ----
+      if (fin === 'notification') {
+        piste($('[data-notif]', p), [
+          [T.fin, { opacity: 0, transform: 'translateY(40%)' }],
+          [T.fin + 650, { opacity: 1, transform: 'none' }, RESSORT],
+        ], RESSORT);
+      } else {
+        // l'appli remplace la landing, puis les leads arrivent rangée par rangée
+        piste($('[data-app]', p), [[T.fin, cache], [T.fin + 500, vu]]);
+        // sur mobile le cadre ne montre que le début de la page : on se cale à gauche
+        piste($('[data-page]', p), [
+          [T.fin, { left: 'calc((100cqw - 200cqh) / 2)' }],
+          [T.fin + 700, { left: '0px' }],
+        ]);
+        $$('[data-carte]', p).forEach((c) => {
+          const t = T.fin + 600 + Number(c.dataset.carte) * 300;
+          piste(c, [[t, { opacity: 0, transform: 'translateY(2.5cqh)' }], [t + 420, { opacity: 1, transform: 'none' }]]);
+        });
+      }
+
+      piste(p, [[arret, vu], [D, cache]], 'ease-in');
+    }
+
+    /**
+     * Captures en `loading="lazy"`, mais Chromium (Chrome, Brave) ne charge
+     * jamais une image entièrement masquée par `clip-path` : c'est l'état de
+     * départ de la capture, qui restait donc vide. Dès que le bloc est à
+     * l'écran, celles du projet en cours et du suivant passent en immédiat.
+     */
+    const charger = (i: number) => {
+      for (const k of [i, (i + 1) % projets.length])
+        $$<HTMLImageElement>('img', projets[k]).forEach((img) => (img.loading = 'eager'));
+    };
+
+    const jouer = () => anims.forEach((a) => a.play());
+    const suspendre = () => anims.forEach((a) => a.pause());
+    const maj = () => {
+      if (calme.matches) return;
+      if (visible && !pauseVoulue && !document.hidden) jouer();
+      else suspendre();
+    };
+
+    function lancer(i: number, t = 0) {
+      actif = i;
+      projets.forEach((p, k) => (p.hidden = k !== i));
+      const p = projets[i];
+      hote.textContent = p.dataset.url || '';
+      chemin.textContent = p.dataset.chemin || '';
+      onglets.forEach((o, k) => {
+        o.setAttribute('aria-selected', String(k === i));
+        o.tabIndex = k === i ? 0 : -1;
+      });
+      ecran.setAttribute('aria-labelledby', onglets[i].id);
+      lien.href = `/realisations/${p.dataset.projet}/`;
+      lien.textContent = `Découvrir le projet ${p.dataset.nom} →`;
+
+      construire(i);
+      if (visible || calme.matches) charger(i);
+      if (calme.matches) {
+        // animations réduites : l'état final, immobile
+        anims.forEach((a) => { a.currentTime = arret; a.pause(); });
+        return;
+      }
+      anims.forEach((a) => (a.currentTime = t));
+      maj();
+    }
+
+    const majBouton = () => {
+      bouton.setAttribute('aria-pressed', String(pauseVoulue));
+      bouton.setAttribute('aria-label', pauseVoulue ? "Reprendre l'animation" : "Mettre l'animation en pause");
+    };
+
+    onglets.forEach((o, i) =>
+      o.addEventListener('click', () => {
+        pauseVoulue = false;
+        majBouton();
+        lancer(i);
+      }),
+    );
+    // flèches du clavier dans la liste d'onglets (motif ARIA « tabs »)
+    $('[role="tablist"]')!.addEventListener('keydown', (e) => {
+      const sens = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!sens) return;
+      e.preventDefault();
+      const i = (actif + sens + onglets.length) % onglets.length;
+      onglets[i].focus();
+      onglets[i].click();
+    });
+
+    bouton.addEventListener('click', () => {
+      pauseVoulue = !pauseVoulue;
+      majBouton();
+      maj();
+    });
+    bouton.hidden = calme.matches;
+
+    new IntersectionObserver(
+      (entrees) => {
+        visible = entrees.some((e) => e.isIntersecting);
+        if (visible) charger(actif);
+        maj();
+      },
+      { threshold: 0.25 },
+    ).observe(ecran);
+    document.addEventListener('visibilitychange', maj);
+    calme.addEventListener('change', () => {
+      bouton.hidden = calme.matches;
+      lancer(actif);
+    });
+    // le mobile masque des champs et des lignes : on reconstruit au même instant
+    etroit.addEventListener('change', () => lancer(actif, Number(anims[0]?.currentTime) || 0));
+
+    lancer(0);
+  }
+</script>
+
+<style>
+  /* Variables propres au bloc. Le site n'a de variables que pour ses
+     couleurs : les rayons et la pile mono reprennent ceux de `.cadre` et
+     `.barre` (global.css), les teintes sont des mélanges de ses couleurs. */
+  .sq {
+    --sq-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --sq-r: 14px;
+    --sq-r-s: 5px;
+    --sq-gris: color-mix(in srgb, var(--fg) 15%, transparent);
+    --sq-gris-fort: color-mix(in srgb, var(--fg) 24%, transparent);
+    --sq-marge: 1.6cqw;
+  }
+
+  /* ---- barre de navigateur : celle des cartes Réalisations, à l'échelle ---- */
+  .barre {
+    height: 40px;
+    padding: 0 16px;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .barre > i {
+    width: 10px;
+    height: 10px;
+  }
+  .sq-url {
+    position: relative;
+    margin-left: 10px;
+    flex: 1;
+    min-width: 0;
+    height: 24px;
+    max-width: 420px;
+    font-family: var(--sq-mono);
+    font-size: 11.5px;
+    color: var(--mut);
+    background: color-mix(in srgb, var(--fg) 5%, transparent);
+    border-radius: var(--sq-r-s);
+    overflow: hidden;
+  }
+  .sq-url em {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-style: normal;
+    white-space: nowrap;
+  }
+  .sq-pre {
+    color: var(--faint);
+    opacity: 0;
+  }
+  .sq-prod {
+    color: var(--fg);
+    opacity: 0;
+  }
+  .sq-prod b {
+    display: inline-block;
+    font-weight: 400;
+    clip-path: inset(0 100% 0 0);
+  }
+  .sq-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 10px 3px 8px;
+    border: 1px solid var(--line2);
+    border-radius: 100px;
+    font-family: var(--sq-mono);
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg);
+    white-space: nowrap;
+    opacity: 0.4;
+  }
+  .sq-live em {
+    position: relative;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--line2);
+  }
+  .sq-live s {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--glow);
+    box-shadow: 0 0 10px 2px var(--lav);
+    opacity: 0;
+  }
+
+  /* fine jauge des sept jours, sous la barre */
+  .sq-jours {
+    height: 2px;
+    background: repeating-linear-gradient(90deg, transparent 0 calc(100% / 7 - 2px), var(--line) calc(100% / 7 - 2px) calc(100% / 7));
+  }
+  .sq-jours i {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet), var(--lav), var(--glow));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  /* ---- l'écran : un conteneur, tout ce qui est dedans suit sa taille ---- */
+  .sq-ecran {
+    position: relative;
+    aspect-ratio: 2 / 1;
+    overflow: hidden;
+    container-type: size;
+    line-height: 1.4;
+    text-align: left;
+    background-color: color-mix(in srgb, var(--violet) 5%, var(--bg));
+    background-image: radial-gradient(var(--line) 1px, transparent 1.2px);
+    background-size: 2.4cqw 2.4cqw;
+  }
+  .sq-projet {
+    position: absolute;
+    inset: 0;
+  }
+  .sq-projet[hidden] {
+    display: none;
+  }
+  /* la page du client garde son format 2:1 ; sur mobile l'écran est plus
+     haut que large, on en montre le milieu (ou le début, voir le script) */
+  .sq-page {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 200cqh;
+    left: calc((100cqw - 200cqh) / 2);
+    overflow: hidden;
+  }
+
+  /* repère de phase : au milieu de la barre, les quatre pastilles empilées */
+  .sq-phases {
+    position: relative;
+    flex: none;
+    width: 19em;
+    height: 24px;
+    margin: 0 auto;
+    font-family: var(--sq-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .sq-phase {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    translate: -50% 0;
+    display: flex;
+    font-style: normal;
+    align-items: center;
+    gap: 0.7em;
+    height: 100%;
+    padding: 0 1em 0 0.8em;
+    white-space: nowrap;
+    color: var(--mut);
+    background: color-mix(in srgb, var(--bg) 62%, transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line2);
+    border-radius: 100px;
+    opacity: 0;
+  }
+  .sq-phase b {
+    font-weight: 500;
+    color: var(--glow);
+  }
+  .sq-phase u {
+    text-decoration: none;
+    color: var(--faint);
+  }
+
+  /* ---- wireframe ---- */
+  .sq-wire {
+    position: absolute;
+    inset: 0;
+  }
+  .sq-wire i {
+    position: absolute;
+    border-radius: 0.35cqw;
+    background: var(--sq-gris);
+    opacity: 0;
+  }
+  .sq-wire .b-texte,
+  .sq-wire .b-lien {
+    border-radius: 100px;
+  }
+  .sq-wire .b-rond {
+    border-radius: 50%;
+  }
+  .sq-wire .b-titre,
+  .sq-wire .b-bouton {
+    background: var(--sq-gris-fort);
+  }
+  .sq-wire .b-surface {
+    background: color-mix(in srgb, var(--fg) 6%, transparent);
+    outline: 1px solid var(--line);
+  }
+  .sq-couleur {
+    background: var(--c-fond);
+    clip-path: inset(0 100% 0 0);
+  }
+  .sq-couleur i {
+    opacity: 1;
+  }
+  .sq-couleur .b-titre {
+    background: var(--c-titre);
+  }
+  .sq-couleur .b-texte,
+  .sq-couleur .b-rond {
+    background: var(--c-texte);
+  }
+  .sq-couleur .b-lien {
+    background: var(--c-lien);
+  }
+  .sq-couleur .b-bouton {
+    background: var(--c-bouton);
+  }
+  .sq-couleur .b-surface {
+    background: var(--c-surface);
+    outline: 0;
+  }
+
+  /* ---- capture réelle, révélée de haut en bas ---- */
+  .sq-shot,
+  .sq-app img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .sq-shot {
+    clip-path: inset(0 0 100% 0);
+  }
+  .sq-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 2;
+    height: 2px;
+    margin-top: -1px;
+    background: linear-gradient(90deg, transparent, var(--glow) 20%, var(--fg) 50%, var(--glow) 80%, transparent);
+    box-shadow: 0 0 18px 3px var(--lav);
+    opacity: 0;
+  }
+
+  /* ---- fin KlientMap : l'appli, colonnes vides puis cartes ---- */
+  .sq-app {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .sq-vide {
+    position: absolute;
+  }
+  .sq-carte {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  /* ---- panneaux ---- */
+  .sq-sombre {
+    background: color-mix(in srgb, var(--bg) 74%, transparent);
+    backdrop-filter: blur(14px) saturate(160%);
+    border: 1px solid var(--line2);
+    box-shadow: 0 1px 0 var(--line) inset, 0 24px 60px -24px var(--bg);
+  }
+  .sq-tete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    font-family: var(--sq-mono);
+    font-size: 0.78em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .sq-tete em {
+    font-style: normal;
+    color: var(--mut);
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  /* carte de brief (verre clair du site, `.glass`) */
+  .sq-brief {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 50%;
+    width: 38cqw;
+    padding: 2cqw 2.2cqw 1.6cqw;
+    border-radius: var(--sq-r);
+    font-size: clamp(10.5px, 1.2cqw, 15px);
+    opacity: 0;
+    transform: translate(-50%, -46%);
+  }
+  .sq-brief dl {
+    margin-top: 1.1em;
+    display: grid;
+    gap: 0.6em;
+  }
+  .sq-brief dl > div {
+    display: grid;
+    grid-template-columns: 6.5em 1fr;
+    align-items: center;
+    padding: 0.55em 0.8em;
+    border-radius: var(--sq-r-s);
+    background: color-mix(in srgb, var(--bg) 22%, transparent);
+    border: 1px solid var(--line);
+  }
+  .sq-brief dt {
+    font-family: var(--sq-mono);
+    font-size: 0.78em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .sq-brief dd {
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .sq-brief dd span {
+    display: inline-block;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  /* extraits de code */
+  .sq-code {
+    --lignes: 4;
+    position: absolute;
+    z-index: 3;
+    left: var(--sq-marge);
+    bottom: var(--sq-marge);
+    width: 46cqw;
+    padding: 1.1cqw 1.3cqw 1.2cqw;
+    border-radius: var(--sq-r);
+    font-size: clamp(9px, 1.05cqw, 13px);
+    opacity: 0;
+  }
+  .sq-code-vue {
+    margin-top: 0.7em;
+    height: calc(var(--lignes) * 1.7em);
+    overflow: hidden;
+  }
+  .sq-code ol {
+    list-style: none;
+    font-family: var(--sq-mono);
+  }
+  .sq-code li {
+    display: flex;
+    gap: 1.1em;
+    height: 1.7em;
+    align-items: center;
+    white-space: pre;
+    opacity: 0;
+  }
+  .sq-code li span {
+    flex: none;
+    width: 2.6em;
+    text-align: right;
+    color: var(--faint);
+  }
+  .sq-code code {
+    font: inherit;
+    color: var(--glow);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sq-code .sq-fichier code {
+    color: var(--faint);
+  }
+
+  /* notification (fin de Tom Carvalho) */
+  .sq-notif {
+    position: absolute;
+    z-index: 3;
+    right: var(--sq-marge);
+    bottom: var(--sq-marge);
+    width: 32cqw;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.9em;
+    padding: 1em 1.1em;
+    border-radius: var(--sq-r);
+    font-size: clamp(10px, 1.1cqw, 14px);
+    opacity: 0;
+  }
+  .sq-icone {
+    display: grid;
+    place-items: center;
+    width: 2.6em;
+    height: 2.6em;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--violet) 30%, transparent);
+    border: 1px solid var(--line2);
+  }
+  .sq-icone svg {
+    width: 1.3em;
+    height: 1.3em;
+    fill: none;
+    stroke: var(--glow);
+    stroke-width: 1.7;
+    stroke-linejoin: round;
+  }
+  .sq-notif-txt {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .sq-notif-txt b {
+    font-weight: 500;
+    color: var(--fg);
+  }
+  .sq-notif-txt span {
+    color: var(--mut);
+    font-size: 0.88em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sq-notif em {
+    align-self: start;
+    font-style: normal;
+    font-family: var(--sq-mono);
+    font-size: 0.72em;
+    color: var(--faint);
+  }
+
+  /* ---- onglets, pause et lien, sous le cadre ---- */
+  .sq-actions {
+    margin-top: 26px;
+    gap: 14px 16px;
+  }
+  .sq-onglets {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    border-radius: 100px;
+    background: color-mix(in srgb, var(--fg) 7%, transparent);
+    border: 1px solid var(--line);
+  }
+  .sq-onglets button {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 100px;
+    background: none;
+    color: var(--mut);
+    font: inherit;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  .sq-onglets button:hover {
+    color: var(--fg);
+  }
+  .sq-onglets b {
+    font-weight: 500;
+  }
+  .sq-onglets em {
+    font-style: normal;
+    font-family: var(--sq-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .sq-onglets [aria-selected='true'] {
+    color: var(--fg);
+    background: color-mix(in srgb, var(--fg) 14%, transparent);
+    border-color: var(--edge);
+  }
+  .sq-onglets button:focus-visible,
+  .sq-pause:focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 2px;
+  }
+  .sq-pause {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--fg) 7%, transparent);
+    color: var(--mut);
+    cursor: pointer;
+  }
+  .sq-pause[hidden] {
+    display: none;
+  }
+  .sq-pause svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .sq-pause .sq-ico-lire,
+  .sq-pause[aria-pressed='true'] .sq-ico-pause {
+    display: none;
+  }
+  .sq-pause[aria-pressed='true'] .sq-ico-lire {
+    display: inline;
+  }
+  .sq-actions .text-link {
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  /* ---- mobile : même séquence, brief et code allégés ---- */
+  @media (max-width: 760px) {
+    .sq-ecran {
+      aspect-ratio: 4 / 3;
+    }
+    .sq-opt {
+      display: none !important;
+    }
+    .sq-brief {
+      width: 76cqw;
+      padding: 4cqw 4.4cqw 3.4cqw;
+      font-size: clamp(10.5px, 3.4cqw, 14px);
+    }
+    .sq-code {
+      --lignes: 3;
+      width: auto;
+      right: var(--sq-marge);
+      font-size: clamp(9px, 2.8cqw, 12px);
+    }
+    .sq-notif {
+      width: auto;
+      left: var(--sq-marge);
+      font-size: clamp(10px, 3.2cqw, 13px);
+    }
+    /* trop peu de place dans la barre : la pastille passe dans l'écran, en
+       haut à droite, loin des logos (sous la barre de 34 px et la jauge de 2 px) */
+    .sq-phases {
+      position: absolute;
+      z-index: 5;
+      right: 10px;
+      top: 44px;
+      width: auto;
+      height: 22px;
+      margin: 0;
+      font-size: 9.5px;
+    }
+    .sq-phase {
+      left: auto;
+      right: 0;
+      translate: none;
+    }
+    .sq-phase u {
+      display: none;
+    }
+    .sq-live {
+      margin-left: auto;
+      padding: 3px 8px;
+      font-size: 9.5px;
+    }
+    .barre {
+      height: 34px;
+      padding: 0 12px;
+    }
+    .sq-onglets button {
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    .sq-onglets em {
+      display: none;
+    }
+  }
+</style>

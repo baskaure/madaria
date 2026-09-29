@@ -29,21 +29,18 @@ for (const [file, html] of pages) {
   }
 }
 const home = pages.get(path.join(root,'index.html'));
-const video = home.match(/<video\b[^>]*>[\s\S]*?<\/video>/)?.[0];
-assert.ok(video,'Vidéo présente');
-const poster = attr(video.split('>')[0],'poster');
-assert.ok([...home.matchAll(/<link\b[^>]*>/g)].some(([tag]) =>
-  attr(tag,'rel') === 'preload' && attr(tag,'as') === 'image' &&
-  attr(tag,'href') === poster && attr(tag,'fetchpriority') === 'high'
-), 'Poster principal préchargé en priorité');
-assert.ok(!/<source\b[^>]*\ssrc=/.test(video),'Aucune source préchargée');
-assert.equal(attr(video.split('>')[0],'preload'),'none','Chargement vidéo différé');
-for (const source of video.matchAll(/<source\b[^>]*>/g)) {
-  const src = attr(source[0],'data-src');
-  assert.ok(src && fs.existsSync(path.join(root,src)), 'Source vidéo différée disponible');
+// Séquence du hero (HeroSequence.astro) : captures WebP en lazy, rien de préchargé
+const sequence = home.match(/<div class="mockwrap[^"]*\bsq\b[\s\S]*?<\/script>/)?.[0];
+assert.ok(sequence,'Séquence du hero présente');
+assert.ok(!/<video\b/.test(sequence),'Aucune vidéo dans le hero');
+const captures = [...sequence.matchAll(/<img\b[^>]*>/g)].map(([tag]) => tag);
+assert.ok(captures.length >= 3,'Captures de la séquence présentes');
+for (const tag of captures) {
+  assert.equal(attr(tag,'loading'),'lazy','Capture de la séquence en lazy');
+  for (const src of (attr(tag,'srcset') || '').split(',').map(s => s.trim().split(' ')[0]).filter(Boolean))
+    assert.ok(src.endsWith('.webp') && fs.existsSync(path.join(root,src)),`Capture disponible ${src}`);
 }
-assert.ok(!/\sautoplay(?:\s|>|=)/.test(video),'Aucun autoplay');
-assert.ok(!attr(video.split('>')[0],'src'),'Pas de src vidéo avant action');
+assert.ok(![...home.matchAll(/<link\b[^>]*>/g)].some(([tag]) => attr(tag,'rel') === 'preload' && attr(tag,'as') === 'image'),'Aucune image préchargée');
 assert.match(home,/<option value="">Choisir un budget<\/option>/);
 assert.match(home,/data-offre="vitrine"/);
 assert.ok(!home.includes('novalidate'),'Validation native active');
@@ -61,4 +58,4 @@ for (const [route,field,value] of [
  assert.ok(sitemap.includes(`https://madaria.fr/${route}/`),`${route}: sitemap`);
 }
 assert.ok(!fs.existsSync(path.join(root,'assets/chrome-capture-2026-09-06.gif')),'GIF archivé hors publication');
-console.log(`${files.length} pages vérifiées, ${links} liens et médias internes valides. SEO, contextes des formulaires, sitemap et vidéo différée : OK.`);
+console.log(`${files.length} pages vérifiées, ${links} liens et médias internes valides. SEO, contextes des formulaires, sitemap et séquence du hero : OK.`);

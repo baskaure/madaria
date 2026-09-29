@@ -333,17 +333,6 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 /* pas d'effet lumineux sur la bordure haute elle-même : la lumière vient
    uniquement de la diffusion .proj au-dessus et de l'aura enveloppante */
 .mock{border-radius:24px;overflow:hidden}
-.mtop{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);
-  background:rgba(255,255,255,.08)}
-.mtop i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.32);
-  box-shadow:0 1px 0 rgba(255,255,255,.5) inset}
-.mtop .url{margin-left:12px;font-size:11.5px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);
-  padding:4px 14px;border-radius:100px;border:1px solid var(--edge);
-  /* sur une seule ligne : sur mobile le libellé est coupé par des points de suspension plutôt que replié */
-  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* vitrine : la capture du site occupe tout le cadre, sous la barre de navigateur */
-.mshot{position:relative;line-height:0}
-.mshot img,.mshot video{width:100%;height:auto;display:block}
 
 /* ---- bande métiers ----
    Une phrase, pas une grille : les métiers s'énumèrent au fil du texte,
@@ -977,14 +966,9 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .fg > div:first-child{grid-column:1/-1}
 
   /* la maquette : cadre et marges resserrés */
-  /* La capture d'un écran large, réduite à 350 px, ne montre plus rien : on
-     recadre sur sa moitié gauche, là où vit le titre du site présenté. */
-  .mshot{aspect-ratio:4/3}
-  .mshot img,.mshot video{height:100%;object-fit:cover;object-position:left center}
   .mockframe{padding:7px;border-radius:26px;transform:rotateX(5deg)}
   .mockwrap:hover .mockframe{transform:rotateX(2deg)}
   .mock{border-radius:19px}
-  .mtop{padding:11px 14px}
 
   /* frise : la colonne des chiffres se resserre */
   .tnode{gap:0 16px;padding:0 0 36px 24px}
