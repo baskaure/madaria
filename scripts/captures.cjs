@@ -29,7 +29,7 @@ const LOCAL = 'http://127.0.0.1:8765';
 const SOURCES = {
   'klientmap':         'http://127.0.0.1:3140/',
   'chateau-tourelles': `${LOCAL}/chateau%20tourelles/maquettes-services/acceuil-chateau-tourelles/index.html`,
-  'tom-carvalho':      `${LOCAL}/portfolio%20tomi%20tom%20tom/portfolio-tom-carvalho/index.html`,
+  'tom-carvalho':      'https://tomcarvalho.fr/', // site en ligne depuis sept. 2026
   'aurore-piercing':   `${LOCAL}/aurorepiercing/aurorepiercing/propositions/aurora/index.html`, // piste retenue, pas le hub des trois pistes
   'kami':              `${LOCAL}/kami/kami/index.html`,
   'lucas-morin':       `${LOCAL}/lm/index.html`,

@@ -93,15 +93,18 @@ export const realisations: readonly Realisation[] = [
     client: 'Tom Carvalho',
     activite: 'Vidéaste indépendant',
     secteur: 'Créateurs & vidéo',
-    ville: 'France',
+    ville: 'Paris',
     annee: '2026',
+    url: 'https://tomcarvalho.fr/',
     type: 'Portfolio',
-    tags: ['Portfolio vidéo', 'Sélection 2023 – 2026', 'Galerie photo', 'Contact direct'],
-    accent: '#E5372B',
-    palette: ['#0B0B0B', '#E5372B', '#EDE9E1'],
-    accroche: 'Je transforme chaque projet en images fortes.',
+    tags: ['Portfolio vidéo', 'Films & photos', 'Services détaillés', 'Formulaire de contact'],
+    // couleurs du site en ligne (css/style.css : --noir, --rouge, --papier) ;
+    // la séquence du hero les lit dans cet ordre
+    accent: '#E3170A',
+    palette: ['#0A0A0A', '#E3170A', '#F1EFEA'],
+    accroche: 'Des vidéos qui marquent.',
     description:
-      "Un portfolio à la typographie énorme, rouge sur noir, façon affiche : manifeste, projets numérotés (automobile, institutionnel, événementiel), galerie photo argentique et numérique. Le site parle comme lui, sans détour.",
+      "Un portfolio clair et graphique : le nom en lettres géantes tramées de points rouges, un badge « accès plateau » pour se présenter, puis les films, les photos prises entre deux plans et cinq services, du format court à l'étalonnage. Le formulaire invite à écrire, même avec une idée encore floue.",
   },
   {
     id: 'aurore-piercing',

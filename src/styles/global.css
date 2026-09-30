@@ -315,7 +315,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .hcta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
 /* ---- mockup dashboard ---- */
-.mockwrap{margin-top:84px;position:relative;perspective:1600px}
+.mockwrap{margin-top:84px;position:relative}
 /* aura diffuse qui enveloppe tout le dashboard — elle dépasse des quatre
    côtés ; le dessus reste plus lumineux grâce à .proj qui s'y ajoute */
 .mockwrap::before{content:'';position:absolute;inset:-110px -100px -90px;
@@ -331,33 +331,30 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
     radial-gradient(32% 32% at 50% 100%,rgba(237,233,254,.92),transparent 70%),
     radial-gradient(58% 72% at 50% 100%,rgba(167,139,250,.55),transparent 72%),
     radial-gradient(92% 100% at 50% 100%,rgba(146,118,255,.26),transparent 78%)}
-/* cadre de verre autour de la maquette, comme un bezel. Pas de
+/* cadre de verre autour de la maquette, comme un bezel, parfaitement droit
+   (plus d'inclinaison 3D, ni au repos ni au survol). Pas de
    backdrop-filter : la séquence animée à l'intérieur l'aurait fait re-flouter
    à chaque image (mesuré : le hero tombait à 30 images/s) */
 .mockframe{position:relative;border-radius:34px;padding:11px;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
   border:1px solid rgba(255,255,255,.3);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.14) inset,
-    0 46px 100px -34px rgba(6,3,20,.95);
-  transform:rotateX(9deg);transform-origin:top center;
-  transition:transform .8s cubic-bezier(.16,1,.3,1)}
-@media(hover:hover){.mockwrap:hover .mockframe{transform:rotateX(2deg)}}
+    0 46px 100px -34px rgba(6,3,20,.95)}
 /* pas d'effet lumineux sur la bordure haute elle-même : la lumière vient
    uniquement de la diffusion .proj au-dessus et de l'aura enveloppante */
 .mock{border-radius:24px;overflow:hidden}
 
 /* ---- entrée du hero ----
    Jouée une seule fois au chargement. Les keyframes n'ont qu'un `from` :
-   l'arrivée est la valeur normale de l'élément (rotateX du cadre compris,
-   qui change selon l'écran), et le remplissage `backwards` rend la main au
-   CSS une fois fini — le survol du cadre refonctionne. Pas de flou sur les
+   l'arrivée est la valeur normale de l'élément, et le remplissage
+   `backwards` rend la main au CSS une fois fini. Pas de flou sur les
    éléments en backdrop-filter (boutons, cadre) : le filtre en ferait une
    racine de fond, le verre s'éteindrait pendant l'entrée.
    Le titre démarre sans délai : c'est l'élément LCP. */
 @keyframes hero-mot{from{opacity:0;transform:translateY(.32em);filter:blur(12px)}}
 @keyframes hero-flou{from{opacity:0;transform:translateY(12px);filter:blur(8px)}}
 @keyframes hero-monte{from{opacity:0;transform:translateY(16px)}}
-@keyframes hero-cadre{from{opacity:0;transform:translateY(90px) rotateX(32deg) scale(.92)}}
+@keyframes hero-cadre{from{opacity:0;transform:translateY(90px) scale(.94)}}
 @keyframes hero-lueur{from{opacity:0}}
 .hero h1 .mot{display:inline-block;
   animation:hero-mot 1s cubic-bezier(.2,.75,.15,1) calc(var(--i)*55ms) backwards}
@@ -994,7 +991,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .fg > div:first-child{grid-column:1/-1}
 
   /* la maquette : cadre et marges resserrés */
-  .mockframe{padding:7px;border-radius:26px;transform:rotateX(5deg)}
+  .mockframe{padding:7px;border-radius:26px}
   .mock{border-radius:19px}
 
   /* frise : la colonne des chiffres se resserre */
@@ -1066,7 +1063,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 
   .badge{font-size:11.5px;padding:6px 13px;gap:8px}
   .hero .badge{margin-bottom:34px}
-  .mockframe{padding:5px;border-radius:21px;transform:none}
+  .mockframe{padding:5px;border-radius:21px}
   .mock{border-radius:16px}
   .tnode{gap:0 13px;padding-left:20px}
   .bcard{padding:22px 19px 24px}
@@ -1075,7 +1072,6 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .bigcta{padding:42px 18px}
   .wkpi{gap:18px}
   .hcta .btn{flex:1 1 100%}
-  .mockwrap{perspective:none}
 }
 
 /* ============================================================
