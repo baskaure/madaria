@@ -1,0 +1,18 @@
+---
+/**
+ * Prix d'une formule : la mensualité en grand, puis l'engagement et le prix
+ * d'achat en une fois. Partagé par l'accueil, les pages métier et la page
+ * service, pour que les trois disent exactement la même chose.
+ */
+import { ENGAGEMENT_MOIS, type Offre } from '../data/offres';
+
+interface Props {
+  o: Offre;
+}
+const { o } = Astro.props;
+---
+
+<div class="price">{o.prix}{o.unite && <sup>{o.unite}</sup>}</div>
+{o.achat && (
+  <p class="achat">Engagement {ENGAGEMENT_MOIS} mois · ou {o.achat} € HT en une fois</p>
+)}

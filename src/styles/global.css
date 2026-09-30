@@ -762,6 +762,8 @@ html.fiche-ouverte{overflow:hidden}
   color:#fff;padding:4px 11px;border-radius:100px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
 .plan .price{font-family:'Sora';font-size:2.3rem;font-weight:600;letter-spacing:-.045em;line-height:1}
 .plan .price sup{font-size:.72rem;font-weight:400;color:var(--mut);vertical-align:super;letter-spacing:0;margin-left:6px}
+/* sous la mensualité : l'engagement et le prix d'achat en une fois */
+.plan .achat{margin-top:9px;font-size:12.5px;color:var(--mut)}
 .plan .d{color:var(--mut);font-size:.92rem;font-weight:300;margin:14px 0 24px;min-height:50px}
 .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px;flex:1}
 .plan li{font-size:.9rem;color:rgba(255,255,255,.86);font-weight:300;display:flex;gap:11px;align-items:flex-start}

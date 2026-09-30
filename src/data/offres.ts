@@ -1,8 +1,11 @@
 export type Offre = {
   id: string;
   nom: string;
+  /** Prix affiché en premier : la mensualité de l'abonnement, ou « Sur devis ». */
   prix: string;
   unite?: string;
+  /** Même formule payée en une fois, sans abonnement (€ HT). */
+  achat?: string;
   accroche: string;
   inclus: string[];
   cta: string;
@@ -11,21 +14,31 @@ export type Offre = {
   badge?: string;
 };
 
+/**
+ * Stratégie de lancement (sept. 2026) : l'abonnement mensuel passe en premier,
+ * création incluse, à un prix volontairement sous le marché pour que la
+ * décision soit facile. L'achat en une fois reste proposé à côté, et sert de
+ * repère. Les prix remonteront si le modèle prend : ils ne sont écrits
+ * qu'ici, tout le site (pages, FAQ, données structurées, llms.txt) en découle.
+ */
+export const ENGAGEMENT_MOIS = 12;
+
 // Les prix affichés servent aussi aux données structurées.
 export const offres: Offre[] = [
   {
     id: 'vitrine',
     nom: 'Vitrine',
-    prix: '690',
-    unite: '€ HT',
+    prix: '49',
+    unite: '€ HT/mois',
+    achat: '690',
     accroche: 'Le site qui installe votre crédibilité et vous rend joignable, en ligne en une semaine.',
     inclus: [
-      'Maquette incluse, validée avant développement',
+      'Création incluse, maquette validée avant développement',
       "Jusqu'à 5 pages sur-mesure",
-      'Design original, aucun template',
-      'Design adapté au mobile',
+      'Design original, adapté au mobile',
       'Formulaire de contact',
-      'Nom de domaine et mise en ligne',
+      'Nom de domaine à votre nom, hébergement et mises à jour',
+      '30 min de modifications par mois',
       'Vitrine livrée en 7 jours après cadrage',
     ],
     cta: 'Choisir Vitrine',
@@ -33,18 +46,19 @@ export const offres: Offre[] = [
   {
     id: 'visibilite',
     nom: 'Visibilité',
-    prix: '1 490',
-    unite: '€ HT',
+    prix: '79',
+    unite: '€ HT/mois',
+    achat: '1 490',
     badge: 'Pour développer votre visibilité',
     accroche: 'Le site complet, pensé pour être trouvé sur Google et dans les moteurs de réponse IA.',
     inclus: [
-      'Maquette incluse, validée avant développement',
-      'Pages et blog : périmètre défini au devis',
+      'Tout Vitrine, avec pages et blog définis au devis',
       'Direction artistique dédiée',
       'SEO technique et référencement local',
       'Contenus structurés pour la recherche',
       'Rédaction des contenus',
       'Analytics et tableau de bord',
+      '1 h de modifications par mois',
     ],
     cta: 'Choisir Visibilité',
     feat: true,
@@ -69,12 +83,36 @@ export const offres: Offre[] = [
 
 /** Conditions communes, reprises sur les pages de services et métier. */
 export const conditionsOffres = [
+  `En abonnement, la création, l'hébergement, les mises à jour et les modifications mensuelles de la formule sont compris, sans rien à payer au départ. Engagement de ${ENGAGEMENT_MOIS} mois, prélèvement mensuel, puis résiliable à tout moment. Le nom de domaine est à votre nom : il vous reste si vous arrêtez. Le site est alors dépublié, ou ses fichiers vous sont cédés au prix indiqué au devis.`,
+  "Vous préférez payer en une fois ? Le prix d'achat de chaque formule est affiché. Le devis distingue alors le prix de création et les frais récurrents : hébergement, maintenance et éventuels abonnements de réservation ou de SMS.",
   'Le délai de 7 jours concerne un site vitrine, après accord sur le devis et réception des contenus et accès nécessaires. Il suppose des validations dans le calendrier convenu. Les autres projets ont un planning dédié.',
-  'La maquette est incluse dans la prestation et validée avant le développement. Le nombre de pages, la rédaction et les possibilités de modification des contenus sont précisés au devis.',
-  'Le devis distingue le prix de création et les frais récurrents : durée du domaine inclus, hébergement, maintenance et éventuels abonnements de réservation ou de SMS. Toute option est chiffrée avant engagement.',
+  'La maquette est incluse et validée avant le développement. Le nombre de pages, la rédaction, les modifications au-delà du forfait mensuel et toute option sont chiffrés avant engagement.',
 ];
-export const prixEntree = offres[0].prix;
-export const offresStructurees = offres.filter(o => o.unite).map(o => ({
-  '@type': 'Offer', name: o.nom, price: o.prix.replace(/\s/g, ''),
-  priceCurrency: 'EUR', description: o.accroche,
-}));
+
+const premiere = offres[0];
+/** Point d'entrée affiché partout : « 49 € HT/mois ». */
+export const prixEntree = `${premiere.prix} ${premiere.unite}`;
+/** Même formule en une fois : « 690 € HT ». */
+export const achatEntree = `${premiere.achat} € HT`;
+
+const nombre = (prix: string) => prix.replace(/\s/g, '');
+/**
+ * Données structurées : pour chaque formule chiffrée, l'offre d'abonnement
+ * (prix unitaire au mois) et l'offre d'achat en une fois.
+ */
+export const offresLd = (liste: Offre[] = offres) =>
+  liste.filter(o => o.unite).flatMap(o => [
+    {
+      '@type': 'Offer', name: `${o.nom} — abonnement`, description: o.accroche,
+      price: nombre(o.prix), priceCurrency: 'EUR',
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification', price: nombre(o.prix), priceCurrency: 'EUR',
+        unitCode: 'MON', referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' },
+      },
+    },
+    ...(o.achat ? [{
+      '@type': 'Offer', name: `${o.nom} — achat en une fois`, description: o.accroche,
+      price: nombre(o.achat), priceCurrency: 'EUR',
+    }] : []),
+  ]);
+export const offresStructurees = offresLd();

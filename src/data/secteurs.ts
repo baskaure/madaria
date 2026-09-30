@@ -34,7 +34,7 @@ export const secteurs: Secteur[] = [
     text: "Un site qui remplit le fauteuil : réservation en ligne, tarifs à jour et visibilité sur les recherches de proximité.",
     besoins: ['Réservation', 'Google Maps', 'Galerie'],
     metaTitle: 'Création de site internet pour barbier à Lyon | Madaria',
-    metaDesc: `Site internet pour barbier avec réservation en ligne, vitrine dès ${prixEntree} € HT, intégrations sur devis. Référencement local pour être trouvé dans votre quartier.`,
+    metaDesc: `Site internet pour barbier avec réservation en ligne, vitrine dès ${prixEntree}, intégrations sur devis. Référencement local pour être trouvé dans votre quartier.`,
     h1: 'Création de site internet pour barbier',
     intro: [
       "Un barbershop se choisit à trois rues près. Vos futurs clients tapent « barbier » sur leur téléphone, regardent les trois premiers résultats, et réservent chez celui qui leur simplifie la vie. Si votre salon n'apparaît pas, ou qu'il faut appeler pendant que vous avez les mains prises, le rendez-vous part chez le voisin.",
@@ -86,7 +86,7 @@ export const secteurs: Secteur[] = [
     text: "Prise de rendez-vous sans appel téléphonique, présentation de l'équipe et des prestations, avis clients mis en avant.",
     besoins: ['Prise de RDV', 'Prestations', 'Avis'],
     metaTitle: 'Création de site internet pour coiffeur à Lyon | Madaria',
-    metaDesc: `Site internet pour salon de coiffure avec prise de rendez-vous en ligne, vitrine dès ${prixEntree} € HT, intégrations sur devis. Accompagnement local selon formule.`,
+    metaDesc: `Site internet pour salon de coiffure avec prise de rendez-vous en ligne, vitrine dès ${prixEntree}, intégrations sur devis. Accompagnement local selon formule.`,
     h1: 'Création de site internet pour salon de coiffure',
     intro: [
       "Le téléphone qui sonne pendant une couleur, c'est un client mal servi d'un côté et un rendez-vous mal noté de l'autre. Un site de salon bien conçu absorbe ces appels : il montre vos prestations, vos tarifs, votre équipe, et laisse le client choisir son créneau tout seul.",
@@ -138,7 +138,7 @@ export const secteurs: Secteur[] = [
     text: "Un portfolio qui met vos pièces en valeur et un formulaire de projet qui filtre les demandes sérieuses.",
     besoins: ['Portfolio', 'Demande de projet', 'Acompte'],
     metaTitle: 'Création de site internet pour tatoueur à Lyon | Madaria',
-    metaDesc: `Site internet pour tatoueur : portfolio haute qualité, formulaire de projet et acompte en ligne. Vitrine dès ${prixEntree} € HT, options sur devis.`,
+    metaDesc: `Site internet pour tatoueur : portfolio haute qualité, formulaire de projet et acompte en ligne. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour tatoueur',
     intro: [
       "Instagram vous a apporté vos premiers clients, mais il ne vous appartient pas : l'algorithme décide qui voit vos pièces, le format écrase vos images, et vos demandes se noient dans les messages privés. Un site vous rend la maîtrise de votre travail et de vos prises de contact.",
@@ -190,7 +190,7 @@ export const secteurs: Secteur[] = [
     text: "Catalogue des poses et des bijoux, prise de rendez-vous, et les documents d'information remis avant la séance.",
     besoins: ['Catalogue', 'Prise de RDV', 'Documents'],
     metaTitle: 'Création de site internet pour perceur à Lyon | Madaria',
-    metaDesc: `Site internet pour perceur : catalogue des poses, prise de rendez-vous et documents d'information. Vitrine dès ${prixEntree} € HT, options sur devis.`,
+    metaDesc: `Site internet pour perceur : catalogue des poses, prise de rendez-vous et documents d'information. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour perceur',
     intro: [
       "Le piercing se décide vite mais se renseigne longuement : quelle pose, quel bijou, quelle cicatrisation, quel prix, quelles conditions pour les mineurs. Chaque question sans réponse sur votre site devient un appel — ou un client qui va voir ailleurs.",
@@ -242,7 +242,7 @@ export const secteurs: Secteur[] = [
     text: "Carte toujours à jour, réservation en ligne et commande à emporter, sans commission prélevée par une plateforme.",
     besoins: ['Carte', 'Réservation', 'Click & collect'],
     metaTitle: 'Création de site internet pour restaurant à Lyon | Madaria',
-    metaDesc: `Site internet pour restaurant : carte à jour, réservation et commande à emporter selon votre outil. Vitrine dès ${prixEntree} € HT, options sur devis.`,
+    metaDesc: `Site internet pour restaurant : carte à jour, réservation et commande à emporter selon votre outil. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour restaurant',
     intro: [
       "Les plateformes de livraison et de réservation prélèvent une commission sur chaque couvert. C'est un loyer que vous payez pour parler à vos propres clients. Un site qui vous appartient transforme cette dépense récurrente en investissement fait une fois.",
@@ -294,7 +294,7 @@ export const secteurs: Secteur[] = [
     text: "Vos soins présentés clairement, réservation par créneaux, cartes cadeaux et relances automatiques entre deux séances.",
     besoins: ['Soins', 'Créneaux', 'Cartes cadeaux'],
     metaTitle: 'Création de site internet pour institut de beauté à Lyon | Madaria',
-    metaDesc: `Site internet pour institut de beauté : réservation en ligne, cartes cadeaux et relances automatiques. Vitrine dès ${prixEntree} € HT, options sur devis.`,
+    metaDesc: `Site internet pour institut de beauté : réservation en ligne, cartes cadeaux et relances automatiques. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour institut de beauté',
     intro: [
       "L'esthétique vit de la fidélité : une cliente satisfaite revient toutes les quatre à six semaines, pendant des années. Le problème n'est pas de la convaincre une fois, mais de ne pas la perdre entre deux rendez-vous.",
@@ -398,7 +398,7 @@ export const secteurs: Secteur[] = [
     text: "Vos chantiers en photos, demande de devis structurée et référencement local pour être trouvé dans votre zone.",
     besoins: ['Réalisations', 'Devis en ligne', 'SEO local'],
     metaTitle: 'Création de site internet pour artisan et BTP à Lyon | Madaria',
-    metaDesc: `Site internet pour artisan du bâtiment : galerie de chantiers, demande de devis et référencement local. Vitrine dès ${prixEntree} € HT, options sur devis.`,
+    metaDesc: `Site internet pour artisan du bâtiment : galerie de chantiers, demande de devis et référencement local. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour artisan et entreprise du bâtiment',
     intro: [
       "Dans le bâtiment, la confiance se gagne avant le premier rendez-vous. Un particulier qui cherche un artisan compare trois entreprises, regarde les chantiers réalisés, vérifie les assurances, et appelle celle qui inspire le plus de sérieux.",

@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { secteurs } from '../data/secteurs';
 import { realisations } from '../data/realisations';
 import { prestations } from '../data/prestations';
-import { offres, prixEntree, conditionsOffres } from '../data/offres';
+import { offres, prixEntree, achatEntree, conditionsOffres } from '../data/offres';
 import { services } from '../data/services';
 import { questions } from '../data/faq';
 import { contact } from '../data/site';
@@ -20,7 +20,7 @@ export const GET: APIRoute = () => {
   l.push('# Madaria');
   l.push('');
   l.push(
-    `> Agence digitale basée à Lyon (France), spécialisée dans les sites vitrines à partir de ${prixEntree} € HT, avec un planning de 7 jours selon périmètre et réception des éléments nécessaires. Également : automatisation et outils métier sur devis. Intervient partout en France, à distance.`,
+    `> Agence digitale basée à Lyon (France), spécialisée dans les sites vitrines à partir de ${prixEntree} en abonnement (création incluse) ou ${achatEntree} en une fois, avec un planning de 7 jours selon périmètre et réception des éléments nécessaires. Également : automatisation et outils métier sur devis. Intervient partout en France, à distance.`,
   );
   l.push('');
 
@@ -32,7 +32,7 @@ export const GET: APIRoute = () => {
   l.push('- Zone desservie : Lyon et toute la France, à distance');
   l.push('- Activité : création de sites internet, automatisation, développement sur-mesure');
   l.push('- Délai de livraison : 7 jours pour un site vitrine');
-  l.push(`- Prix d’entrée : ${prixEntree} € HT`);
+  l.push(`- Prix d’entrée : ${prixEntree} en abonnement, création incluse, ou ${achatEntree} en une fois`);
   l.push('- Maquette : incluse dans la prestation, validée avant tout développement');
   l.push(`- Contact : ${contact.email} · ${contact.tel}`);
   l.push('- Devis : gratuit, chiffré sous 24 heures, sans engagement');
@@ -43,6 +43,7 @@ export const GET: APIRoute = () => {
   for (const o of offres) {
     const prix = o.unite ? `${o.prix} ${o.unite}` : o.prix;
     l.push(`### ${o.nom} — ${prix}`);
+    if (o.achat) l.push(`Ou ${o.achat} € HT en une fois.`);
     l.push(o.accroche);
     l.push('');
     for (const i of o.inclus) l.push(`- ${i}`);

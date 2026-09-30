@@ -13,7 +13,7 @@ export const prestations = [
     ],
     livrables: ['Maquette et design adaptés à votre activité', 'Pages et contenus définis au cadrage', 'Navigation adaptée au téléphone et à l’ordinateur', 'Titres, descriptions et structure de référencement', 'Formulaire et coordonnées de contact', 'Mise en ligne et prise en main selon le périmètre'],
     questions: [
-      { q: 'Le site à 690 € convient-il à tous les projets ?', r: 'Cette formule concerne une vitrine jusqu’à cinq pages. Une boutique, une migration complexe ou une intégration spécifique demandent un périmètre et un devis adaptés.' },
+      { q: 'La formule Vitrine convient-elle à tous les projets ?', r: 'Cette formule concerne une vitrine jusqu’à cinq pages. Une boutique, une migration complexe ou une intégration spécifique demandent un périmètre et un devis adaptés.' },
       { q: 'Qui fournit les textes et les photos ?', r: 'Nous recensons les contenus disponibles au cadrage. La rédaction, la reprise de textes et les besoins en images sont précisés au devis avant le démarrage.' },
       { q: 'Puis-je garder mon domaine et mon hébergeur ?', r: 'Nous examinons vos comptes et contraintes existants avant de proposer la mise en ligne. Les accès nécessaires et les éventuels changements sont convenus avec vous.' },
     ],

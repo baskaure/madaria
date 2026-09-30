@@ -1,16 +1,18 @@
 ---
 import SectionHead from './SectionHead.astro';
 import OfferTerms from './OfferTerms.astro';
-import { offres } from '../data/offres';
+import PrixOffre from './PrixOffre.astro';
+import { offres, ENGAGEMENT_MOIS } from '../data/offres';
 ---
 
 <section id="offres">
   <div class="wrap">
     <SectionHead label="Offres">
       <Fragment slot="titre">
-        Le prix de votre site internet,<br />annoncé <span class="grad">avant</span> de commencer.
+        Votre site internet dès {`${offres[0].prix}\u00a0€\u00a0par\u00a0mois`},<br /><span class="grad">création incluse</span>.
       </Fragment>
-      Maquette incluse et validée avant développement. Le devis précise les pages, les options et les frais récurrents éventuels.
+      Rien à payer au départ : la création, l'hébergement et les mises à jour sont compris dans l'abonnement.
+      Engagement {ENGAGEMENT_MOIS} mois, puis résiliable à tout moment. Vous préférez payer en une fois ? Le prix d'achat est affiché.
     </SectionHead>
 
     <div class="plans">
@@ -20,9 +22,7 @@ import { offres } from '../data/offres';
             <span>{o.nom}</span>
             {o.badge && <em>{o.badge}</em>}
           </div>
-          <div class="price">
-            {o.prix}{o.unite && <sup>{o.unite}</sup>}
-          </div>
+          <PrixOffre o={o} />
           <p class="d">{o.accroche}</p>
           <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
           <a href={`/?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>

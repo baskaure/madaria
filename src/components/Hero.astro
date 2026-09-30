@@ -1,6 +1,6 @@
 ---
 import HeroSequence from './HeroSequence.astro';
-import { prixEntree } from '../data/offres';
+import { prixEntree, achatEntree } from '../data/offres';
 
 // Première ligne du titre découpée en mots pour l'entrée en cascade (--i :
 // rang du mot). La seconde reste d'un bloc : son dégradé en `background-clip`
@@ -30,6 +30,6 @@ const ligne1 = 'Votre site internet en ligne en 7 jours.'.split(' ');
     <a href="#realisations" class="btn btn-g">Voir les réalisations</a>
   </div>
 
-  <p class="hero-note">Sites vitrines dès {prixEntree} € HT · Périmètre et calendrier fixés au devis.</p>
+  <p class="hero-note">Site vitrine dès {prixEntree}, création incluse · ou {achatEntree} en une fois.</p>
   <HeroSequence />
 </div>

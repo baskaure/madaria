@@ -1,4 +1,4 @@
-import { offres, prixEntree } from './offres';
+import { offres, prixEntree, achatEntree, ENGAGEMENT_MOIS } from './offres';
 export type Question = { q: string; r: string };
 
 export const questions: Question[] = [
@@ -20,11 +20,15 @@ export const questions: Question[] = [
   },
   {
     q: 'Et après la mise en ligne ?',
-    r: 'Vous choisissez : autonomie complète, ou contrat de maintenance mensuel (mises à jour, sauvegardes, sécurité, évolutions et rapport de performance).',
+    r: `En abonnement, rien à prévoir : hébergement, mises à jour, sauvegardes et modifications mensuelles sont compris. Si vous avez acheté le site en une fois, vous choisissez entre l'autonomie complète et un contrat de maintenance mensuel.`,
   },
   {
     q: "Combien coûte la création d'un site internet ?",
-    r: `Chez nous, un site vitrine sur-mesure démarre à ${prixEntree} € HT et un site complet avec référencement à ${offres[1].prix} € HT. Le devis est chiffré sous 24 heures et le prix annoncé est celui que vous payez : la maquette est incluse et les options ainsi que les éventuels frais récurrents sont précisés avant engagement.`,
+    r: `Un site vitrine sur-mesure démarre à ${prixEntree}, création incluse, et un site complet avec référencement à ${offres[1].prix} ${offres[1].unite}. Rien à payer au départ, engagement ${ENGAGEMENT_MOIS} mois. Vous pouvez aussi payer en une fois : ${achatEntree} pour la vitrine, ${offres[1].achat} € HT pour le site complet. Le devis est chiffré sous 24 heures, maquette incluse, options précisées avant engagement.`,
+  },
+  {
+    q: "Et si j'arrête l'abonnement ?",
+    r: `Après les ${ENGAGEMENT_MOIS} premiers mois, vous arrêtez quand vous voulez, sans frais. Le nom de domaine est à votre nom : il vous reste. Le site est dépublié, ou ses fichiers vous sont cédés si vous souhaitez le garder, au prix indiqué au devis.`,
   },
   {
     q: 'Travaillez-vous uniquement à Lyon ?',

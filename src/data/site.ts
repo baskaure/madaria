@@ -30,6 +30,7 @@ export const contact = {
 } as const;
 
 export const budgets = [
+  'Abonnement mensuel (dès 49 € HT/mois)',
   '690 – 1 490 € HT',
   '1 500 – 3 000 € HT',
   '3 000 – 6 000 € HT',

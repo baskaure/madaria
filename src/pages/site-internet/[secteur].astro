@@ -8,7 +8,8 @@ import Contact from '../../components/Contact.astro';
 import OfferTerms from '../../components/OfferTerms.astro';
 import { realisations } from '../../data/realisations';
 import { secteurs } from '../../data/secteurs';
-import { offres } from '../../data/offres';
+import PrixOffre from '../../components/PrixOffre.astro';
+import { offres, offresLd } from '../../data/offres';
 import { contact } from '../../data/site';
 
 export function getStaticPaths() {
@@ -34,12 +35,7 @@ const ld = {
         { '@type': 'Country', name: 'France' },
       ],
       description: s.metaDesc,
-      offers: offresPage.map((o) => ({
-        '@type': 'Offer',
-        name: o.nom,
-        price: o.prix.replace(/\s/g, ''),
-        priceCurrency: 'EUR',
-      })),
+      offers: offresLd(offresPage),
     },
     {
       '@type': 'BreadcrumbList',
@@ -127,7 +123,7 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
                 <span>{o.nom}</span>
                 {o.badge && <em>{o.badge}</em>}
               </div>
-              <div class="price">{o.prix}{o.unite && <sup>{o.unite}</sup>}</div>
+              <PrixOffre o={o} />
               <p class="d">{o.accroche}</p>
               <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
               <a href={`?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
