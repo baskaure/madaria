@@ -33,9 +33,13 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-html{overflow-x:hidden}
+/* `clip` et non `hidden` : posé sur html ET body, `hidden` faisait du body
+   un conteneur de défilement — les intros `sticky` (Méthode, FAQ) ne
+   collaient plus, et iOS perdait son défilement inertiel natif. `hidden`
+   reste en repli pour Safari < 16. */
+html{overflow-x:hidden;overflow-x:clip}
 body{background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;line-height:1.62;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;width:100%}
 a{color:inherit;text-decoration:none}
 svg{display:block}
 ::selection{background:var(--violet);color:#fff}
@@ -211,12 +215,14 @@ header.scrolled .nav{
     0 14px 36px -14px rgba(196,181,253,.65)}
 /* pas de changement de fond au survol : un dégradé ne s'interpole pas,
    le fond sauterait d'un coup — seuls l'ombre et le soulèvement animent */
+@media(hover:hover){
 .btn-p:hover{transform:translateY(-2px);
   box-shadow:0 1px 0 #fff inset,0 0 34px -6px rgba(226,217,255,.95),
     0 20px 46px -14px rgba(196,181,253,.85)}
+.btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
+}
 .btn-g{background:rgba(255,255,255,.14);border-color:var(--edge);color:#fff;
   box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
-.btn-g:hover{background:rgba(255,255,255,.24);transform:translateY(-2px)}
 .nav-actions{display:flex;align-items:center;gap:8px}
 .burger{display:none;width:38px;height:38px;border-radius:100px;border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;
@@ -273,10 +279,14 @@ header.scrolled .nav{
 
 body.locked{overflow:hidden}
 
-/* ---- glass ---- */
+/* ---- glass ----
+   Le dépoli (backdrop-filter) n'est posé que sur grand écran : c'est là que
+   les lumières de section passent derrière les panneaux, et son `saturate`
+   leur donne leur teinte violette. Sur téléphone ces lumières sont masquées,
+   le panneau n'a que du noir derrière lui : le flou n'y changeait rien à
+   l'œil, mais le GPU devait le recalculer à chaque image de défilement. */
 .glass{position:relative;border-radius:26px;
   background:linear-gradient(150deg,rgba(255,255,255,.2),rgba(255,255,255,.075));
-  backdrop-filter:blur(14px) saturate(160%);
   border:1px solid var(--edge);
   box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 -1px 0 rgba(255,255,255,.15) inset,
     0 34px 80px -30px rgba(10,5,26,.85)}
@@ -284,6 +294,7 @@ body.locked{overflow:hidden}
   background:linear-gradient(145deg,rgba(255,255,255,.5),transparent 34%);
   -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
   -webkit-mask-composite:xor;mask-composite:exclude;padding:1px}
+@media(min-width:761px){.glass{backdrop-filter:blur(14px) saturate(160%)}}
 
 /* ---- hero ---- */
 .hero{padding:178px 26px 0;text-align:center;position:relative}
@@ -320,19 +331,44 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
     radial-gradient(32% 32% at 50% 100%,rgba(237,233,254,.92),transparent 70%),
     radial-gradient(58% 72% at 50% 100%,rgba(167,139,250,.55),transparent 72%),
     radial-gradient(92% 100% at 50% 100%,rgba(146,118,255,.26),transparent 78%)}
-/* cadre de verre autour de la maquette, comme un bezel */
+/* cadre de verre autour de la maquette, comme un bezel. Pas de
+   backdrop-filter : la séquence animée à l'intérieur l'aurait fait re-flouter
+   à chaque image (mesuré : le hero tombait à 30 images/s) */
 .mockframe{position:relative;border-radius:34px;padding:11px;
   background:linear-gradient(150deg,rgba(255,255,255,.17),rgba(255,255,255,.045));
-  backdrop-filter:blur(12px) saturate(160%);
   border:1px solid rgba(255,255,255,.3);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset,0 -1px 0 rgba(255,255,255,.14) inset,
     0 46px 100px -34px rgba(6,3,20,.95);
   transform:rotateX(9deg);transform-origin:top center;
   transition:transform .8s cubic-bezier(.16,1,.3,1)}
-.mockwrap:hover .mockframe{transform:rotateX(2deg)}
+@media(hover:hover){.mockwrap:hover .mockframe{transform:rotateX(2deg)}}
 /* pas d'effet lumineux sur la bordure haute elle-même : la lumière vient
    uniquement de la diffusion .proj au-dessus et de l'aura enveloppante */
 .mock{border-radius:24px;overflow:hidden}
+
+/* ---- entrée du hero ----
+   Jouée une seule fois au chargement. Les keyframes n'ont qu'un `from` :
+   l'arrivée est la valeur normale de l'élément (rotateX du cadre compris,
+   qui change selon l'écran), et le remplissage `backwards` rend la main au
+   CSS une fois fini — le survol du cadre refonctionne. Pas de flou sur les
+   éléments en backdrop-filter (boutons, cadre) : le filtre en ferait une
+   racine de fond, le verre s'éteindrait pendant l'entrée.
+   Le titre démarre sans délai : c'est l'élément LCP. */
+@keyframes hero-mot{from{opacity:0;transform:translateY(.32em);filter:blur(12px)}}
+@keyframes hero-flou{from{opacity:0;transform:translateY(12px);filter:blur(8px)}}
+@keyframes hero-monte{from{opacity:0;transform:translateY(16px)}}
+@keyframes hero-cadre{from{opacity:0;transform:translateY(90px) rotateX(32deg) scale(.92)}}
+@keyframes hero-lueur{from{opacity:0}}
+.hero h1 .mot{display:inline-block;
+  animation:hero-mot 1s cubic-bezier(.2,.75,.15,1) calc(var(--i)*55ms) backwards}
+.hero .badge{animation:hero-flou .9s cubic-bezier(.2,.75,.15,1) backwards}
+.hero .lead{animation:hero-flou 1s cubic-bezier(.2,.75,.15,1) .42s backwards}
+.hcta{animation:hero-monte .9s cubic-bezier(.16,1,.3,1) .56s backwards}
+.hero-note{animation:hero-monte .9s cubic-bezier(.16,1,.3,1) .66s backwards}
+.hero .mockframe{animation:hero-cadre 1.7s cubic-bezier(.16,1,.3,1) .5s backwards}
+.heroglow{animation:hero-lueur 2.2s ease-out .2s backwards}
+.hero .mockwrap::before{animation:hero-lueur 1.8s ease-out .7s backwards}
+.proj{animation:hero-lueur 1.4s cubic-bezier(.5,0,.2,1) 1.05s backwards}
 
 /* ---- bande métiers ----
    Une phrase, pas une grille : les métiers s'énumèrent au fil du texte,
@@ -376,14 +412,17 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   background:radial-gradient(200px circle at var(--mx) var(--my),rgba(237,233,254,.95),transparent 68%);
   -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
   -webkit-mask-composite:xor;mask-composite:exclude}
+@media(hover:hover){
 .bcard:hover::before{opacity:1}
 /* `.rv.in` pose transform:none plus bas : il faut passer devant en spécificité */
 .bcard:hover{background:linear-gradient(150deg,rgba(255,255,255,.26),rgba(255,255,255,.1));
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 -1px 0 rgba(255,255,255,.18) inset,
     0 40px 90px -34px rgba(10,5,26,.95)}
-.bcard .ico{transition:transform .5s cubic-bezier(.34,1.3,.5,1),box-shadow .45s ease}
 .bcard:hover .ico{transform:scale(1.07);
   box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 12px 30px -10px rgba(124,107,245,1)}
+.bcard:hover .spark{opacity:1}
+}
+.bcard .ico{transition:transform .5s cubic-bezier(.34,1.3,.5,1),box-shadow .45s ease}
 .bcard .ico{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;margin-bottom:20px;
   background:linear-gradient(150deg,rgba(255,255,255,.42),rgba(255,255,255,.12));border:1px solid var(--edge2);
   box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 10px 26px -12px rgba(10,5,26,.9)}
@@ -395,7 +434,6 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   background:rgba(255,255,255,.14);padding:4px 10px;border-radius:100px}
 .bcard .spark{position:absolute;left:0;right:0;bottom:-40px;height:80px;opacity:0;transition:.5s;
   background:radial-gradient(ellipse at center,rgba(167,139,250,.55),transparent 68%);filter:blur(20px)}
-.bcard:hover .spark{opacity:1}
 
 /* ---- méthode : intro sticky à gauche, frise à droite ---- */
 .msplit{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px 80px;align-items:start}
@@ -414,23 +452,11 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
    Rail d'un pixel tout à gauche, gros chiffres ajourés qui se remplissent
    quand l'étape est atteinte, losange lumineux sur le rail. Pas de pastilles
    ni de boîtes : la frise se lit comme un sommaire, pas comme une liste.
-   --tlp (0 → 1) est écrit par le script au fil du scroll. */
-.tl{position:relative;--tlp:0}
-/* rail éteint */
+   `.atteint` est posé par le script quand l'étape passe la ligne de lecture. */
+.tl{position:relative}
+/* rail */
 .tl::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;
   background:linear-gradient(180deg,transparent,rgba(255,255,255,.15) 8%,rgba(255,255,255,.15) 92%,transparent)}
-/* trait qui se remplit */
-.tlfill{position:absolute;left:0;top:8px;width:1px;z-index:0;
-  height:calc((100% - 16px) * var(--tlp));
-  background:linear-gradient(180deg,#7C6BF5,#A78BFA 55%,#DCD5FF);
-  box-shadow:0 0 12px rgba(167,139,250,.85);
-  transition:height .12s linear}
-/* tête lumineuse en bout de trait */
-.tlfill::after{content:'';position:absolute;left:50%;bottom:0;width:7px;height:7px;border-radius:50%;
-  transform:translate(-50%,50%);background:#EDE9FE;
-  box-shadow:0 0 16px 4px rgba(196,181,253,.85);
-  opacity:calc(var(--tlp) * 4);transition:opacity .3s ease}
-.tl.termine .tlfill::after{opacity:0}
 
 .tnode{position:relative;display:grid;grid-template-columns:auto 1fr;gap:0 26px;
   padding:0 0 46px 34px;opacity:.35;transition:opacity .55s ease}
@@ -460,7 +486,6 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .tbody{transform:translateX(-14px);transition:transform .6s cubic-bezier(.16,1,.3,1)}
 .tnode.atteint .tbody{transform:none}
 @media(prefers-reduced-motion:reduce){
-  .tl{--tlp:1}
   .tnode{opacity:1}
   .tbody{transform:none}
 }
@@ -490,7 +515,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
   border:1px solid var(--line2);background:none;color:var(--mut);font:inherit;font-size:13.5px;
   cursor:pointer;transition:border-color .25s,color .25s,background .25s,transform .25s cubic-bezier(.16,1,.3,1)}
 .chip .nb{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--faint)}
-.chip:hover{border-color:var(--edge2);color:#fff;transform:translateY(-1px)}
+@media(hover:hover){.chip:hover{border-color:var(--edge2);color:#fff;transform:translateY(-1px)}}
 .chip.on{background:#fff;border-color:#fff;color:#150C2E}
 .chip.on .nb{color:rgba(21,12,46,.6)}
 .vues{display:inline-flex;gap:2px;padding:4px;border-radius:100px;border:1px solid var(--line2);background:rgba(255,255,255,.04)}
@@ -516,7 +541,6 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .reals.ouvert .real.extra:nth-child(9){animation-delay:.2s}
 .reals.ouvert .real.extra:nth-child(10){animation-delay:.25s}
 .reals.ouvert .real.extra:nth-child(11){animation-delay:.3s}
-.real.in{animation:surgir .7s cubic-bezier(.16,1,.3,1) both}
 @media(max-width:1040px){.real,.real.vedette{grid-column:span 6}}
 @media(max-width:640px){.real,.real.vedette{grid-column:span 12}}
 
@@ -555,7 +579,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 .real:hover .tel,.real.actif .tel{opacity:1;transform:translateY(0) rotate(-3deg)}
 .real.vedette .tel{width:16%}
 .rhint{position:absolute;left:14px;bottom:14px;z-index:2;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  padding:6px 10px;border-radius:100px;background:rgba(8,4,18,.8);backdrop-filter:blur(8px);color:#fff;
+  padding:6px 10px;border-radius:100px;background:rgba(8,4,18,.86);color:#fff;
   opacity:0;transform:translateY(6px);transition:opacity .3s,transform .4s cubic-bezier(.16,1,.3,1)}
 .real:hover .rhint,.real.actif .rhint{opacity:1;transform:none}
 
@@ -598,7 +622,7 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 /* fiche projet */
 .rmodal{border:0;padding:0;background:transparent;color:var(--fg);margin:auto;overflow:visible;
   width:min(1360px,100vw - 32px);max-width:none;height:min(880px,100dvh - 32px);max-height:none}
-.rmodal::backdrop{background:rgba(0,0,0,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.rmodal::backdrop{background:rgba(0,0,0,.86)}
 .rmodal[open]{animation:surgir .45s cubic-bezier(.16,1,.3,1)}
 html.fiche-ouverte{overflow:hidden}
 .rm-inner{height:100%;display:flex;flex-direction:column;overflow:hidden;border-radius:26px;
@@ -644,7 +668,7 @@ html.fiche-ouverte{overflow:hidden}
   .tel-cadre{display:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .real.in,.rmodal[open]{animation:none}
+  .rmodal[open]{animation:none}
   .real:hover .ecran:not(.fixe) .pleine,.real.actif .ecran:not(.fixe) .pleine{transition-duration:.01s}
 }
 
@@ -671,14 +695,16 @@ html.fiche-ouverte{overflow:hidden}
    gauche, flèche en coin. Huit métiers d'égale importance = liste, pas vitrine. */
 .secteurs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;position:relative;z-index:1}
 /* dépoli réel (backdrop-filter) : c'est lui qui écrase les formes néon
-   placées derrière et donne l'épaisseur de verre aux tuiles */
+   placées derrière et donne l'épaisseur de verre aux tuiles. 12 px suffisent,
+   les néons sont eux-mêmes flous ; à 22 px le défilement de la section
+   saccadait (mesuré : 8 % d'images lentes, 2 % à 12 px) */
 .secteur{display:flex;gap:20px;align-items:flex-start;padding:24px 54px 26px 24px;
   position:relative;border-radius:18px;
   background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(22px) saturate(150%);
+  backdrop-filter:blur(12px) saturate(150%);
   box-shadow:0 1px 0 rgba(255,255,255,.26) inset;
   transition:background .35s ease,border-color .35s ease}
-.secteur:hover{background:rgba(255,255,255,.1);border-color:var(--line2)}
+@media(hover:hover){.secteur:hover{background:rgba(255,255,255,.1);border-color:var(--line2)}}
 .secteur .ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
   background:linear-gradient(150deg,rgba(255,255,255,.3),rgba(255,255,255,.08));border:1px solid var(--edge);
   box-shadow:0 1px 0 rgba(255,255,255,.45) inset}
@@ -691,7 +717,7 @@ html.fiche-ouverte{overflow:hidden}
   background:none;padding:3px 9px;border-radius:100px}
 .secteur .voir{position:absolute;top:22px;right:22px;font-size:16px;color:var(--glow);
   opacity:.4;transition:opacity .3s ease,transform .3s ease}
-.secteur:hover .voir{opacity:1;transform:translateX(3px)}
+@media(hover:hover){.secteur:hover .voir{opacity:1;transform:translateX(3px)}}
 /* métiers repliés : masqués tant que le bouton n'a pas été actionné, donc
    hors du parcours clavier, mais bien présents dans le HTML pour les moteurs */
 .secteur.extra{display:none}
@@ -967,7 +993,6 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 
   /* la maquette : cadre et marges resserrés */
   .mockframe{padding:7px;border-radius:26px;transform:rotateX(5deg)}
-  .mockwrap:hover .mockframe{transform:rotateX(2deg)}
   .mock{border-radius:19px}
 
   /* frise : la colonne des chiffres se resserre */
@@ -1011,17 +1036,13 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   #secteurs .neons .n2{width:170px;height:210px;right:-10px;top:26%;filter:blur(12px)}
   #secteurs .neons .n3{width:250px;height:220px;left:-90px;filter:blur(20px)}
   #secteurs .neons i{animation:none}
-  .secteur{backdrop-filter:blur(12px) saturate(150%)}
   .heroglow{filter:blur(44px)}
   .proj{top:-120px;height:140px}
   /* pas d'animation sur téléphone : la lueur chevauche le cadre en
      backdrop-filter, qui devrait re-filtrer à chaque frame */
   .proj i{filter:blur(18px);animation:none}
   .mockwrap::before{inset:-60px -40px -50px;filter:blur(34px)}
-  .glass{backdrop-filter:blur(10px) saturate(150%);}
   .nav{backdrop-filter:blur(10px) saturate(150%);}
-  .mockframe{backdrop-filter:blur(8px) saturate(150%);}
-  details{backdrop-filter:blur(10px)}
 }
 
 @media(max-width:460px){
@@ -1043,9 +1064,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 
   .badge{font-size:11.5px;padding:6px 13px;gap:8px}
   .hero .badge{margin-bottom:34px}
-  .mockwrap{perspective:none}
   .mockframe{padding:5px;border-radius:21px;transform:none}
-  .mockwrap:hover .mockframe{transform:none}
   .mock{border-radius:16px}
   .tnode{gap:0 13px;padding-left:20px}
   .bcard{padding:22px 19px 24px}
@@ -1054,6 +1073,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .bigcta{padding:42px 18px}
   .wkpi{gap:18px}
   .hcta .btn{flex:1 1 100%}
+  .mockwrap{perspective:none}
 }
 
 /* ============================================================
@@ -1067,15 +1087,13 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
    ============================================================ */
 @supports (-webkit-backdrop-filter: blur(1px)) {
   .nav{-webkit-backdrop-filter:blur(16px) saturate(112%)}
-  .glass{-webkit-backdrop-filter:blur(14px) saturate(160%)}
-  .secteur{-webkit-backdrop-filter:blur(22px) saturate(150%)}
-  .mockframe{-webkit-backdrop-filter:blur(12px) saturate(160%)}
+  .secteur{-webkit-backdrop-filter:blur(12px) saturate(150%)}
 
+  @media(min-width:761px){
+    .glass{-webkit-backdrop-filter:blur(14px) saturate(160%)}
+  }
   @media(max-width:760px){
-    .glass{-webkit-backdrop-filter:blur(10px) saturate(150%)}
     .nav{-webkit-backdrop-filter:blur(10px) saturate(150%)}
-    .mockframe{-webkit-backdrop-filter:blur(8px) saturate(150%)}
-    .secteur{-webkit-backdrop-filter:blur(12px) saturate(150%)}
   }
 }
 
@@ -1087,7 +1105,6 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 .rv.rv-pending{opacity:0;transform:translateY(10px);transition:none}
 #services::before,#methode::before,#faq::before,#realisations::before,
 #offres::before,#contact-section::before,#secteurs .neons i,.proj i{animation:none}
-.tlfill{display:none}
 .tdot{color:var(--glow)}
 .rpeek{left:0;top:0;translate:var(--peek-x,0px) var(--peek-y,0px)}
 .footer-title{font-family:'Inter',sans-serif;font-size:11px;line-height:1.6;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:16px;font-weight:500}

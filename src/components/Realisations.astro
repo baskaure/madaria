@@ -98,7 +98,7 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
     <div class="reals" id="grille-reals">
       {projets.map((p, i) => (
         <article
-          class:list={['real', { vedette: p.vedette, extra: debutRepli > -1 && i >= debutRepli }]}
+          class:list={['real', 'rv', { vedette: p.vedette, extra: debutRepli > -1 && i >= debutRepli }]}
           data-secteur={p.secteur}
           data-id={p.id}
           data-i={i}
@@ -267,24 +267,11 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
     const souris = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     /* ---------- apparition des cartes ---------- */
-    if (!calme) {
-      const io = new IntersectionObserver(
-        (entrees) => {
-          entrees.forEach((e) => {
-            if (!e.isIntersecting) return;
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          });
-        },
-        { rootMargin: '0px 0px -8% 0px' },
-      );
-      cartes.forEach((c, i) => {
-        c.style.animationDelay = `${(i % 3) * 80}ms`;
-        io.observe(c);
-      });
-    } else {
-      cartes.forEach((c) => c.classList.add('in'));
-    }
+    // Les cartes passent par `.rv` (scripts/reveal.ts) : seules celles encore
+    // hors écran sont masquées, puis révélées en arrivant. L'ancienne
+    // animation partait de l'opacité 0 sur une carte déjà affichée : elle
+    // disparaissait puis revenait. Ici, un léger décalage par colonne.
+    if (!calme) cartes.forEach((c, i) => (c.style.transitionDelay = `${(i % 3) * 70}ms`));
 
     /* ---------- écran tactile : le rendu se lance quand la carte est devant les yeux ---------- */
     // Sans survol possible, la classe `.actif` reproduit l'état :hover (défilement
@@ -364,11 +351,12 @@ const donnees = JSON.stringify(projets).replace(/<\//g, '<\\/');
         const visible = f === 'tous' || el.dataset.secteur === f;
         el.hidden = !visible;
         if (visible && el.classList.contains('real')) {
+          // les cartes du nouveau filtre arrivent en cascade
+          if (!calme)
+            el.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], {
+              duration: 550, delay: n * 50, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards',
+            });
           n++;
-          if (!calme) {
-            // rejoue l'animation d'entrée
-            el.classList.add('in');
-          }
         }
       });
       vide.hidden = n > 0;

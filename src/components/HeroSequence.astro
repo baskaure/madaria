@@ -13,10 +13,10 @@
  *                              projet (notification ou leads qui arrivent)
  *
  * Deux projets en boucle (`data/sequence.ts`), un onglet chacun. Tout est
- * piloté par la Web Animations API : chaque élément reçoit UNE animation qui
- * couvre toute la durée du projet (ses étapes en offsets), toutes démarrent
- * ensemble. Mettre en pause, reprendre ou sauter à l'état final revient donc
- * à agir sur la même horloge pour toutes.
+ * piloté par la Web Animations API : chaque étape d'un élément devient une
+ * animation calée sur la durée totale du projet (délai avant, délai après),
+ * et toutes démarrent ensemble. Mettre en pause, reprendre ou sauter à l'état
+ * final revient donc à agir sur la même horloge pour toutes.
  *
  * A remplacé la vitrine vidéo KlientMap le 29/09/2026 (source archivée dans
  * `medias-en-reserve/`).
@@ -49,7 +49,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
             <em class="sq-phase" data-phase><b>{e.num}</b>{e.titre}<u>{e.delai}</u></em>
           ))}
         </p>
-        <b class="sq-live" data-live><em><s data-live-on></s></em>En ligne</b>
+        <b class="sq-live" data-live><em><u data-live-onde></u><s data-live-on></s></em>En ligne</b>
       </div>
       <div class="sq-jours" aria-hidden="true"><i data-avance></i></div>
 
@@ -71,6 +71,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
                   {p.blocs.map((b) => <i class={`b-${b.role}`} style={boite(b)} />)}
                 </div>
               ))}
+              <i class="sq-onde" data-onde aria-hidden="true" />
               <i class="sq-scan" data-scan aria-hidden="true" />
               <img
                 class="sq-shot"
@@ -111,6 +112,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
                   ))}
                 </div>
               )}
+              <i class="sq-reflet" data-reflet aria-hidden="true" />
             </div>
 
             <div class="sq-brief glass" data-brief>
@@ -140,7 +142,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
 
             {p.fin.type === 'notification' && (
               <div class="sq-notif sq-sombre" data-notif>
-                <span class="sq-icone" aria-hidden="true">
+                <span class="sq-icone" data-icone aria-hidden="true">
                   <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3.5 6.5l8.5 6.5 8.5-6.5" /></svg>
                 </span>
                 <span class="sq-notif-txt">
@@ -158,6 +160,8 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
 
   <div class="demo-actions sq-actions">
     <div class="sq-onglets" role="tablist" aria-label="Projets présentés">
+      {/* fond de l'onglet actif, qui glisse de l'un à l'autre ; sa jauge suit le projet en cours */}
+      <span class="sq-indic" data-indic aria-hidden="true"><i data-indic-jauge></i></span>
       {projets.map((p, i) => (
         <button
           type="button"
@@ -182,6 +186,8 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
   <noscript><style>
     .sq-shot,.sq-prod,.sq-prod b,.sq-live,.sq-live s,.sq-notif,.sq-phase:last-child{opacity:1!important;clip-path:none!important;transform:none!important}
     .sq-pause{display:none!important}
+    .sq-indic{display:none}
+    .sq-onglets [aria-selected='true']{background:color-mix(in srgb,var(--fg) 14%,transparent);border-color:var(--edge)}
   </style></noscript>
 </div>
 
@@ -204,23 +210,40 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     const ecran = $('[data-ecran]')!;
     const hote = $('[data-u-hote]')!;
     const chemin = $('[data-u-chemin]')!;
+    const liste = $('[role="tablist"]')!;
+    const indic = $('[data-indic]')!;
+    const jauge = $('[data-indic-jauge]')!;
 
     // Repères de la séquence, en millisecondes. Mêmes pour les deux projets
     // jusqu'à la mise en ligne ; seule la fin (notification ou leads) diffère.
     const T = { design: 2400, dev: 5200, ligne: 8600, fin: 9900 } as const;
     const FIN = { notification: 2500, leads: 3500 } as const;
     const SORTIE = 600;
+    // Courbes : entrées longues qui se posent, sorties courtes qui accélèrent,
+    // un seul ressort, discret, pour ce qui « arrive » (boutons, notification).
     const SOUPLE = 'cubic-bezier(.16,1,.3,1)';
-    const RESSORT = 'cubic-bezier(.34,1.4,.5,1)';
+    const POSE = 'cubic-bezier(.2,.75,.15,1)';
+    const FILE = 'cubic-bezier(.5,0,.9,.3)';
+    const RESSORT = 'cubic-bezier(.3,1.25,.5,1)';
+    const BALAYE = 'cubic-bezier(.65,0,.35,1)';
 
-    /** Lignes réellement affichées (le mobile en masque une partie). */
-    const affiche = (els: HTMLElement[]) => els.filter((el) => getComputedStyle(el).display !== 'none');
+    /**
+     * Lignes réellement affichées : le mobile masque les `.sq-opt` (même
+     * point de rupture que le CSS). Pas de getComputedStyle ici : la page
+     * contient des conteneurs de taille, et tout calcul de style y force la
+     * mise en page complète (mesuré : 170 ms de tâche bloquante au chargement
+     * sur mobile).
+     */
+    const affiche = (els: HTMLElement[]) => (etroit.matches ? els.filter((el) => !el.classList.contains('sq-opt')) : els);
 
     let actif = 0;
     let anims: Animation[] = [];
     let arret = 0; // temps de l'état final (juste avant le fondu de sortie)
     let visible = false;
     let pauseVoulue = false;
+    // au chargement, le cadre fait d'abord son entrée (global.css) : la
+    // séquence attend qu'il soit posé pour démarrer
+    let pret = calme.matches;
 
     function construire(i: number) {
       anims.forEach((a) => a.cancel());
@@ -230,18 +253,40 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
       const D = T.fin + FIN[fin] + SORTIE;
       arret = D - SORTIE;
 
-      /** Une animation par élément sur toute la durée D ; les étapes deviennent des offsets. */
+      /**
+       * Une piste = les étapes d'un élément sur la durée D. Chaque passage
+       * d'une étape à la suivante devient sa propre animation, qui ne tourne
+       * que pendant ce passage (délai avant, `endDelay` après : toutes ont la
+       * même durée totale D, donc la même horloge). Entre deux passages, la
+       * valeur est tenue par le remplissage et le navigateur n'a plus rien à
+       * recalculer : une seule animation sur tout D forçait le recalcul de
+       * style de chaque élément à chaque image, même immobile (mesuré : plus
+       * de 400 ms de style pendant un défilement sur mobile).
+       * La première tient aussi l'état de départ (`both`) ; les suivantes,
+       * créées au-dessus, ne s'appliquent qu'une fois commencées (`forwards`).
+       */
       const piste = (el: Element | null, etapes: Etape[], easing = SOUPLE) => {
         if (!el) return;
-        const pts = [...etapes];
-        if (pts[0][0] > 0) pts.unshift([0, pts[0][1]]);
-        if (pts[pts.length - 1][0] < D) pts.push([D, pts[pts.length - 1][1]]);
-        const a = el.animate(
-          pts.map(([t, k, e]) => ({ ...k, offset: Math.min(1, t / D), easing: e ?? easing })),
-          { duration: D, fill: 'both' },
-        );
-        a.pause();
-        anims.push(a);
+        const meme = (a: Keyframe, b: Keyframe) => JSON.stringify(a) === JSON.stringify(b);
+        let premier = true;
+        const segment = (t0: number, t1: number, k0: Keyframe, k1: Keyframe, e: string) => {
+          const a = el.animate([{ ...k0, easing: e }, k1], {
+            delay: t0,
+            duration: Math.max(1, t1 - t0),
+            endDelay: D - Math.max(t1, t0 + 1),
+            fill: premier ? 'both' : 'forwards',
+          });
+          premier = false;
+          a.pause();
+          anims.push(a);
+        };
+        for (let i = 0; i < etapes.length - 1; i++) {
+          const [t0, k0, e] = etapes[i];
+          const [t1, k1] = etapes[i + 1];
+          if (!meme(k0, k1)) segment(Math.min(t0, D), Math.min(t1, D), k0, k1, e ?? easing);
+        }
+        // piste immobile : son état tient seul
+        if (premier) segment(0, D, etapes[0][1], etapes[0][1], 'linear');
       };
       const cache = { opacity: 0 };
       const vu = { opacity: 1 };
@@ -255,94 +300,154 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
       const debuts = [0, T.design, T.dev, T.ligne, arret];
       $$('[data-phase]').forEach((el, k) => {
         const a = debuts[k], b = debuts[k + 1];
-        const bas = { opacity: 0, transform: 'translateY(40%)' };
-        const haut = { opacity: 0, transform: 'translateY(-40%)' };
+        const bas = { opacity: 0, transform: 'translateY(55%) scale(.94)' };
+        const haut = { opacity: 0, transform: 'translateY(-55%) scale(.94)' };
         const ici = { opacity: 1, transform: 'none' };
         piste(el, k === 3
-          ? [[a, bas], [a + 350, ici], [arret, ici], [D, haut]]
-          : [[a, bas], [a + 350, ici], [b, ici], [b + 250, haut]]);
+          ? [[a, bas], [a + 500, ici], [arret, ici, FILE], [D, haut]]
+          : [[a, bas], [a + 500, ici], [b - 60, ici, FILE], [b + 160, haut]]);
       });
-      piste($('[data-avance]'), [[0, { transform: 'scaleX(0)' }], [T.ligne, { transform: 'scaleX(1)' }]], 'linear');
-      piste($('[data-u-pre]'), [[T.dev, cache], [T.dev + 250, vu], [T.ligne, vu], [T.ligne + 150, cache]]);
+      // la jauge avance jour par jour : chaque phase la pousse jusqu'à son
+      // dernier jour, et elle se remplit pile à la mise en ligne
+      const jour = (n: number) => ({ transform: `scaleX(${n / 7})`, opacity: 1 });
+      piste($('[data-avance]'), [
+        [0, jour(0)],
+        [300, jour(0)], [T.design - 200, jour(1)],
+        [T.design + 200, jour(1)], [T.dev - 200, jour(3)],
+        [T.dev + 200, jour(3)], [T.ligne - 100, jour(6)],
+        [T.ligne + 100, jour(6)], [T.ligne + 700, jour(7)],
+        [arret, jour(7), FILE], [D, { transform: 'scaleX(1)', opacity: 0 }],
+      ], POSE);
+      piste($('[data-u-pre]'), [[T.dev, cache], [T.dev + 300, vu], [T.ligne, vu, FILE], [T.ligne + 150, cache]]);
       const typo = (el: HTMLElement, t: number, duree: number) => {
         const n = Math.max(1, el.textContent!.length);
         piste(el, [
-          [t, { clipPath: 'inset(0 100% 0 0)' }],
-          [t + duree, { clipPath: 'inset(0 0% 0 0)' }, 'linear'],
-        ], `steps(${n}, end)`);
+          [t, { clipPath: 'inset(0 100% 0 0)' }, `steps(${n}, end)`],
+          [t + duree, { clipPath: 'inset(0 0% 0 0)' }],
+        ]);
       };
       piste($('[data-u-prod]'), [[T.ligne + 100, vu], [arret, vu], [D, cache]]);
       typo(hote, T.ligne + 100, 600);
       typo(chemin, T.fin, 300);
-      piste($('[data-live]'), [[T.ligne + 700, { opacity: 0.4 }], [T.ligne + 950, vu], [arret, vu], [D, { opacity: 0.4 }]]);
-      piste($('[data-live-on]'), [
-        [T.ligne + 700, { opacity: 0, transform: 'scale(.4)' }],
-        [T.ligne + 950, { opacity: 1, transform: 'scale(1.35)' }],
-        [T.ligne + 1300, { opacity: 1, transform: 'scale(1)' }],
-        [arret, { opacity: 1, transform: 'scale(1)' }],
-        [D, { opacity: 0, transform: 'scale(1)' }],
-      ]);
 
-      // ---- 1. Cadrage : la carte de brief, ses champs tapés un à un ----
+      // ---- mise en ligne : voyant qui s'allume, onde, reflet sur l'écran ----
+      const eteint = { opacity: 0.4, borderColor: 'rgba(255,255,255,.32)', boxShadow: '0 0 0 0 rgba(167,139,250,0)' };
+      const allume = { opacity: 1, borderColor: 'rgba(196,181,253,.7)', boxShadow: '0 0 22px -4px rgba(167,139,250,.75)' };
+      piste($('[data-live]'), [[T.ligne + 650, eteint], [T.ligne + 1000, allume], [arret, allume], [D, eteint]]);
+      piste($('[data-live-on]'), [
+        [T.ligne + 650, { opacity: 0, transform: 'scale(.3)' }, RESSORT],
+        [T.ligne + 1100, { opacity: 1, transform: 'none' }],
+        [arret, { opacity: 1, transform: 'none' }],
+        [D, { opacity: 0, transform: 'none' }],
+      ]);
+      piste($('[data-live-onde]'), [
+        [T.ligne + 700, { opacity: 0.9, transform: 'scale(1)' }],
+        [T.ligne + 1700, { opacity: 0, transform: 'scale(4.2)' }],
+      ], 'cubic-bezier(.2,.6,.3,1)');
+      piste($('[data-reflet]', p), [
+        [T.ligne + 750, { transform: 'translateX(-100%)' }],
+        [T.ligne + 1650, { transform: 'translateX(100%)' }],
+      ], 'cubic-bezier(.45,0,.2,1)');
+
+      // ---- 1. Cadrage : la carte de brief, ses champs posés puis tapés ----
       const brief = $('[data-brief]', p);
       piste(brief, [
-        [150, { opacity: 0, transform: 'translate(-50%, -46%) scale(.96)' }],
-        [600, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }],
-        [T.design, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }],
-        [T.design + 350, { opacity: 0, transform: 'translate(-50%, -56%) scale(.98)' }],
+        [100, { opacity: 0, transform: 'translate(-50%, -43%) scale(.92)' }],
+        [800, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }],
+        [T.design - 50, { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }, FILE],
+        [T.design + 250, { opacity: 0, transform: 'translate(-50%, -50%) scale(1.07)' }],
       ]);
-      affiche($$('dl > div', brief)).forEach((champ, j) => typo($('[data-frappe]', champ)!, 700 + j * 550, 450));
-
-      // ---- 2. Design : blocs gris en cascade, puis balayage aux couleurs du client ----
-      $$('[data-wire="gris"] > i', p).forEach((b, j) => {
-        const t = T.design + 150 + Math.min(j, 18) * 55;
-        piste(b, [[t, { opacity: 0, transform: 'scale(.9)' }], [t + 380, { opacity: 1, transform: 'none' }]]);
+      const repos = { borderColor: 'rgba(255,255,255,.18)', backgroundColor: 'rgba(0,0,0,.22)' };
+      const saisie = { borderColor: 'rgba(196,181,253,.65)', backgroundColor: 'rgba(99,102,241,.16)' };
+      affiche($$('dl > div', brief)).forEach((champ, j) => {
+        const t = 700 + j * 550;
+        piste(champ, [
+          [220 + j * 70, { opacity: 0, transform: 'translateY(8px)', ...repos }],
+          [600 + j * 70, { opacity: 1, transform: 'none', ...repos }],
+          [t - 60, { opacity: 1, transform: 'none', ...repos }],
+          [t + 80, { opacity: 1, transform: 'none', ...saisie }],
+          [t + 480, { opacity: 1, transform: 'none', ...saisie }],
+          [t + 800, { opacity: 1, transform: 'none', ...repos }],
+        ], 'ease-out');
+        typo($('[data-frappe]', champ)!, t, 450);
       });
-      piste($('[data-wire="gris"]', p), [[T.dev + 2600, vu], [T.dev + 2700, cache]]);
-      piste($('[data-wire="couleur"]', p), [
-        [T.design + 1700, { clipPath: 'inset(0 100% 0 0)' }],
-        [T.design + 2600, { clipPath: 'inset(0 0% 0 0)' }],
-      ], 'cubic-bezier(.65,0,.35,1)');
 
-      // ---- 3. Développement : la capture remplace la maquette, le code défile ----
-      const balaye = 'cubic-bezier(.45,0,.25,1)';
+      // ---- 2. Design : wireframe tracé en ordre de lecture, puis onde de couleur ----
+      // chaque bloc se trace selon sa nature : les lignes de texte s'étirent
+      // depuis la gauche, les titres montent, les boutons éclosent
+      const trace: Record<string, Keyframe> = {
+        texte: { opacity: 0, transform: 'scaleX(0)' },
+        lien: { opacity: 0, transform: 'scaleX(0)' },
+        titre: { opacity: 0, transform: 'scaleY(.15)' },
+        bouton: { opacity: 0, transform: 'scale(.5)' },
+        pilule: { opacity: 0, transform: 'scale(.5)' },
+        rond: { opacity: 0, transform: 'scale(.4)' },
+        surface: { opacity: 0, transform: 'scale(.97)' },
+      };
+      $$('[data-wire="gris"] > i', p).forEach((b) => {
+        const role = /b-(\w+)/.exec(b.className)?.[1] ?? '';
+        const t = T.design + 150 + parseFloat(b.style.top) * 6 + parseFloat(b.style.left) * 2.5;
+        const ressort = role === 'bouton' || role === 'pilule' || role === 'rond';
+        piste(b, [[t, trace[role] ?? cache, ressort ? RESSORT : POSE], [t + (ressort ? 550 : 480), { opacity: 1, transform: 'none' }]]);
+      });
+      piste($('[data-wire="gris"]', p), [[T.dev + 2400, vu], [T.dev + 2500, cache]]);
+      // la couleur du client se répand en cercle depuis le titre, bordée d'une onde lumineuse
+      const COULEUR = [T.design + 1650, T.design + 2600] as const;
+      piste($('[data-wire="couleur"]', p), [
+        [COULEUR[0], { clipPath: 'circle(0% at 50% 45%)' }, BALAYE],
+        [COULEUR[1], { clipPath: 'circle(75% at 50% 45%)' }],
+      ]);
+      const onde = $('[data-onde]', p);
+      // sa taille (pas un scale : le liseré rétrécirait avec elle et disparaîtrait)
+      piste(onde, [[COULEUR[0], { width: '0%' }, BALAYE], [COULEUR[1], { width: '118.6%' }]]);
+      piste(onde, [[COULEUR[0], cache], [COULEUR[0] + 120, vu], [COULEUR[1] - 350, vu, 'ease-in'], [COULEUR[1], cache]]);
+
+      // ---- 3. Développement : la capture se révèle sous un front de lumière, le code défile ----
+      const REVELE = [T.dev + 400, T.dev + 2400] as const;
       piste($('[data-shot]', p), [
-        [T.dev + 400, { clipPath: 'inset(0 0 100% 0)' }],
-        [T.dev + 3000, { clipPath: 'inset(0 0 0% 0)' }],
-      ], balaye);
-      piste($('[data-scan]', p), [
-        [T.dev + 300, { opacity: 0, top: '0%' }],
-        [T.dev + 400, { opacity: 1, top: '0%' }, balaye],
-        [T.dev + 3000, { opacity: 1, top: '100%' }],
-        [T.dev + 3150, { opacity: 0, top: '100%' }],
-      ], 'linear');
+        [REVELE[0], { clipPath: 'inset(0 0 100% 0)' }, BALAYE],
+        [REVELE[1], { clipPath: 'inset(0 0 0% 0)' }],
+      ]);
+      // le bas du front suit exactement le bord de la découpe (même courbe)
+      const front = (k: number) => ({ transform: `translateY(calc(${k * 100}cqh - 100%))` });
+      piste($('[data-scan]', p), [[REVELE[0], front(0), BALAYE], [REVELE[1], front(1)]]);
+      piste($('[data-scan]', p), [[REVELE[0], cache], [REVELE[0] + 150, vu], [REVELE[1] - 250, vu, 'ease-in'], [REVELE[1] + 100, cache]]);
 
       const code = $('[data-code]', p)!;
       piste(code, [
-        [T.dev + 100, { opacity: 0, transform: 'translateY(8%)' }],
-        [T.dev + 450, { opacity: 1, transform: 'none' }],
-        [T.ligne - 300, { opacity: 1, transform: 'none' }],
-        [T.ligne, { opacity: 0, transform: 'translateY(-4%)' }],
+        [T.dev + 100, { opacity: 0, transform: 'translateY(14%) scale(.97)' }],
+        [T.dev + 700, { opacity: 1, transform: 'none' }],
+        [T.ligne - 280, { opacity: 1, transform: 'none' }, FILE],
+        [T.ligne, { opacity: 0, transform: 'translateY(6%) scale(.98)' }],
       ]);
       const lignes = affiche($$('[data-ligne]', code));
-      const vues = Number(getComputedStyle(code).getPropertyValue('--lignes')) || 4;
+      // lignes visibles du panneau : `--lignes` du CSS (4, 3 sur mobile). Pas
+      // lu par getComputedStyle, pour la même raison que dans `affiche`
+      const vues = etroit.matches ? 3 : 4;
       const pas = 2700 / lignes.length;
       // le panneau montre `vues` lignes : chaque ligne suivante le fait monter d'un cran
       const cran = (k: number) => ({ transform: `translateY(${-k * 1.7}em)` });
       const defile: Etape[] = [[0, cran(0)]];
       lignes.forEach((l, j) => {
         const t = T.dev + 400 + j * pas;
-        piste(l, [[t, { opacity: 0, transform: 'translateX(-.6em)' }], [t + 260, { opacity: 1, transform: 'none' }]]);
-        if (j >= vues) defile.push([t, cran(j - vues)], [t + 260, cran(j - vues + 1)]);
+        piste(l, [
+          [t, { opacity: 0, transform: 'translateY(.45em)', filter: 'blur(4px)' }, POSE],
+          [t + 380, { opacity: 1, transform: 'none', filter: 'blur(0)' }],
+        ]);
+        if (j >= vues) defile.push([t, cran(j - vues), POSE], [t + Math.min(380, pas), cran(j - vues + 1)]);
       });
       if (defile.length > 1) piste($('[data-lignes]', code), defile);
 
       // ---- 4. Mise en ligne : la fin propre au projet ----
       if (fin === 'notification') {
         piste($('[data-notif]', p), [
-          [T.fin, { opacity: 0, transform: 'translateY(40%)' }],
-          [T.fin + 650, { opacity: 1, transform: 'none' }, RESSORT],
-        ], RESSORT);
+          [T.fin, { opacity: 0, transform: 'translateY(35%) scale(.95)' }, RESSORT],
+          [T.fin + 700, { opacity: 1, transform: 'none' }],
+        ]);
+        piste($('[data-icone]', p), [
+          [T.fin + 180, { opacity: 0, transform: 'scale(.4) rotate(-12deg)' }, RESSORT],
+          [T.fin + 750, { opacity: 1, transform: 'none' }],
+        ]);
       } else {
         // l'appli remplace la landing, puis les leads arrivent rangée par rangée
         piste($('[data-app]', p), [[T.fin, cache], [T.fin + 500, vu]]);
@@ -353,11 +458,17 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
         ]);
         $$('[data-carte]', p).forEach((c) => {
           const t = T.fin + 600 + Number(c.dataset.carte) * 300;
-          piste(c, [[t, { opacity: 0, transform: 'translateY(2.5cqh)' }], [t + 420, { opacity: 1, transform: 'none' }]]);
+          piste(c, [
+            [t, { opacity: 0, transform: 'translateY(3cqh) scale(.96)' }, RESSORT],
+            [t + 550, { opacity: 1, transform: 'none' }],
+          ]);
         });
       }
 
-      piste(p, [[arret, vu], [D, cache]], 'ease-in');
+      // jauge de l'onglet : le temps restant avant le projet suivant
+      piste(jauge, [[0, { transform: 'scaleX(0)' }], [D, { transform: 'scaleX(1)' }]], 'linear');
+
+      piste(p, [[arret, { opacity: 1, transform: 'none' }, FILE], [D, { opacity: 0, transform: 'scale(.985)' }]]);
     }
 
     /**
@@ -375,8 +486,24 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     const suspendre = () => anims.forEach((a) => a.pause());
     const maj = () => {
       if (calme.matches) return;
-      if (visible && !pauseVoulue && !document.hidden) jouer();
+      if (visible && pret && !pauseVoulue && !document.hidden) jouer();
       else suspendre();
+    };
+
+    /**
+     * Cale le fond glissant sur l'onglet actif (sa transition CSS fait le
+     * trajet). La toute première pose attend le ResizeObserver, qui passe
+     * après la mise en page : lue plus tôt, la position forçait une mise en
+     * page complète de la page pendant le chargement du script.
+     */
+    let place = false;
+    const placer = () => {
+      const o = onglets[actif];
+      indic.style.setProperty('--x', `${o.offsetLeft}px`);
+      indic.style.setProperty('--w', `${o.offsetWidth}px`);
+      // première position posée sans trajet ; le fond glisse ensuite d'onglet en onglet
+      if (!place) requestAnimationFrame(() => (liste.dataset.pret = ''));
+      place = true;
     };
 
     function lancer(i: number, t = 0) {
@@ -390,6 +517,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
         o.tabIndex = k === i ? 0 : -1;
       });
       ecran.setAttribute('aria-labelledby', onglets[i].id);
+      if (place) placer();
       lien.href = `/realisations/${p.dataset.projet}/`;
       lien.textContent = `Découvrir le projet ${p.dataset.nom} →`;
 
@@ -412,12 +540,13 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     onglets.forEach((o, i) =>
       o.addEventListener('click', () => {
         pauseVoulue = false;
+        pret = true;
         majBouton();
         lancer(i);
       }),
     );
     // flèches du clavier dans la liste d'onglets (motif ARIA « tabs »)
-    $('[role="tablist"]')!.addEventListener('keydown', (e) => {
+    liste.addEventListener('keydown', (e) => {
       const sens = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!sens) return;
       e.preventDefault();
@@ -449,7 +578,14 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     // le mobile masque des champs et des lignes : on reconstruit au même instant
     etroit.addEventListener('change', () => lancer(actif, Number(anims[0]?.currentTime) || 0));
 
+    // les largeurs d'onglets bougent au chargement des polices et au redimensionnement
+    new ResizeObserver(placer).observe(liste);
+
     lancer(0);
+    setTimeout(() => {
+      pret = true;
+      maj();
+    }, 1000);
   }
 </script>
 
@@ -464,6 +600,8 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     --sq-gris: color-mix(in srgb, var(--fg) 15%, transparent);
     --sq-gris-fort: color-mix(in srgb, var(--fg) 24%, transparent);
     --sq-marge: 1.6cqw;
+    /* lignes visibles dans le panneau de code (reprises dans le script) */
+    --lignes: 4;
   }
 
   /* ---- barre de navigateur : celle des cartes Réalisations, à l'échelle ---- */
@@ -535,6 +673,13 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     height: 7px;
     border-radius: 50%;
     background: var(--line2);
+  }
+  .sq-live u {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--glow);
+    opacity: 0;
   }
   .sq-live s {
     position: absolute;
@@ -613,8 +758,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     padding: 0 1em 0 0.8em;
     white-space: nowrap;
     color: var(--mut);
-    background: color-mix(in srgb, var(--bg) 62%, transparent);
-    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
     border: 1px solid var(--line2);
     border-radius: 100px;
     opacity: 0;
@@ -646,6 +790,14 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
   .sq-wire .b-rond {
     border-radius: 50%;
   }
+  /* point d'ancrage du tracé : les lignes s'étirent depuis la gauche, les titres montent */
+  .sq-gris .b-texte,
+  .sq-gris .b-lien {
+    transform-origin: left center;
+  }
+  .sq-gris .b-titre {
+    transform-origin: center bottom;
+  }
   .sq-wire .b-titre,
   .sq-wire .b-bouton {
     background: var(--sq-gris-fort);
@@ -656,7 +808,26 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
   }
   .sq-couleur {
     background: var(--c-fond);
-    clip-path: inset(0 100% 0 0);
+    clip-path: circle(0% at 50% 45%);
+  }
+  /* onde au bord du cercle de couleur. Diamètre = celui du cercle final
+     (75 % de √((l² + h²) / 2) sur une page 2:1, soit 118,6 % de sa largeur),
+     centrée au même point ; le script la fait grandir de 0 à cette largeur
+     sur la même courbe */
+  .sq-onde {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 45%;
+    width: 0;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--glow) 70%, #fff);
+    box-shadow: 0 0 36px 4px color-mix(in srgb, var(--lav) 45%, transparent),
+      inset 0 0 22px 0 color-mix(in srgb, var(--lav) 28%, transparent);
+    opacity: 0;
+    pointer-events: none;
   }
   .sq-couleur i {
     opacity: 1;
@@ -691,17 +862,41 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
   .sq-shot {
     clip-path: inset(0 0 100% 0);
   }
+  /* front de lumière : un voile qui descend avec la découpe, fin liseré au bord */
   .sq-scan {
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     z-index: 2;
-    height: 2px;
-    margin-top: -1px;
-    background: linear-gradient(90deg, transparent, var(--glow) 20%, var(--fg) 50%, var(--glow) 80%, transparent);
-    box-shadow: 0 0 18px 3px var(--lav);
+    height: 22cqh;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--lav) 10%, transparent) 70%,
+      color-mix(in srgb, var(--glow) 32%, transparent));
     opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+  }
+  .sq-scan::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--glow) 80%, #fff) 30%, #fff 50%,
+      color-mix(in srgb, var(--glow) 80%, #fff) 70%, transparent);
+    box-shadow: 0 0 14px 1px color-mix(in srgb, var(--lav) 70%, transparent);
+  }
+
+  /* reflet qui traverse l'écran une fois, au moment de la mise en ligne */
+  .sq-reflet {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.16) 46%,
+      rgba(255, 255, 255, 0.28) 50%, rgba(255, 255, 255, 0.16) 54%, transparent 70%);
+    transform: translateX(-100%);
+    pointer-events: none;
   }
 
   /* ---- fin KlientMap : l'appli, colonnes vides puis cartes ---- */
@@ -719,10 +914,13 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     opacity: 0;
   }
 
-  /* ---- panneaux ---- */
+  /* ---- panneaux ----
+     Fonds denses plutôt que dépolis : sous eux la page s'anime sans arrêt, et
+     un backdrop-filter devait re-flouter ce fond à chaque image (mesuré : le
+     hero tombait à 30 images/s sur un portable modeste). */
   .sq-sombre {
-    background: color-mix(in srgb, var(--bg) 74%, transparent);
-    backdrop-filter: blur(14px) saturate(160%);
+    background: linear-gradient(160deg, color-mix(in srgb, #1a1630 88%, transparent),
+      color-mix(in srgb, var(--bg) 90%, transparent));
     border: 1px solid var(--line2);
     box-shadow: 0 1px 0 var(--line) inset, 0 24px 60px -24px var(--bg);
   }
@@ -744,8 +942,12 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     text-transform: none;
   }
 
-  /* carte de brief (verre clair du site, `.glass`) */
+  /* carte de brief : l'aspect du verre du site (`.glass`), en plus dense et
+     sans son dépoli (voir `.sq-sombre`) */
   .sq-brief {
+    background: linear-gradient(150deg, #2a2640, #16131f);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     position: absolute;
     z-index: 3;
     left: 50%;
@@ -790,7 +992,6 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
 
   /* extraits de code */
   .sq-code {
-    --lignes: 4;
     position: absolute;
     z-index: 3;
     left: var(--sq-marge);
@@ -897,6 +1098,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     gap: 14px 16px;
   }
   .sq-onglets {
+    position: relative;
     display: flex;
     gap: 6px;
     padding: 5px;
@@ -905,6 +1107,8 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     border: 1px solid var(--line);
   }
   .sq-onglets button {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: baseline;
     gap: 8px;
@@ -916,7 +1120,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     font: inherit;
     font-size: 13.5px;
     cursor: pointer;
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: color 0.35s ease;
   }
   .sq-onglets button:hover {
     color: var(--fg);
@@ -934,8 +1138,35 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
   }
   .sq-onglets [aria-selected='true'] {
     color: var(--fg);
+  }
+  /* fond de l'onglet actif : un seul, qui glisse ; --x et --w posés par le script */
+  .sq-indic {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: var(--w, 0);
+    transform: translateX(var(--x, 0));
+    border-radius: 100px;
     background: color-mix(in srgb, var(--fg) 14%, transparent);
-    border-color: var(--edge);
+    border: 1px solid var(--edge);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  [data-pret] > .sq-indic {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .sq-indic i {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 3px;
+    height: 1.5px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--violet), var(--lav), var(--glow));
+    transform: scaleX(0);
+    transform-origin: left;
   }
   .sq-onglets button:focus-visible,
   .sq-pause:focus-visible {
@@ -977,6 +1208,13 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     text-align: center;
   }
 
+  /* animations réduites : état final immobile, la jauge n'a plus de sens */
+  @media (prefers-reduced-motion: reduce) {
+    .sq-indic i {
+      display: none;
+    }
+  }
+
   /* ---- mobile : même séquence, brief et code allégés ---- */
   @media (max-width: 760px) {
     .sq-ecran {
@@ -990,8 +1228,10 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
       padding: 4cqw 4.4cqw 3.4cqw;
       font-size: clamp(10.5px, 3.4cqw, 14px);
     }
-    .sq-code {
+    .sq {
       --lignes: 3;
+    }
+    .sq-code {
       width: auto;
       right: var(--sq-marge);
       font-size: clamp(9px, 2.8cqw, 12px);
