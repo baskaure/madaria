@@ -6,6 +6,8 @@ import { offres, prixEntree, achatEntree, conditionsOffres } from '../data/offre
 import { services } from '../data/services';
 import { questions } from '../data/faq';
 import { contact } from '../data/site';
+import { tousLesGuides } from '../lib/guides';
+import { villes } from '../data/villes';
 
 const BASE = 'https://madaria.fr';
 
@@ -14,7 +16,7 @@ const BASE = 'https://madaria.fr';
  * factuel du site en markdown, plus facile à extraire qu'une page HTML.
  * Généré depuis les mêmes données que le site, donc jamais désynchronisé.
  */
-export const GET: APIRoute = () => {
+export const GET: APIRoute = async () => {
   const l: string[] = [];
 
   l.push('# Madaria');
@@ -82,6 +84,11 @@ export const GET: APIRoute = () => {
   for (const s of secteurs) {
     l.push(`- [${s.h1}](${BASE}/site-internet/${s.slug}/) : ${s.metaDesc}`);
   }
+  for (const v of villes) l.push(`- [Création de site internet ${v.a}](${BASE}/creation-site-internet/${v.slug}/) : ${v.metaDesc}`);
+  l.push(`- [Réalisations](${BASE}/realisations/) : les projets livrés, avec captures`);
+  l.push(`- [À propos](${BASE}/a-propos/) : Aurélien Branco, fondateur de Madaria`);
+  l.push(`- [Guides](${BASE}/guides/) : prix, référencement local, conseils pour indépendants et TPE`);
+  for (const g of await tousLesGuides()) l.push(`- [${g.data.titre}](${BASE}/guides/${g.id}/) : ${g.data.description}`);
   l.push(`- [Mentions légales](${BASE}/mentions-legales/)`);
   l.push(`- [Politique de confidentialité](${BASE}/confidentialite/)`);
   l.push('');

@@ -54,7 +54,12 @@ const ld = {
   ],
 };
 
-const projetsMetier: Record<string, string[]> = { restaurant: ['kami', 'munda-kfe'], perceur: ['aurore-piercing'], 'btp-artisan': ['recharge-clim'] };
+const projetsMetier: Record<string, string[]> = {
+  restaurant: ['kami', 'munda-kfe'],
+  perceur: ['aurore-piercing'],
+  'garage-automobile': ['recharge-clim'],
+  photographe: ['lucas-morin', 'tom-carvalho'],
+};
 const exemples = (projetsMetier[s.slug] ?? []).map(projet);
 const autres = secteurs.filter((x) => x.slug !== s.slug);
 ---

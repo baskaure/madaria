@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Ariane from '../../components/Ariane.astro';
+import Icon from '../../components/Icon.astro';
+import Contact from '../../components/Contact.astro';
+import portrait from '../../assets/aurelien-branco.png';
+import { tousLesGuides, lecture, dateFr, type Guide } from '../../lib/guides';
+import { secteurs } from '../../data/secteurs';
+
+export async function getStaticPaths() {
+  return (await tousLesGuides()).map((g) => ({ params: { slug: g.id }, props: { g } }));
+}
+const { g } = Astro.props as { g: Guide };
+const { Content, headings } = await render(g);
+const sommaire = headings.filter((h) => h.depth === 2);
+const autres = (await tousLesGuides()).filter((x) => x.id !== g.id).slice(0, 3);
+const metiers = secteurs.filter((s) => g.data.metiers.includes(s.slug));
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: g.data.titre,
+      description: g.data.description,
+      datePublished: g.data.publie.toISOString().slice(0, 10),
+      ...(g.data.maj ? { dateModified: g.data.maj.toISOString().slice(0, 10) } : {}),
+      author: { '@id': 'https://madaria.fr/#fondateur' },
+      publisher: { '@id': 'https://madaria.fr/#organisation' },
+      image: 'https://madaria.fr/og.png',
+      mainEntityOfPage: url,
+      inLanguage: 'fr-FR',
+    },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://madaria.fr/' },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://madaria.fr/guides/' },
+      { '@type': 'ListItem', position: 3, name: g.data.titre, item: url },
+    ] },
+  ],
+};
+---
+
+<Base title={g.data.title} description={g.data.description}>
+  <section class="ph">
+    <div class="wrap">
+      <Ariane etapes={[{ label: 'Guides', href: '/guides/' }, { label: g.data.titre }]} />
+      <span class="lab">{g.data.categorie}</span>
+      <h1>{g.data.titre}</h1>
+      <p class="chapo">{g.data.chapo}</p>
+      <div class="byline">
+        <Image class="avatar petit" src={portrait} width={40} height={40} densities={[1, 2]} format="webp" quality={80} alt="" />
+        <span>
+          Par <a href="/a-propos/">Aurélien Branco</a>, fondateur de Madaria<br />
+          {g.data.maj ? <>Mis à jour le <time datetime={g.data.maj.toISOString().slice(0, 10)}>{dateFr(g.data.maj)}</time></> : <>Publié le <time datetime={g.data.publie.toISOString().slice(0, 10)}>{dateFr(g.data.publie)}</time></>} · {lecture(g)} min de lecture
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec court">
+    <div class="wrap guide-grid">
+      <article class="article">
+        <Content />
+        <div class="auteur">
+          <Image class="avatar" src={portrait} width={64} height={64} densities={[1, 2]} format="webp" quality={80} alt="Aurélien Branco" />
+          <div>
+            <b>Aurélien Branco</b>
+            <p>Fondateur de Madaria, je conçois et je code des sites pour des indépendants et des TPE, de Lyon à Capbreton. <a href="/a-propos/">En savoir plus</a></p>
+          </div>
+        </div>
+      </article>
+      {sommaire.length > 2 && (
+        <aside class="sommaire" aria-label="Sommaire">
+          <span class="lab">Sommaire</span>
+          <nav>{sommaire.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}</nav>
+          <a class="btn btn-p" href="#contact">Demander un devis</a>
+        </aside>
+      )}
+    </div>
+  </section>
+
+  {metiers.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <span class="lab">Pour votre métier</span>
+        <div class="pastilles">
+          {metiers.map((s) => <a href={`/site-internet/${s.slug}/`}><span class="ico"><Icon name={s.icon} /></span>Site internet pour {s.nom.toLowerCase()}</a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {autres.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <div class="shead rv"><div><span class="lab">À lire aussi</span><h2>D'autres guides.</h2></div><a class="tlink" href="/guides/">Tous les guides<Icon name="arrow" class="i" /></a></div>
+        <div class="liste-guides">
+          {autres.map((x) => (
+            <a class="ligne-guide" href={`/guides/${x.id}/`}>
+              <span class="meta-guide">{x.data.categorie}<br />{lecture(x)} min de lecture</span>
+              <span><h3>{x.data.titre}</h3><p>{x.data.chapo}</p></span>
+              <Icon name="arrow" class="i" />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Contact secteur={`Guide : ${g.data.titre}`} />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>

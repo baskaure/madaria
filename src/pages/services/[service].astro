@@ -10,6 +10,7 @@ import PlanCard from '../../components/PlanCard.astro';
 import { prestations } from '../../data/prestations';
 import { offres, offresStructurees } from '../../data/offres';
 import { projet } from '../../lib/projets';
+import { villes } from '../../data/villes';
 
 export function getStaticPaths() {
   return prestations.map((p) => ({ params: { service: p.slug }, props: { p } }));
@@ -80,6 +81,17 @@ const ld = {
       <div class="projets">{exemples.map((r) => <CarteProjet p={r} />)}</div>
     </div>
   </section>
+
+  {web && (
+    <section class="sec">
+      <div class="wrap">
+        <span class="lab">Près de chez vous</span>
+        <div class="pastilles">
+          {villes.map((x) => <a href={`/creation-site-internet/${x.slug}/`}><span class="ico"><Icon name="pin" /></span>Site internet {x.a}</a>)}
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="sec" id="tarifs">
     <div class="wrap">

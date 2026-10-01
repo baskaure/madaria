@@ -60,7 +60,7 @@ import { nav, contact } from '../data/site';
         targets[(index + (e.shiftKey ? -1 : 1) + targets.length) % targets.length].focus();
       }
     });
-    matchMedia('(min-width: 861px)').addEventListener('change', e => {
+    matchMedia('(min-width: 1001px)').addEventListener('change', e => {
       if (e.matches) setOpen(false, false);
     });
   }

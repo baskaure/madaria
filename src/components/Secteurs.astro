@@ -16,6 +16,10 @@ import { secteurs } from '../data/secteurs';
           <span class="ico"><Icon name={s.icon} /></span>{s.nom}<Icon name="arrow" class="i fl" />
         </a>
       ))}
+      {/* complète la dernière ligne quand le nombre de métiers ne tombe pas juste */}
+      <a class="metier autre" href="#contact" style={`grid-column: span ${(4 - (secteurs.length % 4)) % 4 || 4}`}>
+        <span class="ico"><Icon name="plus" /></span>Votre métier n'est pas listé ? Parlons-en<Icon name="arrow" class="i fl" />
+      </a>
     </div>
   </div>
 </section>

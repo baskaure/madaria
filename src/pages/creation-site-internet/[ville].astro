@@ -1,0 +1,142 @@
+---
+import Base from '../../layouts/Base.astro';
+import Ariane from '../../components/Ariane.astro';
+import Icon from '../../components/Icon.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import CarteProjet from '../../components/CarteProjet.astro';
+import Contact from '../../components/Contact.astro';
+import OfferTerms from '../../components/OfferTerms.astro';
+import PlanCard from '../../components/PlanCard.astro';
+import { villes } from '../../data/villes';
+import { secteurs } from '../../data/secteurs';
+import { realisations } from '../../data/realisations';
+import { offres, offresLd } from '../../data/offres';
+import { projet } from '../../lib/projets';
+
+export function getStaticPaths() {
+  return villes.map((v) => ({ params: { ville: v.slug }, props: { v } }));
+}
+const { v } = Astro.props;
+const offresPage = offres.slice(0, 2);
+// sans client sur place, on montre les trois projets phares
+const exemples = (v.projets.length ? v.projets : ['kami', 'aurore-piercing', 'recharge-clim']).map(projet);
+const metiers = v.metiers.map((slug) => secteurs.find((s) => s.slug === slug)!).filter(Boolean);
+const autres = villes.filter((x) => x.slug !== v.slug);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Service',
+      name: `Création de site internet ${v.a}`,
+      serviceType: 'Création de site internet',
+      provider: { '@id': 'https://madaria.fr/#organisation' },
+      areaServed: { '@type': 'City', name: v.nom },
+      description: v.metaDesc,
+      offers: offresLd(offresPage),
+    },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://madaria.fr/' },
+      { '@type': 'ListItem', position: 2, name: 'Sites internet', item: 'https://madaria.fr/services/creation-site-internet/' },
+      { '@type': 'ListItem', position: 3, name: v.nom, item: url },
+    ] },
+    { '@type': 'FAQPage', mainEntity: v.faq.map((q) => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.r } })) },
+  ],
+};
+---
+
+<Base title={v.metaTitle} description={v.metaDesc}>
+  <section class="ph">
+    <div class="wrap">
+      <Ariane etapes={[{ label: 'Sites internet', href: '/services/creation-site-internet/' }, { label: v.nom }]} />
+      <span class="lab"><Icon name="pin" class="i" /> {v.nom}</span>
+      <h1>Création de site internet <span class="acc">{v.a}.</span></h1>
+      {v.intro.map((p) => <p class="chapo">{p}</p>)}
+      <div class="hcta">
+        <a href="#contact" class="btn btn-p">Devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
+        <a href="#tarifs" class="btn btn-g">Voir les tarifs</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div class="rv">
+        <span class="lab">{v.projets.length ? 'Nos clients' : 'Votre interlocuteur'}</span>
+        <h2>{v.ancrage.titre}</h2>
+      </div>
+      <div class="txt rv">
+        {v.ancrage.texte.map((p) => <p>{p}</p>)}
+        <p class="note-petite">Zone couverte : {v.zone.join(', ')}.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <SectionHead label="Réalisations">
+        <Fragment slot="titre">{v.projets.length ? <>Des sites livrés <span class="acc">{v.a}.</span></> : <>Des sites <span class="acc">déjà en ligne.</span></>}</Fragment>
+        <a class="tlink" href="/realisations/">Les {realisations.length} réalisations<Icon name="arrow" class="i" /></a>
+      </SectionHead>
+      <div class="projets">{exemples.map((p) => <CarteProjet p={p} />)}</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <SectionHead label="Ce qu'on construit">
+        <Fragment slot="titre">Un site pensé pour être trouvé <span class="acc">{v.a}.</span></Fragment>
+      </SectionHead>
+      <div class="points rv">
+        {v.enjeux.map((e, i) => (
+          <article class="point"><span class="num">{String(i + 1).padStart(2, '0')}</span><h3>{e.titre}</h3><p>{e.text}</p></article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="tarifs">
+    <div class="wrap">
+      <SectionHead label="Tarifs">
+        <Fragment slot="titre">Les mêmes prix partout, <span class="acc">création incluse.</span></Fragment>
+        <p>Rien à payer au départ en abonnement, ou le prix d'achat en une fois. Le sur-mesure se chiffre sur devis.</p>
+      </SectionHead>
+      <div class="plans deux rv">{offresPage.map((o) => <PlanCard o={o} href={`?offre=${o.id}#contact`} />)}</div>
+      <OfferTerms />
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <span class="lab">Un site pour votre métier</span>
+      <div class="pastilles">
+        {metiers.map((s) => <a href={`/site-internet/${s.slug}/`}><span class="ico"><Icon name={s.icon} /></span>{s.nom}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap fsplit">
+      <div class="intro rv"><span class="lab">Questions</span><h2>Questions fréquentes.</h2><p>Une réponse manque ? Écrivez-nous, vous l'aurez sous 24&nbsp;h.</p></div>
+      <div class="faq rv">
+        {v.faq.map((q, i) => (
+          <details open={i === 0}><summary>{q.q}<Icon name="plus" class="i" /></summary><p>{q.r}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {autres.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <span class="lab">Ailleurs en France</span>
+        <div class="pastilles">
+          {autres.map((x) => <a href={`/creation-site-internet/${x.slug}/`}><span class="ico"><Icon name="pin" /></span>Site internet {x.a}</a>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Contact secteur={`Site internet ${v.a}`} />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>

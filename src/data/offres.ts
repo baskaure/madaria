@@ -25,6 +25,12 @@ export type Offre = {
  */
 export const ENGAGEMENT_MOIS = 12;
 
+/**
+ * Site acheté en une fois : une panne due à notre travail est corrigée
+ * gratuitement ; les modifications et évolutions sont facturées à l'heure.
+ */
+export const TAUX_HORAIRE = 30;
+
 // Les prix affichés servent aussi aux données structurées.
 export const offres: Offre[] = [
   {

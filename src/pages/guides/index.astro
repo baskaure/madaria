@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import Ariane from '../../components/Ariane.astro';
+import Icon from '../../components/Icon.astro';
+import Contact from '../../components/Contact.astro';
+import { tousLesGuides, lecture, dateFr } from '../../lib/guides';
+
+const guides = await tousLesGuides();
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'CollectionPage', name: 'Guides Madaria', url, about: 'Création de site internet, référencement local et outils pour les indépendants' },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://madaria.fr/' },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: url },
+    ] },
+  ],
+};
+---
+
+<Base title="Guides : site internet, Google et clients en ligne | Madaria" description="Prix d'un site, fiche Google, référencement local : des guides concrets pour les indépendants et les TPE qui veulent être trouvés et contactés en ligne.">
+  <section class="ph">
+    <div class="wrap">
+      <Ariane etapes={[{ label: 'Guides' }]} />
+      <span class="lab">Guides</span>
+      <h1>Votre site, Google et vos clients, <span class="acc">expliqués simplement.</span></h1>
+      <p class="chapo">Ce qu'on explique à chaque client avant de commencer, écrit une bonne fois pour toutes : les prix, le référencement local, les choix à faire et les pièges à éviter.</p>
+    </div>
+  </section>
+
+  <section class="sec court">
+    <div class="wrap">
+      <div class="liste-guides">
+        {guides.map((g) => (
+          <a class="ligne-guide rv" href={`/guides/${g.id}/`}>
+            <span class="meta-guide">{g.data.categorie}<br />{lecture(g)} min de lecture</span>
+            <span>
+              <h2>{g.data.titre}</h2>
+              <p>{g.data.chapo}</p>
+            </span>
+            <Icon name="arrow" class="i" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Contact secteur="Guides" />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>

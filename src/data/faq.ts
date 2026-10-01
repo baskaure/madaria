@@ -1,4 +1,4 @@
-import { offres, prixEntree, achatEntree, ENGAGEMENT_MOIS } from './offres';
+import { offres, prixEntree, achatEntree, ENGAGEMENT_MOIS, TAUX_HORAIRE } from './offres';
 export type Question = { q: string; r: string };
 
 export const questions: Question[] = [
@@ -28,7 +28,7 @@ export const questions: Question[] = [
   },
   {
     q: 'Et après la mise en ligne ?',
-    r: `En abonnement, rien à prévoir : hébergement, mises à jour, sauvegardes et modifications mensuelles sont compris. Si vous avez acheté le site en une fois, vous choisissez entre l'autonomie complète et un contrat de maintenance mensuel.`,
+    r: `En abonnement, rien à prévoir : hébergement, mises à jour, sauvegardes et modifications mensuelles sont compris. Si vous avez acheté le site en une fois, une panne qui vient de notre travail est réparée gratuitement, et les modifications sont facturées à l'heure (${TAUX_HORAIRE} € HT).`,
   },
   {
     q: 'Travaillez-vous uniquement à Lyon ?',

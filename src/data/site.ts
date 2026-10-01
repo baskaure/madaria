@@ -17,6 +17,7 @@ export const nav = [
   { href: '/#realisations', label: 'Réalisations' },
   { href: '/#secteurs', label: 'Secteurs' },
   { href: '/#offres', label: 'Offres' },
+  { href: '/guides/', label: 'Guides' },
   { href: '/#faq', label: 'FAQ' },
 ] as const;
 
@@ -39,12 +40,16 @@ export const footerColumns = [
       { href: '/services/automatisation/', label: 'Automatisations' },
       { href: '/#services', label: 'Développement' },
       { href: '/#services', label: 'SEO' },
+      { href: '/creation-site-internet/lyon/', label: 'Site internet à Lyon' },
+      { href: '/creation-site-internet/montpellier/', label: 'Site internet à Montpellier' },
+      { href: '/creation-site-internet/capbreton/', label: 'Site internet à Capbreton' },
     ],
   },
   {
     title: 'Agence',
     links: [
-      { href: '/#agence', label: 'Votre interlocuteur' },
+      { href: '/a-propos/', label: 'À propos' },
+      { href: '/guides/', label: 'Guides' },
       { href: '/#realisations', label: 'Réalisations' },
       { href: '/#secteurs', label: 'Secteurs' },
       { href: '/#offres', label: 'Offres' },

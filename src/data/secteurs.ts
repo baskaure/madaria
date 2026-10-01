@@ -441,6 +441,286 @@ export const secteurs: Secteur[] = [
       },
     ],
   },
+
+  {
+    slug: 'plombier',
+    icon: 'plombier',
+    nom: 'Plombiers',
+    singulier: 'plombier',
+    text: "Être appelé en premier quand une fuite tombe : zone d'intervention claire, numéro en un geste, devis demandé en ligne.",
+    besoins: ['Appel direct', 'Zone desservie', 'Devis en ligne'],
+    metaTitle: 'Création de site internet pour plombier | Madaria',
+    metaDesc: `Site internet pour plombier : appel en un geste, zone d'intervention, demande de devis en ligne. Vitrine dès ${prixEntree}, référencement local inclus en formule Visibilité.`,
+    h1: 'Création de site internet pour plombier',
+    intro: [
+      "Personne ne cherche un plombier par plaisir. On le cherche avec de l'eau sous l'évier, souvent le soir, sur son téléphone, et on appelle le premier qui inspire confiance et répond. Ce premier, c'est rarement le meilleur artisan du secteur : c'est celui que Google affiche et dont le numéro se trouve en un geste.",
+      "Nous construisons des sites de plombier pensés pour ces moments-là : vous trouver dans votre zone, vous appeler sans chercher, et vous envoyer une demande de devis complète pour les chantiers qui peuvent attendre.",
+    ],
+    enjeux: [
+      {
+        titre: 'Sortir dans votre zone, pas à 50 km',
+        text: "Les recherches se font avec le nom de la commune ou « près de moi ». Une page claire sur votre zone d'intervention, reliée à votre fiche Google, vous fait apparaître là où vous travaillez vraiment, sans attirer des appels hors secteur.",
+      },
+      {
+        titre: 'Un appel en un geste',
+        text: "Sur téléphone, le numéro doit être visible tout de suite et cliquable. Chaque seconde passée à le chercher, c'est un client qui revient aux résultats et appelle le suivant.",
+      },
+      {
+        titre: 'Trier l’urgence et le chantier',
+        text: "Une fuite se règle au téléphone, une salle de bain se prépare. Un formulaire de devis bien pensé (type de travaux, photos, adresse) vous fait gagner un déplacement de repérage sur les demandes simples.",
+      },
+      {
+        titre: 'Rassurer avant d’entrer chez quelqu’un',
+        text: "Le client vous ouvre sa porte. Vos assurances, vos certifications si vous en avez (RGE, Qualibat…), des photos de chantiers et des avis réels font la différence avec l'inconnu du résultat d'à côté.",
+      },
+    ],
+    livrables: [
+      'Numéro cliquable visible sur chaque page',
+      "Page zone d'intervention avec vos communes",
+      'Formulaire de devis avec envoi de photos',
+      'Présentation de vos prestations, du dépannage à la rénovation',
+      'Fiche Google optimisée et reliée au site',
+      'Affichage impeccable sur mobile',
+    ],
+    faq: [
+      {
+        q: 'Mon site peut-il afficher que je fais du dépannage d’urgence ?',
+        r: "Oui, si vous le proposez vraiment. On met en avant vos horaires de dépannage et votre numéro, et on évite les promesses que vous ne pourriez pas tenir, comme une intervention en trente minutes partout.",
+      },
+      {
+        q: 'Je travaille sur plusieurs communes, comment apparaître dans chacune ?',
+        r: "Une page claire sur votre zone d'intervention, des réalisations situées dans ces communes et une fiche Google bien réglée font l'essentiel. Créer une page vide par ville ne marche pas, et Google la pénalise.",
+      },
+      {
+        q: 'Puis-je recevoir les demandes de devis directement par e-mail ?',
+        r: "Oui. Chaque demande arrive dans votre boîte mail avec les photos jointes. Si vous utilisez un logiciel de devis, on regarde au cadrage s'il peut les recevoir directement.",
+      },
+    ],
+  },
+
+  {
+    slug: 'electricien',
+    icon: 'electricien',
+    nom: 'Électriciens',
+    singulier: 'électricien',
+    text: "Des demandes de devis qualifiées pour la rénovation, la mise aux normes ou la borne de recharge, et un appel facile pour le dépannage.",
+    besoins: ['Devis en ligne', 'Certifications', 'Zone desservie'],
+    metaTitle: 'Création de site internet pour électricien | Madaria',
+    metaDesc: `Site internet pour électricien : demandes de devis qualifiées, certifications mises en avant, zone d'intervention. Vitrine dès ${prixEntree}, référencement local en formule Visibilité.`,
+    h1: 'Création de site internet pour électricien',
+    intro: [
+      "Un électricien vit de deux types d'appels : le dépannage, où le client veut quelqu'un vite, et les projets (rénovation, mise aux normes, borne de recharge, domotique) où il compare trois devis avant de choisir. Les deux passent aujourd'hui par une recherche sur téléphone.",
+      "Nous construisons des sites d'électricien qui répondent aux deux : un numéro accessible en un geste pour l'urgence, et des pages par prestation qui font venir des demandes de devis précises pour les chantiers.",
+    ],
+    enjeux: [
+      {
+        titre: 'Une page par prestation',
+        text: "« Mise aux normes tableau électrique », « installation borne de recharge », « rénovation électrique maison » : chaque prestation a sa recherche. Une page dédiée à chacune vous fait apparaître sur des demandes précises, qui deviennent des chantiers.",
+      },
+      {
+        titre: 'Montrer vos qualifications',
+        text: "Pour certains travaux, le client cherche une qualification précise : l'installation d'une borne de recharge au-delà de 3,7 kW demande par exemple la qualification IRVE. Vos certifications bien visibles rassurent et filtrent les demandes que vous ne pouvez pas prendre.",
+      },
+      {
+        titre: 'Des devis complets du premier coup',
+        text: "Type de logement, travaux envisagés, photos du tableau : un formulaire bien construit vous donne de quoi chiffrer, ou au moins de quoi savoir si le déplacement vaut le coup.",
+      },
+      {
+        titre: 'Être trouvé dans votre secteur',
+        text: "Votre zone d'intervention, vos réalisations dans le coin et une fiche Google reliée au site : c'est ce qui vous fait sortir quand un particulier cherche un électricien près de chez lui.",
+      },
+    ],
+    livrables: [
+      'Une page par prestation (rénovation, normes, borne, dépannage)',
+      'Certifications et assurances mises en avant',
+      'Formulaire de devis avec photos',
+      "Zone d'intervention claire",
+      'Fiche Google optimisée et reliée au site',
+      'Numéro cliquable sur chaque page',
+    ],
+    faq: [
+      {
+        q: 'Faut-il vraiment une page par prestation ?',
+        r: "Pour les prestations qui comptent pour vous, oui. Une page bien écrite sur l'installation de bornes de recharge se classe sur cette recherche ; une simple ligne dans une liste, beaucoup moins.",
+      },
+      {
+        q: 'Je veux surtout des chantiers, pas du dépannage. Comment orienter le site ?',
+        r: "On met en avant vos prestations de projet et la demande de devis, et on garde le numéro visible sans en faire le cœur de la page. Le site s'adapte au type de clients que vous voulez attirer.",
+      },
+      {
+        q: 'Pouvez-vous ajouter mes réalisations au fil du temps ?',
+        r: "Oui. En abonnement, les modifications mensuelles comprennent l'ajout de photos de chantiers. Chaque réalisation située dans une commune renforce aussi votre présence locale.",
+      },
+    ],
+  },
+
+  {
+    slug: 'photographe',
+    icon: 'photographe',
+    nom: 'Photographes',
+    singulier: 'photographe',
+    text: "Un portfolio qui charge vite malgré les photos en grand, des demandes de devis claires pour les mariages et les séances.",
+    besoins: ['Portfolio', 'Devis mariage', 'Galerie client'],
+    metaTitle: 'Création de site internet pour photographe | Madaria',
+    metaDesc: `Site internet pour photographe : portfolio rapide en grand format, demandes de devis pour mariages et séances, galeries clients. Vitrine dès ${prixEntree}.`,
+    h1: 'Création de site internet pour photographe',
+    intro: [
+      "Un photographe se choisit sur ses images. Encore faut-il qu'elles s'affichent : un portfolio qui met cinq secondes à charger sur téléphone perd le visiteur avant la troisième photo. Et Instagram, s'il montre votre travail, ne dit ni vos tarifs, ni vos disponibilités, ni comment réserver.",
+      "Nous construisons des sites de photographe où vos images sont en grand et chargent vite, où chaque type de prestation a sa page, et où les futurs mariés vous envoient une demande complète plutôt qu'un message privé sans date.",
+    ],
+    enjeux: [
+      {
+        titre: 'Des photos en grand, qui chargent vite',
+        text: "Chaque image est préparée en plusieurs tailles et servie au format le plus léger que le navigateur accepte. Vos photos restent nettes sur un grand écran sans ralentir l'affichage sur un téléphone en 4G.",
+      },
+      {
+        titre: 'Une page par type de séance',
+        text: "Mariage, portrait, famille, entreprise : chaque prestation attire une recherche différente et un client différent. Une page dédiée avec vos images et vos formules vous fait trouver sur chacune.",
+      },
+      {
+        titre: 'Des demandes de devis exploitables',
+        text: "Date, lieu, nombre d'invités, type de prestation : le formulaire pose les bonnes questions pour que vous puissiez répondre avec un devis, pas avec trois messages de relance.",
+      },
+      {
+        titre: 'Livrer les photos proprement',
+        text: "Une galerie privée, protégée par mot de passe, pour que chaque client récupère ses images sans passer par un service de transfert. C'est une fonction à cadrer au devis selon votre volume.",
+      },
+    ],
+    livrables: [
+      'Portfolio en grand format optimisé pour le mobile',
+      'Une page par type de prestation',
+      'Formulaire de devis adapté (date, lieu, formule)',
+      'Galeries privées pour vos clients (sur devis)',
+      'Tarifs et formules faciles à mettre à jour',
+      'Référencement sur votre ville et vos prestations',
+    ],
+    faq: [
+      {
+        q: 'Mes photos vont-elles perdre en qualité ?',
+        r: "Non. Elles sont redimensionnées pour chaque taille d'écran et compressées sans perte visible. Vos originaux ne sont jamais modifiés.",
+      },
+      {
+        q: 'Puis-je garder Instagram comme vitrine principale ?',
+        r: "Instagram reste utile pour être découvert, et on peut afficher vos dernières publications sur le site. Mais le site vous appartient, il se classe sur Google et il recueille les demandes de devis, ce qu'Instagram fait mal.",
+      },
+      {
+        q: 'Je suis aussi vidéaste, le site peut-il montrer des vidéos ?',
+        r: "Oui. Les vidéos sont intégrées sans alourdir la page : elles ne se chargent que lorsqu'on les lance. Le site de Tom Carvalho, vidéaste, en est un exemple.",
+      },
+    ],
+  },
+
+  {
+    slug: 'garage-automobile',
+    icon: 'garage',
+    nom: 'Garages automobiles',
+    singulier: 'garage',
+    text: "Des rendez-vous pris en ligne pour l'entretien, des tarifs clairs pour les forfaits courants, et un garage trouvé dans son quartier.",
+    besoins: ['Prise de RDV', 'Forfaits', 'Google Maps'],
+    metaTitle: 'Création de site internet pour garage automobile | Madaria',
+    metaDesc: `Site internet pour garage automobile : prise de rendez-vous en ligne, forfaits affichés, référencement local. Vitrine dès ${prixEntree}, réservation intégrée sur devis.`,
+    h1: 'Création de site internet pour garage automobile',
+    intro: [
+      "Vidange, pneus, freins, climatisation : l'automobiliste cherche un garage proche, avec un prix à peu près connu et un créneau rapide. S'il doit appeler pendant vos heures d'atelier pour savoir combien coûte une vidange, il appelle aussi le concurrent, et c'est souvent le premier qui décroche qui gagne.",
+      "Nous construisons des sites de garage qui répondent à ces questions avant l'appel : vos forfaits, vos horaires, la prise de rendez-vous en ligne et votre place sur Google Maps dans votre quartier.",
+    ],
+    enjeux: [
+      {
+        titre: 'Afficher les forfaits courants',
+        text: "Les prix des prestations courantes (vidange, plaquettes, recharge de clim, géométrie) sont parmi les informations les plus recherchées. Les afficher, même « à partir de », rassure et évite les appels qui ne servent qu'à demander un prix.",
+      },
+      {
+        titre: 'Prendre les rendez-vous sans décrocher',
+        text: "Un module de prise de rendez-vous remplit l'agenda de l'atelier le soir et le week-end, sans interrompre le travail en cours. On l'adapte à votre organisation : créneaux, durées par prestation, confirmation.",
+      },
+      {
+        titre: 'Être le garage du quartier sur Google',
+        text: "« Garage près de moi » : la recherche est locale et souvent faite depuis la voiture. Une fiche Google bien réglée, reliée à un site rapide, vous place dans ces résultats.",
+      },
+      {
+        titre: 'Mettre en avant vos spécialités',
+        text: "Climatisation, diagnostic électronique, véhicules hybrides : une page par spécialité vous fait trouver par les clients qui cherchent exactement ce que vous savez faire. C'est ce qu'on a fait pour Recharge Clim Auto à Montpellier.",
+      },
+    ],
+    livrables: [
+      'Prise de rendez-vous en ligne (sur devis)',
+      'Forfaits et tarifs faciles à mettre à jour',
+      'Une page par spécialité',
+      'Horaires, accès et numéro cliquable',
+      'Fiche Google optimisée et reliée au site',
+      'Affichage impeccable sur mobile',
+    ],
+    faq: [
+      {
+        q: 'Dois-je afficher tous mes prix ?',
+        r: "Non, seulement ceux des prestations courantes, et souvent en « à partir de ». Le reste se fait sur devis. Ce qui compte, c'est que le client ne vous appelle pas uniquement pour connaître le prix d'une vidange.",
+      },
+      {
+        q: 'Je suis spécialisé, le site peut-il se concentrer sur une seule prestation ?',
+        r: "Oui, et c'est souvent plus efficace. Un site centré sur une spécialité se classe mieux sur cette recherche qu'un site généraliste. Le site de Recharge Clim Auto, centré sur la climatisation, en est un exemple.",
+      },
+      {
+        q: 'Le module de rendez-vous est-il compris ?',
+        r: "La prise de rendez-vous dépend de votre outil actuel et de votre organisation. Son périmètre, son coût et son délai sont précisés au devis.",
+      },
+    ],
+  },
+
+  {
+    slug: 'fleuriste',
+    icon: 'fleuriste',
+    nom: 'Fleuristes',
+    singulier: 'fleuriste',
+    text: "Des commandes en ligne pour le retrait ou la livraison, les grandes fêtes anticipées, et une boutique trouvée dans son quartier.",
+    besoins: ['Commande en ligne', 'Livraison', 'Événements'],
+    metaTitle: 'Création de site internet pour fleuriste | Madaria',
+    metaDesc: `Site internet pour fleuriste : commande en ligne avec retrait ou livraison, pages mariage et deuil, référencement local. Vitrine dès ${prixEntree}, boutique sur devis.`,
+    h1: 'Création de site internet pour fleuriste',
+    intro: [
+      "Un bouquet se commande souvent à la dernière minute, et souvent à distance : l'anniversaire oublié, le collègue hospitalisé, des obsèques dans une autre ville. Le client cherche un fleuriste près du destinataire, pas près de chez lui. S'il ne peut pas commander en ligne, il passe par une plateforme qui prend sa commission sur votre travail.",
+      "Nous construisons des sites de fleuriste qui prennent ces commandes en direct : retrait en boutique ou livraison dans votre zone, pages dédiées aux mariages et au deuil, et une boutique trouvée sur Google dans votre quartier.",
+    ],
+    enjeux: [
+      {
+        titre: 'Commander en direct, sans commission',
+        text: "Les réseaux de transmission florale apportent des commandes, mais ils se rémunèrent sur chacune. Une commande prise sur votre propre site vous laisse la marge entière, et les coordonnées du client.",
+      },
+      {
+        titre: 'Préparer les grandes dates',
+        text: "Saint-Valentin, fête des mères, Toussaint : les commandes se concentrent sur quelques jours. Ouvrir les précommandes en ligne quelques semaines avant vous aide à prévoir vos achats et à lisser la charge.",
+      },
+      {
+        titre: 'Mariage et deuil, deux pages à part',
+        text: "Ce sont deux demandes très différentes, qui se préparent avec soin et se recherchent avec des mots précis. Une page dédiée à chacune, avec vos réalisations et un formulaire adapté, transforme la recherche en rendez-vous.",
+      },
+      {
+        titre: 'Votre zone de livraison claire',
+        text: "Le client veut savoir tout de suite si vous livrez la commune du destinataire et à quel prix. Une zone affichée clairement évite les commandes impossibles et rassure ceux qui commandent de loin.",
+      },
+    ],
+    livrables: [
+      'Commande en ligne avec retrait ou livraison (sur devis)',
+      'Zone et tarifs de livraison clairs',
+      'Pages mariage et deuil avec formulaire dédié',
+      'Précommandes pour les grandes fêtes',
+      'Fiche Google optimisée et reliée au site',
+      'Créations et bouquets faciles à mettre à jour',
+    ],
+    faq: [
+      {
+        q: 'Un site de vente en ligne n’est-il pas trop compliqué pour une boutique de fleurs ?',
+        r: "Pas besoin d'une grande boutique : quelques bouquets types, un choix de taille, la date et l'adresse de livraison suffisent souvent. Le périmètre est défini avec vous au cadrage et chiffré au devis.",
+      },
+      {
+        q: 'Puis-je continuer à travailler avec un réseau de transmission florale ?',
+        r: "Oui. Le site ne remplace pas le réseau du jour au lendemain : il vous permet de récupérer en direct les clients qui vous connaissent déjà, là où votre marge est entière.",
+      },
+      {
+        q: 'Mes créations changent toutes les semaines, comment tenir le site à jour ?',
+        r: "Vous pouvez mettre à jour vos bouquets depuis votre téléphone, ou nous envoyer les photos : en abonnement, les modifications mensuelles comprennent ce genre de mise à jour.",
+      },
+    ],
+  },
 ];
 
 export const parSlug = (slug: string) => secteurs.find((s) => s.slug === slug);

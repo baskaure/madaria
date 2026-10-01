@@ -27,6 +27,11 @@ export const icons = {
   esthetique: '<path d="M12 3s6 6.5 6 10.5a6 6 0 0 1-12 0C6 9.5 12 3 12 3z"/>',
   formation: '<path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.6 3 3 6 3s6-1.4 6-3v-5.5"/>',
   perceur: '<circle cx="12" cy="13" r="6.5"/><circle cx="12" cy="4.5" r="2"/>',
+  plombier: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+  electricien: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  photographe: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+  garage: '<path d="M3 13l2-6h14l2 6v5H3z"/><path d="M3 13h18"/><circle cx="7" cy="16" r="1.2"/><circle cx="17" cy="16" r="1.2"/>',
+  fleuriste: '<path d="M12 21v-9"/><path d="M7 4l2.5 3L12 4l2.5 3L17 4v4a5 5 0 0 1-10 0z"/><path d="M12 17c-2.5 0-4.5-1.5-5-4 2.5 0 4.5 1.5 5 4z"/>',
   btp: '<path d="M3 18h18M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M10 8.2V5h4v3.2"/>',
 } as const;
 

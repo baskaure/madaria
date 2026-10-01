@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Ariane from '../components/Ariane.astro';
+import Icon from '../components/Icon.astro';
+import Contact from '../components/Contact.astro';
+import portrait from '../assets/aurelien-branco.png';
+import { realisations } from '../data/realisations';
+import { contact } from '../data/site';
+
+// villes des clients, sans doublon, dans l'ordre des réalisations
+const villes = [...new Set(realisations.map((r) => r.ville).filter((v) => v !== 'France'))];
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'ProfilePage', url, mainEntity: { '@id': 'https://madaria.fr/#fondateur' } },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://madaria.fr/' },
+      { '@type': 'ListItem', position: 2, name: 'À propos', item: url },
+    ] },
+  ],
+};
+---
+
+<Base title="Aurélien Branco, fondateur de Madaria | Madaria" description="Aurélien Branco conçoit et code lui-même chaque site Madaria, depuis Lyon et à distance partout en France. Son parcours, sa façon de travailler et ses réalisations.">
+  <section class="ph">
+    <div class="wrap apropos">
+      <div>
+        <Ariane etapes={[{ label: 'À propos' }]} />
+        <span class="lab">À propos</span>
+        <h1>Aurélien Branco, <span class="acc">fondateur de Madaria.</span></h1>
+        <p class="chapo">Je conçois et je code moi-même chaque site Madaria : la maquette, le développement, la mise en ligne, puis les modifications des mois suivants. Je suis basé à Lyon et je travaille à distance avec des clients partout en France.</p>
+        <div class="hcta">
+          <a class="btn btn-p" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
+          <a class="btn btn-g" href="#contact">M'écrire</a>
+        </div>
+      </div>
+      <figure class="portrait-apropos">
+        <Image src={portrait} widths={[320, 640]} sizes="(max-width: 700px) 70vw, 320px" format="webp" quality={80} alt="Portrait d'Aurélien Branco" loading="eager" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div class="rv">
+        <span class="lab">Parcours</span>
+        <h2>Le code, <span class="acc">depuis toujours.</span></h2>
+      </div>
+      <div class="txt rv">
+        <p>Je code depuis que je suis petit. Mon premier vrai projet, un site pensé pour être utilisé par d'autres et pas juste pour apprendre, date d'il y a sept ou huit ans. J'ai ensuite suivi trois ans d'études en développement.</p>
+        <p>J'ai créé Madaria en 2020 avec une idée simple : donner aux indépendants et aux petites entreprises des sites aussi soignés que ceux des grandes marques, sans les délais ni les intermédiaires d'une agence classique.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div class="rv">
+        <span class="lab">Ma façon de travailler</span>
+        <h2>Un seul interlocuteur, <span class="acc">du début à la fin.</span></h2>
+      </div>
+      <div class="txt rv">
+        <p>Chez Madaria, personne ne se glisse entre vous et la personne qui fabrique votre site. Pas de commercial qui promet, pas de chef de projet qui transmet : vous parlez directement à celui qui code.</p>
+        <p>Chaque projet suit la même méthode : un appel de cadrage, une maquette à valider avant la moindre ligne de code, le développement avec une préproduction ouverte en continu, puis la mise en ligne. Pour un site vitrine, comptez sept jours une fois les contenus réunis.</p>
+        <p>Je travaille sur des technologies modernes et rapides (Astro, Next.js), je soigne le référencement dès la maquette, et j'automatise les tâches répétitives de mes clients quand ça leur fait gagner du temps.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap split">
+      <div class="rv">
+        <span class="lab">Clients</span>
+        <h2>{realisations.length} projets livrés, <span class="acc">de Paris à Capbreton.</span></h2>
+      </div>
+      <div class="txt rv">
+        <p>Restaurants, studio de piercing, vidéastes, agence de publicité, artisan de la climatisation automobile, maison d'hôtes : chaque site a sa propre identité. Mes clients sont à {villes.slice(0, -1).join(', ')} et {villes.at(-1)}.</p>
+        <div class="hcta"><a class="btn btn-g" href="/realisations/">Voir les réalisations<Icon name="arrow" class="i" /></a><a class="btn btn-g" href="/guides/">Lire les guides</a></div>
+      </div>
+    </div>
+  </section>
+
+  <Contact secteur="Page À propos" />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+</Base>

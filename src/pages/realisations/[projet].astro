@@ -15,7 +15,14 @@ const { p } = Astro.props;
 const complet = existe(p.id, 'full');
 const mobile = existe(p.id, 'mobile');
 const video = aVideo(p.id);
-const metiers: Record<string, string> = { kami: 'restaurant', 'munda-kfe': 'restaurant', 'aurore-piercing': 'perceur', 'recharge-clim': 'btp-artisan' };
+const metiers: Record<string, string> = {
+  kami: 'restaurant',
+  'munda-kfe': 'restaurant',
+  'aurore-piercing': 'perceur',
+  'recharge-clim': 'garage-automobile',
+  'lucas-morin': 'photographe',
+  'tom-carvalho': 'photographe',
+};
 // trois autres projets : le même secteur d'abord, puis les suivants dans l'ordre
 const autres = [
   ...realisations.filter((r) => r.id !== p.id && r.secteur === p.secteur),
