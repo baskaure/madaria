@@ -38,7 +38,7 @@ import { nav, contact } from '../data/site';
   const burger = document.getElementById('burger');
   const menu = document.getElementById('mmenu');
   if (burger && menu) {
-    const background = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip, .barre'));
+    const background = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip'));
     const setOpen = (open: boolean, restore = true) => {
       menu.classList.toggle('open', open);
       burger.classList.toggle('open', open);
