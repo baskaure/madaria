@@ -14,21 +14,49 @@ type Tuile = { id: string; tel: boolean };
 const bureau = realisations.map((r) => r.id);
 const tel = realisations.filter((r) => existe(r.id, 'mobile')).map((r) => r.id);
 
-/** Une rangée : sept vues bureau à partir de `debut`, des vues téléphone aux positions données. */
-const rangee = (debut: number, posTel: number[]): Tuile[] => {
-  const suite: Tuile[] = Array.from({ length: 7 }, (_, k) => ({ id: bureau[(debut + k) % bureau.length], tel: false }));
-  posTel.forEach((pos, k) => suite.splice(pos, 0, { id: tel[(debut + k) % tel.length], tel: true }));
-  return suite;
+// Tirage pseudo-aléatoire à graine fixe : le mur est mélangé, mais identique
+// d'un build à l'autre (pas de différence entre deux déploiements).
+let graine = 20261001;
+const hasard = () => ((graine = (graine * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+const melanger = <T,>(liste: T[]) => {
+  const l = [...liste];
+  for (let i = l.length - 1; i > 0; i--) {
+    const j = Math.floor(hasard() * (i + 1));
+    [l[i], l[j]] = [l[j], l[i]];
+  }
+  return l;
 };
+
+/**
+ * Une rangée : tous les sites en vue bureau, dans un ordre mélangé, et trois
+ * vues téléphone glissées dedans (des visuels différents, qui espacent les
+ * répétitions). Chaque capture n'apparaît qu'une fois par tour de rangée ;
+ * une vue téléphone n'est jamais voisine de la vue bureau du même site, et
+ * on évite qu'une capture tombe au même endroit que dans la rangée du dessus.
+ */
+const rangee = (precedente: Tuile[] | null): Tuile[] => {
+  let meilleure: Tuile[] = [];
+  let conflitsMin = Infinity;
+  for (let essai = 0; essai < 400 && conflitsMin > 0; essai++) {
+    const suite: Tuile[] = melanger(bureau).map((id) => ({ id, tel: false }));
+    const dispo = melanger(tel);
+    for (const pos of [2, 6, 10].map((p, k) => p + k + Math.floor(hasard() * 2))) {
+      const voisins = suite.slice(Math.max(0, pos - 2), pos + 2).map((t) => t.id);
+      const i = dispo.findIndex((id) => !voisins.includes(id));
+      if (i > -1) suite.splice(pos, 0, { id: dispo.splice(i, 1)[0], tel: true });
+    }
+    const conflits = precedente
+      ? suite.filter((t, i) => [i - 1, i, i + 1].some((k) => precedente[k]?.id === t.id)).length
+      : 0;
+    if (conflits < conflitsMin) [meilleure, conflitsMin] = [suite, conflits];
+  }
+  return meilleure;
+};
+const lignes: Tuile[][] = [];
+for (let i = 0; i < 6; i++) lignes.push(rangee(lignes[i - 1] ?? null));
 // sens alternés, durées toutes différentes pour que les rangées ne se calent jamais
-const rangees = [
-  { t: rangee(0, [2, 6]), sens: '', d: 90 },
-  { t: rangee(3, [4]), sens: 'd', d: 75 },
-  { t: rangee(6, [1, 5]), sens: '', d: 105 },
-  { t: rangee(9, [3]), sens: 'd', d: 82 },
-  { t: rangee(2, [5]), sens: '', d: 96 },
-  { t: rangee(5, [2, 6]), sens: 'd', d: 88 },
-];
+const durees = [132, 114, 150, 122, 140, 106];
+const rangees = lignes.map((t, i) => ({ t, sens: i % 2 ? 'd' : '', d: durees[i] }));
 ---
 
 <div class="mur" id="mur">
@@ -39,9 +67,9 @@ const rangees = [
           r.t.map((t) => (
             <div class:list={['tuile', { tel: t.tel }]}>
               {t.tel ? (
-                <Image src={capture(t.id, 'mobile')} widths={[120, 240]} sizes="(max-width: 700px) 60px, 95px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
+                <Image src={capture(t.id, 'mobile')} widths={[120, 240]} sizes="(max-width: 700px) 61px, 108px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
               ) : (
-                <Image src={capture(t.id, 'thumb')} widths={[320, 640]} sizes="(max-width: 700px) 180px, 304px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
+                <Image src={capture(t.id, 'thumb')} widths={[320, 640]} sizes="(max-width: 700px) 196px, 344px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
               )}
             </div>
           )),

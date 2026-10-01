@@ -149,12 +149,15 @@ header.sh.scrolled .sh-nav{background:linear-gradient(165deg,rgba(20,19,30,.44),
    alternés (d'après « Diagonal Marquee Carousel » de Great UI, licence MIT).
    Chaque rangée contient deux fois la même suite : un décalage de -50 % la
    ramène exactement à son point de départ. Seul transform est animé. */
-.mur{position:absolute;top:0;right:0;bottom:0;width:50%;overflow:hidden;--th:190px;
+.mur{position:absolute;top:0;right:0;bottom:0;width:50%;overflow:hidden;--th:215px;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%),linear-gradient(180deg,transparent,#000 12%,#000 84%,transparent);
   -webkit-mask-composite:source-in;
   mask-image:linear-gradient(90deg,transparent,#000 22%),linear-gradient(180deg,transparent,#000 12%,#000 84%,transparent);
   mask-composite:intersect}
-.mur-rot{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;gap:18px;transform:translate(-50%,-50%) rotate(-16deg)}
+/* largeur fixe (150 % du cadre) : une fois inclinée de 16°, la bande couvre
+   toujours le cadre. Chaque rangée démarre à son bord gauche et un tour de
+   rangée (11 sites) est plus long que la bande : jamais de case vide. */
+.mur-rot{position:absolute;left:50%;top:50%;width:150%;display:flex;flex-direction:column;gap:18px;transform:translate(-50%,-50%) rotate(-16deg)}
 .mrow{display:flex;gap:18px;width:max-content;animation:mur-g var(--d,80s) linear infinite}
 .mrow.d{animation-name:mur-d}
 .mur:hover .mrow,.mur.pause .mrow{animation-play-state:paused}
@@ -451,7 +454,7 @@ video.defile.joue{opacity:1}
   .hero{flex-direction:column;align-items:stretch;min-height:0;padding:128px 0 0}
   .htxt{max-width:none}
   .lead{max-width:600px}
-  .mur{position:relative;order:2;width:auto;height:480px;margin-top:40px;--th:150px;
+  .mur{position:relative;order:2;width:auto;height:480px;margin-top:40px;--th:165px;
     -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent)}
   .mur-lien{left:40px;bottom:40px}
   .projets{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -474,7 +477,7 @@ video.defile.joue{opacity:1}
   .hero h1{font-size:40px;line-height:1.05}
   .lead{font-size:16px;margin:20px 0 28px}
   .hcta .btn{flex:1 1 100%}
-  .mur{height:360px;margin-top:32px;--th:112px}
+  .mur{height:360px;margin-top:32px;--th:122px}
   .mur-lien{left:20px;bottom:24px;font-size:12.5px}
   .preuves{flex-direction:column;gap:10px;margin-top:28px}
   .sec{padding:80px 0}
