@@ -1,8 +1,9 @@
 ---
+import Icon from '../../components/Icon.astro';
 import Editorial from '../../layouts/Editorial.astro';
 import Contact from '../../components/Contact.astro';
 import OfferTerms from '../../components/OfferTerms.astro';
-import PrixOffre from '../../components/PrixOffre.astro';
+import PlanCard from '../../components/PlanCard.astro';
 import { prestations } from '../../data/prestations';
 import { realisations } from '../../data/realisations';
 import { offres, offresStructurees } from '../../data/offres';
@@ -32,10 +33,10 @@ const ld = {'@context':'https://schema.org','@graph':[
   </section>
   <section class="editorial-section" id="exemples"><h2>{web ? 'Des sites réalisés' : 'Un exemple d’outil métier'}</h2>
     {!web && <p>KlientMap illustre un outil qui regroupe recherche, qualification et suivi de prospects. Les flux décrits plus haut sont des exemples à cadrer selon votre organisation.</p>}
-    <div class="case-grid">{exemples.map(r=><a class="case-card" href={`/realisations/${r.id}/`}><img src={`/realisations/shots/${r.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu du projet ${r.nom}`} /><span class="mono">{r.type}</span><h3>{r.nom}</h3><p>{r.accroche}</p><span class="text-link">Découvrir le projet →</span></a>)}</div>
+    <div class="case-grid">{exemples.map(r=><a class="case-card" href={`/realisations/${r.id}/`}><img src={`/realisations/shots/${r.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu du projet ${r.nom}`} /><span class="mono">{r.type}</span><h3>{r.nom}</h3><p>{r.accroche}</p><span class="text-link">Découvrir le projet <Icon name="arrow" class="i" /></span></a>)}</div>
   </section>
   <section class="editorial-section" id="tarifs"><h2>{web ? 'Choisir votre point de départ' : 'Un périmètre, un devis'}</h2>
-    {web ? <div class="plans deux">{offres.slice(0,2).map(o=><article class="glass plan"><h3>{o.nom}</h3><PrixOffre o={o} /><p>{o.accroche}</p><ul>{o.inclus.map(i=><li>{i}</li>)}</ul><a class="btn btn-p" href={`?offre=${o.id}#contact`} data-offre={o.id}>{o.cta}</a></article>)}</div> : <p>La réalisation est chiffrée sur devis. Les abonnements aux outils, les opérations de maintenance et les évolutions éventuelles sont distingués du coût initial.</p>}
+    {web ? <div class="plans deux rv">{offres.slice(0,2).map(o=><PlanCard o={o} href={`?offre=${o.id}#contact`} />)}</div> : <p>La réalisation est chiffrée sur devis. Les abonnements aux outils, les opérations de maintenance et les évolutions éventuelles sont distingués du coût initial.</p>}
     {web && <OfferTerms />}
   </section>
   <section class="editorial-section"><h2>Vos questions</h2><div class="faq">{p.questions.map(q=><details><summary>{q.q}<span class="pm">+</span></summary><p>{q.r}</p></details>)}</div></section>

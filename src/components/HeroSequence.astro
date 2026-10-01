@@ -23,6 +23,8 @@
  */
 import { projets } from '../data/sequence';
 import { etapes } from '../data/methode';
+import Icon from './Icon.astro';
+import Delai from './Delai.astro';
 
 const premier = projets[0];
 const pc = (v: number) => `${v}%`;
@@ -46,7 +48,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
         {/* phase en cours : dans la barre sur ordinateur, dans l'écran sur mobile */}
         <p class="sq-phases" aria-hidden="true">
           {etapes.map((e) => (
-            <em class="sq-phase" data-phase><b>{e.num}</b>{e.titre}<u>{e.delai}</u></em>
+            <em class="sq-phase" data-phase><b>{e.num}</b>{e.titre}<u><Delai texte={e.delai} /></u></em>
           ))}
         </p>
         <b class="sq-live" data-live><em><u data-live-onde></u><s data-live-on></s></em>En ligne</b>
@@ -179,7 +181,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     <button type="button" class="sq-pause" data-pause aria-pressed="false" aria-label="Mettre l'animation en pause">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sq-ico-pause" d="M9 6v12M15 6v12" /><path class="sq-ico-lire" d="M8 5.5v13l11-6.5z" /></svg>
     </button>
-    <a class="text-link" data-lien href={`/realisations/${premier.id}/`}>Découvrir le projet {premier.nom} →</a>
+    <a class="text-link" data-lien href={`/realisations/${premier.id}/`}>Découvrir le projet <span data-lien-nom>{premier.nom}</span> <Icon name="arrow" class="i" /></a>
   </div>
 
   <!-- sans JavaScript : l'état final du premier projet, immobile -->
@@ -207,6 +209,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
     const onglets = $$<HTMLButtonElement>('[data-onglet]');
     const bouton = $<HTMLButtonElement>('[data-pause]')!;
     const lien = $<HTMLAnchorElement>('[data-lien]')!;
+    const lienNom = $('[data-lien-nom]')!;
     const ecran = $('[data-ecran]')!;
     const hote = $('[data-u-hote]')!;
     const chemin = $('[data-u-chemin]')!;
@@ -519,7 +522,7 @@ const boite = (b: { x: number; y: number; w: number; h: number }) =>
       ecran.setAttribute('aria-labelledby', onglets[i].id);
       if (place) placer();
       lien.href = `/realisations/${p.dataset.projet}/`;
-      lien.textContent = `Découvrir le projet ${p.dataset.nom} →`;
+      lienNom.textContent = p.dataset.nom ?? '';
 
       construire(i);
       if (visible || calme.matches) charger(i);

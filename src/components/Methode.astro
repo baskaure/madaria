@@ -1,4 +1,5 @@
 ---
+import Delai from './Delai.astro';
 import { etapes } from '../data/methode';
 ---
 
@@ -26,7 +27,7 @@ import { etapes } from '../data/methode';
           <div class="tbody">
             <div class="h">
               <h3>{e.titre}</h3>
-              <span class="t">{e.delai}</span>
+              <span class="t"><Delai texte={e.delai} /></span>
             </div>
             <p>{e.text}</p>
           </div>

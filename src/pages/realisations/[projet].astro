@@ -1,4 +1,5 @@
 ---
+import Icon from '../../components/Icon.astro';
 import fs from 'node:fs';
 import Editorial from '../../layouts/Editorial.astro';
 import Contact from '../../components/Contact.astro';
@@ -7,6 +8,8 @@ export function getStaticPaths(){ return realisations.map(p=>({params:{projet:p.
 const {p} = Astro.props;
 const hasFull = fs.existsSync(`public/realisations/shots/${p.id}-full.webp`);
 const hasMobile = fs.existsSync(`public/realisations/shots/${p.id}-mobile.webp`);
+// défilement filmé (scripts/captures-video.cjs) : il remplace la capture en tête de page
+const hasVideo = fs.existsSync(`public/realisations/shots/${p.id}-defile.webm`);
 const metiers: Record<string,string> = {'kami':'restaurant','munda-kfe':'restaurant','aurore-piercing':'perceur','recharge-clim':'btp-artisan'};
 const related = realisations.filter(r=>r.id!==p.id && r.secteur===p.secteur).slice(0,2);
 const url = new URL(Astro.url.pathname, Astro.site).href;
@@ -14,8 +17,20 @@ const ld = {'@context':'https://schema.org','@type':'BreadcrumbList',itemListEle
 ---
 <Editorial title={`${p.nom} — ${p.type} réalisé par Madaria`} description={`${p.nom} : ${p.accroche} Découvrez le projet ${p.type.toLowerCase()}, ses fonctionnalités et ses captures, réalisé par Madaria.`}>
   <nav class="ariane" aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>/</span><a href="/realisations/">Réalisations</a><span>/</span><span aria-current="page">{p.nom}</span></nav>
-  <div class="editorial-hero case-hero"><div><span class="lab">{p.secteur} · {p.annee}</span><h1>{p.nom}</h1><p class="chapo">{p.accroche}</p><p>{p.activite} · {p.ville}</p><div class="hcta"><a class="btn btn-p" href="#contact">Je souhaite un projet similaire</a>{p.url && <a class="btn btn-g" href={p.url} target="_blank" rel="noopener noreferrer">Voir le site ↗</a>}</div></div>
-    <img src={`/realisations/shots/${p.id}-desktop.webp`} width="1200" height="750" alt={`Vue du site ${p.nom} sur ordinateur`} fetchpriority="high" />
+  <div class="editorial-hero case-hero"><div><span class="lab">{p.secteur} · {p.annee}</span><h1>{p.nom}</h1><p class="chapo">{p.accroche}</p><p>{p.activite} · {p.ville}</p><div class="hcta"><a class="btn btn-p" href="#contact">Je souhaite un projet similaire</a>{p.url && <a class="btn btn-g" href={p.url} target="_blank" rel="noopener noreferrer">Voir le site <Icon name="arrowUpRight" class="i" /></a>}</div></div>
+    {hasVideo ? (
+      <div class="case-video ecran">
+        {/* l'image reste le contenu de la page (référencement, affichage
+            immédiat) ; la vidéo se pose dessus une fois qu'elle tourne */}
+        <img src={`/realisations/shots/${p.id}-desktop.webp`} width="1200" height="750" alt={`Vue du site ${p.nom} sur ordinateur`} fetchpriority="high" />
+        <video class="defile" data-video={`/realisations/shots/${p.id}`} muted loop playsinline preload="none" aria-hidden="true"></video>
+        <button type="button" class="vd-pause" aria-pressed="false" aria-label="Mettre la vidéo en pause">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="vd-ico-pause" d="M9 6v12M15 6v12" /><path class="vd-ico-lire" d="M8 5.5v13l11-6.5z" /></svg>
+        </button>
+      </div>
+    ) : (
+      <img src={`/realisations/shots/${p.id}-desktop.webp`} width="1200" height="750" alt={`Vue du site ${p.nom} sur ordinateur`} fetchpriority="high" />
+    )}
   </div>
   <section class="editorial-section editorial-split"><div><span class="lab">Le projet en bref</span><h2>Un site pensé pour <span class="grad">son activité</span></h2><p>{p.description}</p><p class="form-help">Présentation du projet réalisé en {p.annee}. Les captures documentent cette version du site.</p></div><div class="glass case-scope"><h3>Dans ce projet</h3><ul>{p.tags.map(t=><li>{t}</li>)}</ul><p class="mono">{p.type}</p>{!p.url && <p class="form-help">Les captures présentent la réalisation. Le lien du site peut être demandé lors de notre échange.</p>}</div></section>
   <section class="editorial-section"><h2>Le site <span class="grad">en images</span></h2>
@@ -26,3 +41,21 @@ const ld = {'@context':'https://schema.org','@type':'BreadcrumbList',itemListEle
   <Contact slot="contact" projet={p.nom} />
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </Editorial>
+
+<script>
+  // Défilement filmé en tête de page : joue tant qu'il est à l'écran, sauf
+  // si le visiteur l'a mis en pause ou a demandé moins d'animations.
+  import { brancher, jouer, arreter, boutonPause } from '../../scripts/videoDefile';
+
+  const bloc = document.querySelector<HTMLElement>('.case-video');
+  const v = bloc?.querySelector('video');
+  const b = bloc?.querySelector<HTMLButtonElement>('.vd-pause');
+  if (v && b) {
+    brancher(v);
+    const lectureAuto = boutonPause(v, b);
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && lectureAuto()) jouer(v);
+      else arreter(v, false);
+    }, { threshold: 0.3 }).observe(v);
+  }
+</script>

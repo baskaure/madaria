@@ -4,12 +4,14 @@ import { icons, type IconName } from './icons';
 interface Props {
   name: IconName;
   size?: number;
+  class?: string;
 }
 
-const { name, size } = Astro.props;
+const { name, size, class: classe } = Astro.props;
 ---
 
 <svg
+  class={classe}
   viewBox="0 0 24 24"
   aria-hidden="true"
   width={size}

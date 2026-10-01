@@ -8,6 +8,13 @@ export const icons = {
   data: '<path d="M4 19V5M4 19h16M8 15v-4M12 15V8M16 15v-6"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
 
+  // pictos d'interface, à la place des caractères flèche que iOS remplace
+  // par des emojis (↗ notamment)
+  arrowLeft: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  arrowUpRight: '<path d="M7 17L17 7M8 7h9v9"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+
   // secteurs
   barbier: '<path d="M3 8h18v4a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M7 8V5M11 8V5M15 8V5M19 8V5"/>',
   coiffeur: '<circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><path d="M8.1 7.4L20 18M8.1 16.6L20 6"/>',
@@ -20,3 +27,7 @@ export const icons = {
 } as const;
 
 export type IconName = keyof typeof icons;
+
+/** Même icône en chaîne HTML, pour le contenu injecté par script. */
+export const iconHtml = (name: IconName) =>
+  `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${icons[name]}</svg>`;

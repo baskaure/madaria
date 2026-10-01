@@ -1,4 +1,5 @@
 ---
+import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
 import Background from '../components/Background.astro';
 import Header from '../components/Header.astro';
@@ -14,7 +15,7 @@ import { secteurs } from '../data/secteurs';
 
   <main id="contenu" class="legal">
     <div class="wrap">
-      <a class="retour" href="/">← Retour à l'accueil</a>
+      <a class="retour" href="/"><Icon name="arrowLeft" class="i" /> Retour à l'accueil</a>
       <h1>Page introuvable</h1>
       <p class="maj">Erreur 404</p>
       <div class="glass corps">

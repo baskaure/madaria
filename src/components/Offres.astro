@@ -1,7 +1,7 @@
 ---
 import SectionHead from './SectionHead.astro';
 import OfferTerms from './OfferTerms.astro';
-import PrixOffre from './PrixOffre.astro';
+import PlanCard from './PlanCard.astro';
 import { offres, ENGAGEMENT_MOIS } from '../data/offres';
 ---
 
@@ -15,19 +15,8 @@ import { offres, ENGAGEMENT_MOIS } from '../data/offres';
       Engagement {ENGAGEMENT_MOIS} mois, puis résiliable à tout moment. Vous préférez payer en une fois ? Le prix d'achat est affiché.
     </SectionHead>
 
-    <div class="plans">
-      {offres.map((o) => (
-        <div class:list={['glass', 'plan', 'rv', { feat: o.feat }]}>
-          <div class="pn">
-            <span>{o.nom}</span>
-            {o.badge && <em>{o.badge}</em>}
-          </div>
-          <PrixOffre o={o} />
-          <p class="d">{o.accroche}</p>
-          <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
-          <a href={`/?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
-        </div>
-      ))}
+    <div class="plans rv">
+      {offres.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
     </div>
     <OfferTerms />
   </div>

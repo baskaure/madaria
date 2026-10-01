@@ -8,7 +8,7 @@ import Contact from '../../components/Contact.astro';
 import OfferTerms from '../../components/OfferTerms.astro';
 import { realisations } from '../../data/realisations';
 import { secteurs } from '../../data/secteurs';
-import PrixOffre from '../../components/PrixOffre.astro';
+import PlanCard from '../../components/PlanCard.astro';
 import { offres, offresLd } from '../../data/offres';
 import { contact } from '../../data/site';
 
@@ -112,23 +112,12 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
         </div>
       </section>
 
-      {exemples.length > 0 && <section class="bloc"><h2>Des projets <span class="grad">dans votre univers</span></h2><div class="case-grid">{exemples.map(p => <a class="case-card" href={`/realisations/${p.id}/`}><img src={`/realisations/shots/${p.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu de ${p.nom}`} /><h3>{p.nom}</h3><p>{p.accroche}</p><span class="text-link">Découvrir le projet →</span></a>)}</div></section>}
+      {exemples.length > 0 && <section class="bloc"><h2>Des projets <span class="grad">dans votre univers</span></h2><div class="case-grid">{exemples.map(p => <a class="case-card" href={`/realisations/${p.id}/`}><img src={`/realisations/shots/${p.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu de ${p.nom}`} /><h3>{p.nom}</h3><p>{p.accroche}</p><span class="text-link">Découvrir le projet <Icon name="arrow" class="i" /></span></a>)}</div></section>}
       <section class="bloc" id="tarifs">
         <h2>Combien coûte un site internet pour{' '}
           <span class="grad">{s.singulier}</span> ?</h2>
-        <div class="plans deux">
-          {offresPage.map((o) => (
-            <div class:list={['glass', 'plan', 'rv', { feat: o.feat }]}>
-              <div class="pn">
-                <span>{o.nom}</span>
-                {o.badge && <em>{o.badge}</em>}
-              </div>
-              <PrixOffre o={o} />
-              <p class="d">{o.accroche}</p>
-              <ul>{o.inclus.map((i) => <li>{i}</li>)}</ul>
-              <a href={`?offre=${o.id}#contact`} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}</a>
-            </div>
-          ))}
+        <div class="plans deux rv">
+          {offresPage.map((o) => <PlanCard o={o} href={`?offre=${o.id}#contact`} />)}
         </div>
         <OfferTerms />
       </section>

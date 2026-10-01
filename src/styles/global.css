@@ -42,6 +42,10 @@ body{background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-ser
   -webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;width:100%}
 a{color:inherit;text-decoration:none}
 svg{display:block}
+/* icône posée dans le texte (flèches, coches) : suit la taille et la couleur
+   du texte. Remplace les caractères flèche, qu'iOS affiche en emoji. */
+.i{display:inline-block;width:1em;height:1em;flex:none;vertical-align:-.14em;
+  fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 ::selection{background:var(--violet);color:#fff}
 h1,h2,h3{font-family:'Sora',sans-serif;font-weight:500;line-height:1.08;letter-spacing:-.03em}
 
@@ -617,6 +621,35 @@ h1{font-size:clamp(1.95rem,4.4vw,3.55rem);font-weight:500;letter-spacing:-.035em
 @media(hover:none){.rpeek{display:none}}
 
 /* fiche projet */
+/* ---- défilement filmé (scripts/captures-video.cjs, scripts/videoDefile.ts) ----
+   Par-dessus la capture fixe, visible seulement une fois lancé (`.joue`) :
+   jamais d'écran noir pendant le chargement. */
+.ecran video.defile{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;
+  opacity:0;transition:opacity .35s ease}
+.ecran video.defile.joue{opacity:1}
+.ecran video.defile[hidden]{display:none}
+/* dans la fiche : le cadre prend le format de la vidéo, sans défilement */
+.rm-big{position:relative}
+.rm-big.video{height:auto}
+.rm-big.video .ecran{flex:none;aspect-ratio:1000/626;overflow:hidden}
+.rm-big.video .rm-scroll img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+/* sur ordinateur, la carte à vidéo ne fait pas défiler sa capture au survol */
+@media(hover:hover){.real:hover .ecran.a-video .pleine{transform:none}}
+/* page projet : la capture en place, la vidéo par-dessus */
+.case-video.ecran{aspect-ratio:auto;container-type:normal;border-radius:18px;border:1px solid var(--line)}
+.case-hero .case-video img{border:0;border-radius:0}
+/* pause / lecture : obligatoire sur une animation qui démarre seule */
+.vd-pause{position:absolute;right:12px;bottom:12px;z-index:3;width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;border:1px solid var(--line2);background:rgba(8,4,18,.72);color:#fff;cursor:pointer;
+  transition:background .25s}
+.vd-pause:hover{background:rgba(8,4,18,.92)}
+.vd-pause[hidden]{display:none}
+.vd-pause svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vd-pause .vd-ico-lire,.vd-pause[aria-pressed=true] .vd-ico-pause{display:none}
+.vd-pause[aria-pressed=true] .vd-ico-lire{display:inline}
+/* dans la fiche, le téléphone occupe le coin bas droit du grand cadre */
+.rm-big .vd-pause{right:auto;left:12px}
+
 .rmodal{border:0;padding:0;background:transparent;color:var(--fg);margin:auto;overflow:visible;
   width:min(1360px,100vw - 32px);max-width:none;height:min(880px,100dvh - 32px);max-height:none}
 .rmodal::backdrop{background:rgba(0,0,0,.86)}
@@ -737,35 +770,48 @@ html.fiche-ouverte{overflow:hidden}
   #secteurs .neons .n3{width:330px;height:290px;left:-110px}
 }
 
-/* ---- offres ---- */
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-.plan{padding:32px 28px 30px;display:flex;flex-direction:column}
-/* les formules d'appoint s'assourdissent pour laisser la vedette dominer */
-.plan:not(.feat){background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.035))}
-/* la formule vedette quitte le verre : panneau d'encre violette surélevé,
-   halo intérieur, seul vrai point chaud de la section */
-.plan.feat{background:linear-gradient(168deg,#2A1760 0%,#1B0F42 48%,#130A2E 100%);
-  border-color:rgba(167,139,250,.6);overflow:hidden;
-  margin-top:-20px;padding-top:38px;padding-bottom:36px;
-  box-shadow:0 0 0 1px rgba(196,181,253,.22),0 1px 0 rgba(255,255,255,.3) inset,
-    0 40px 90px -24px rgba(109,74,236,.6)}
-.plan.feat::before{content:'';position:absolute;left:50%;top:-34%;width:360px;height:300px;
-  transform:translateX(-50%);pointer-events:none;filter:blur(34px);
-  background:radial-gradient(circle,rgba(139,111,255,.5),transparent 66%)}
-.plan.feat .price{font-size:2.7rem}
-.plan .pn{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
-.plan .pn span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
-.plan .pn em{font-style:normal;font-size:10.5px;background:linear-gradient(100deg,#7C6BF5,#4F80F0);
-  color:#fff;padding:4px 11px;border-radius:100px;box-shadow:0 1px 0 rgba(255,255,255,.4) inset}
-.plan .price{font-family:'Sora';font-size:2.3rem;font-weight:600;letter-spacing:-.045em;line-height:1}
-.plan .price sup{font-size:.72rem;font-weight:400;color:var(--mut);vertical-align:super;letter-spacing:0;margin-left:6px}
-/* sous la mensualité : l'engagement et le prix d'achat en une fois */
-.plan .achat{margin-top:9px;font-size:12.5px;color:var(--mut)}
-.plan .d{color:var(--mut);font-size:.92rem;font-weight:300;margin:14px 0 24px;min-height:50px}
-.plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px;flex:1}
-.plan li{font-size:.9rem;color:rgba(255,255,255,.86);font-weight:300;display:flex;gap:11px;align-items:flex-start}
-.plan li::before{content:'✓';color:#C4B5FD;font-size:12px;font-weight:700;margin-top:1px}
-.plan .btn{width:100%}
+/* ---- offres ----
+   Un seul bloc à filets fins plutôt que des cartes : aucune ombre, aucun
+   dégradé, la hiérarchie tient à la typographie et à l'espace. Les colonnes
+   partagent leurs rangées (subgrid) pour que noms, prix et boutons
+   s'alignent d'une formule à l'autre. */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,255,255,.12);
+  border-radius:20px;overflow:hidden;background:rgba(6,5,10,.72)}
+.plan{display:flex;flex-direction:column;padding:36px 32px 40px}
+.plan.feat{background:rgba(255,255,255,.04)}
+@media(min-width:761px){
+  .plans{grid-template-rows:repeat(5,auto);backdrop-filter:blur(14px)}
+  .plan{grid-row:span 5;display:grid;grid-template-rows:subgrid;row-gap:0}
+  .plan + .plan{border-left:1px solid rgba(255,255,255,.1)}
+}
+
+.plan-tete{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px}
+.plan .plan-tete h3{font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;letter-spacing:0;margin:0;line-height:1.4}
+.plan-badge{font-size:11px;line-height:1.3;color:var(--mut);padding:4px 10px;border-radius:100px;
+  border:1px solid rgba(255,255,255,.16)}
+.plan .d{color:var(--faint);font-size:.88rem;font-weight:400;line-height:1.55;margin:10px 0 0;max-width:none}
+
+.plan-prix{margin:32px 0 28px}
+.plan .price{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;font-family:'Sora',sans-serif;
+  font-size:2.9rem;font-weight:500;letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
+.plan .price .pu{font-family:'Inter',sans-serif;font-size:13px;font-weight:400;letter-spacing:0;color:var(--faint)}
+.plan .price .pu span + span::before{content:' / '}
+.plan .price.devis{font-size:2.2rem;padding-top:.35em}
+.plan .achat{margin:12px 0 0;font-size:12.5px;color:var(--faint);max-width:none}
+.plan .achat span + span::before{content:' · '}
+.plan .achat b{color:var(--mut);font-weight:500}
+
+.plan .btn{width:100%;padding-block:12px}
+.plan .btn-g{background:transparent;border-color:rgba(255,255,255,.18);box-shadow:none}
+.plan .btn-p{background:#fff;box-shadow:none}
+@media(hover:hover){.plan .btn-g:hover{background:rgba(255,255,255,.07);transform:none}
+  .plan .btn-p:hover{transform:none}}
+
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:12px;align-self:start;
+  margin-top:32px;padding-top:28px;border-top:1px solid rgba(255,255,255,.08)}
+.plan li{display:flex;gap:12px;align-items:flex-start;font-size:.88rem;line-height:1.5;color:var(--mut)}
+.plan li .i{width:15px;height:15px;margin-top:3px;stroke-width:2.2;color:var(--faint)}
+.plan.feat li .i{color:var(--glow)}
 
 /* ---- faq : intro sticky à gauche, questions en liste à filets à droite ----
    Pas de boîtes ici : après les panneaux des offres, l'accordéon nu repose
@@ -851,7 +897,9 @@ form{padding:30px 28px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .metier .split{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
 .livrables{list-style:none;padding:26px 28px;display:flex;flex-direction:column;gap:13px}
 .livrables li{color:#CFC9E8;font-size:.94rem;font-weight:300;display:flex;gap:11px;align-items:flex-start}
-.livrables li::before{content:'✓';color:#C4B5FD;font-size:12px;font-weight:700;margin-top:2px}
+.livrables li::before{content:'';flex:none;width:14px;height:14px;margin-top:5px;background:#C4B5FD;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7'/%3E%3C/svg%3E") center/contain no-repeat}
 
 .plans.deux{grid-template-columns:repeat(2,1fr)}
 
@@ -944,7 +992,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   /* empilées, les formules garderaient toute la largeur : prix et listes
      se perdraient dans le vide. On les ramène à une largeur de lecture. */
   .plans,.plans.deux{grid-template-columns:1fr;max-width:560px;margin-inline:auto}
-  .plan.feat{margin-top:0}
+  .plan + .plan{border-top:1px solid rgba(255,255,255,.1)}
   .cgrid{grid-template-columns:1fr}
   .fg{grid-template-columns:1fr 1fr}
 
@@ -1004,7 +1052,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   /* densité des blocs */
   .bcard{padding:26px 22px 28px}
   .wbody{padding:20px 21px 22px}
-  .plan{padding:28px 23px 26px}
+  .plan{padding:30px 24px 32px}
   .cinfo{padding:28px 24px}
   form{padding:24px 21px}
   summary{padding:18px 2px;font-size:.98rem}
@@ -1067,7 +1115,7 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
   .mock{border-radius:16px}
   .tnode{gap:0 13px;padding-left:20px}
   .bcard{padding:22px 19px 24px}
-  .plan{padding:24px 20px 22px}
+  .plan{padding:28px 20px 30px}
   .cinfo,form{padding:22px 18px}
   .bigcta{padding:42px 18px}
   .wkpi{gap:18px}
@@ -1108,6 +1156,10 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 .footer-title{font-family:'Inter',sans-serif;font-size:11px;line-height:1.6;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-bottom:16px;font-weight:500}
 .text-link{display:inline-block;color:var(--glow);font-weight:500;margin-top:16px;text-underline-offset:5px}
 .text-link:hover{text-decoration:underline}
+.text-link .i{margin-left:2px;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+@media(hover:hover){.text-link:hover .i,.case-card:hover .text-link .i{transform:translateX(3px)}}
+.rm-btn .i{width:17px;height:17px}
+.rhint .i{width:12px;height:12px;margin-left:2px}
 .hero-note{color:var(--mut);font-size:.88rem;margin:18px auto 0;max-width:520px}
 .demo-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:22px}
 .demo-actions .text-link{margin:0}
@@ -1219,5 +1271,3 @@ footer{position:relative;z-index:1;padding:66px 0 30px;
 /* Empêche les options longues d'élargir les grilles sur les petits écrans. */
 .cgrid > *, .f{min-width:0}
 .f input,.f textarea,.f select{width:100%;min-width:0;max-width:100%}
-.plan .pn{flex-wrap:wrap}
-.plan .pn em{max-width:100%;white-space:normal}
