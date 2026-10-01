@@ -10,12 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Sora:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <style>
 body{margin:0;background:#050407}
+:root{--acc:#B4A5FF;--mut:rgba(245,244,248,.66);--faint:rgba(245,244,248,.46);--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.17)}
 a{color:inherit;text-decoration:none}
 a:hover{color:#fff}
 .page{container-type:inline-size;container-name:page;position:relative;background:#050407;color:#F5F4F8;
   font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow:hidden;
   --mut:rgba(245,244,248,.66);--faint:rgba(245,244,248,.46);--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.17)}
-.page *{box-sizing:border-box}
+.page *,.sh,.sh *,.mmenu,.mmenu *,.barre,.barre *{box-sizing:border-box}
 .page h1,.page h2,.page h3{font-family:'Sora',sans-serif;font-weight:500;letter-spacing:-.035em;margin:0;color:#fff}
 .page p{margin:0}
 .wrap{max-width:1200px;margin:0 auto;padding:0 40px}
@@ -35,24 +36,84 @@ a:hover{color:#fff}
 .tlink{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500;color:#fff;white-space:nowrap}
 .tlink:hover{color:var(--acc)}
 
-/* nav */
-.nav{display:flex;align-items:center;justify-content:space-between;height:76px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:11px;font-family:'Sora',sans-serif;font-weight:600;font-size:15px;letter-spacing:.12em}
 .brand svg{width:22px;height:auto}
-.links{display:flex;gap:32px;font-size:14px;color:var(--mut)}
-.nav-r{display:flex;align-items:center;gap:20px}
-.tel{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--mut)}
-.nav .btn{min-height:40px;padding:0 18px;font-size:13.5px}
-.burger{display:none;width:44px;height:44px;border-radius:999px;border:1px solid var(--line2);background:none;color:#fff;align-items:center;justify-content:center}
+
+/* ---- header : repris du site (Header.astro + global.css), classes préfixées sh- ----
+   Placé hors de .page : container-type y crée un bloc conteneur, un élément
+   fixed à l'intérieur défilerait avec la page. */
+.sh{position:fixed;top:18px;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:0 20px;font-family:'Inter',system-ui,sans-serif;color:#F5F4F8}
+.sh-nav{display:flex;align-items:center;gap:26px;padding:9px 9px 9px 20px;border-radius:100px;
+  background:linear-gradient(165deg,rgba(22,20,34,.22),rgba(10,9,16,.32));
+  -webkit-backdrop-filter:blur(16px) saturate(112%);backdrop-filter:blur(16px) saturate(112%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 1px 0 rgba(255,255,255,.26) inset,0 -1px 0 rgba(255,255,255,.07) inset,0 20px 46px -22px rgba(4,2,14,.7);
+  max-width:100%;transition:background .4s ease,border-color .4s ease,box-shadow .4s ease}
+.sh.scrolled .sh-nav{background:linear-gradient(165deg,rgba(20,19,30,.44),rgba(8,8,13,.56));border-color:rgba(255,255,255,.24);
+  box-shadow:0 1px 0 rgba(255,255,255,.32) inset,0 -1px 0 rgba(255,255,255,.09) inset,0 24px 54px -20px rgba(4,2,14,.85)}
+.sh-brand{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:600;letter-spacing:.16em;font-size:13px}
+.sh-brand svg{width:21px;height:auto;display:block}
+.sh-links{display:flex;gap:2px;font-size:13.5px}
+.sh-links a{padding:8px 14px;border-radius:100px;color:rgba(255,255,255,.74);transition:.28s}
+.sh-links a:hover{color:#fff;background:rgba(255,255,255,.1)}
+.sh-actions{display:flex;align-items:center;gap:8px}
+.sh-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:11px 22px;border-radius:100px;
+  font-size:13.5px;font-weight:500;border:1px solid transparent;cursor:pointer;transition:background .25s;
+  background:#fff;color:#0B0A10}
+.sh-btn:hover{color:#0B0A10;background:#ECE8FF}
+.sh-burger{display:none;width:44px;height:44px;border-radius:100px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.14);flex-direction:column;gap:4px;align-items:center;justify-content:center;cursor:pointer;transition:background .3s ease}
+.sh-burger:hover{background:rgba(255,255,255,.22)}
+.sh-burger i{width:15px;height:1.5px;background:#F5F4F8;border-radius:2px;transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+.sh-burger.open i:first-child{transform:translateY(2.75px) rotate(45deg)}
+.sh-burger.open i:last-child{transform:translateY(-2.75px) rotate(-45deg)}
+.mmenu{position:fixed;inset:0;z-index:95;display:flex;flex-direction:column;justify-content:space-between;
+  padding:120px 26px 38px;counter-reset:m;font-family:'Inter',system-ui,sans-serif;color:#F5F4F8;
+  background:radial-gradient(120% 70% at 50% 0%,#170A35 0%,#08030F 55%,#000 100%);
+  opacity:0;visibility:hidden;pointer-events:none;overflow-y:auto;overscroll-behavior:contain;transition:opacity .38s ease,visibility .38s}
+.mmenu.open{opacity:1;visibility:visible;pointer-events:auto}
+.mmenu-links{display:flex;flex-direction:column;flex:none}
+.mmenu-links a{display:flex;align-items:baseline;gap:16px;padding:18px 2px;border-bottom:1px solid rgba(255,255,255,.1);
+  font-family:'Sora',sans-serif;font-weight:500;letter-spacing:-.03em;font-size:clamp(1.6rem,7.5vw,2.2rem);
+  opacity:0;transform:translateY(16px);transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .5s cubic-bezier(.16,1,.3,1),color .25s}
+.mmenu-links a::before{counter-increment:m;content:counter(m,decimal-leading-zero);font-family:'Inter',sans-serif;font-size:11px;font-weight:400;letter-spacing:.14em;color:rgba(255,255,255,.5)}
+.mmenu.open .mmenu-links a{opacity:1;transform:none}
+.mmenu.open .mmenu-links a:nth-child(1){transition-delay:.08s}
+.mmenu.open .mmenu-links a:nth-child(2){transition-delay:.14s}
+.mmenu.open .mmenu-links a:nth-child(3){transition-delay:.2s}
+.mmenu.open .mmenu-links a:nth-child(4){transition-delay:.26s}
+.mmenu.open .mmenu-links a:nth-child(5){transition-delay:.32s}
+.mmenu.open .mmenu-links a:nth-child(6){transition-delay:.38s}
+.mmenu-bas{display:flex;flex-direction:column;gap:22px;flex:none;opacity:0;transform:translateY(16px);
+  transition:opacity .5s cubic-bezier(.16,1,.3,1) .36s,transform .5s cubic-bezier(.16,1,.3,1) .36s}
+.mmenu.open .mmenu-bas{opacity:1;transform:none}
+.mmenu-bas .sh-btn{width:100%;padding:16px 22px;font-size:14.5px}
+.mmenu-coord{display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:rgba(255,255,255,.74)}
+body.locked{overflow:hidden}
+@media(max-width:860px){
+  .sh-links{display:none}
+  .sh-burger{display:flex}
+  .sh-nav{width:100%;max-width:560px;justify-content:space-between;gap:16px;padding:8px 8px 8px 20px}
+}
+@media(max-width:760px){.sh-nav{-webkit-backdrop-filter:blur(10px) saturate(150%);backdrop-filter:blur(10px) saturate(150%)}}
+@media(max-width:460px){
+  .sh-nav{gap:6px;padding:7px 7px 7px 12px}
+  .sh-actions{gap:8px}
+  .mmenu{padding-left:18px;padding-right:18px}
+  .sh-brand{font-size:12.5px;letter-spacing:.12em;gap:7px}
+  .sh-brand svg{width:19px}
+  .sh-actions .sh-btn{font-size:11px;padding:10px 11px}
+}
 
 /* hero */
-.hero{position:relative;padding:96px 0 120px}
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:136px 0 96px}
+.hero > .wrap{width:100%;position:relative;z-index:1}
 .hero::before{content:'';position:absolute;left:50%;top:-200px;width:1100px;height:700px;transform:translateX(-50%);pointer-events:none;
   background:radial-gradient(closest-side,rgba(139,124,246,.16),transparent)}
-.hgrid{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:72px;align-items:center}
+.hgrid > div{max-width:calc(50% - 48px)}
 .pill{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border:1px solid var(--line2);border-radius:999px;font-size:13px;color:var(--mut);margin-bottom:32px}
 .pill b{font-weight:500;color:#0B0A10;background:var(--acc);border-radius:999px;padding:2px 9px;font-size:12px}
-.hero h1{font-size:68px;line-height:1.02;letter-spacing:-.045em}
+.hero h1{font-size:clamp(44px,4.3vw,64px);line-height:1.03;letter-spacing:-.045em}
 .hero .lead{font-size:18px;color:var(--mut);margin:28px 0 36px;max-width:520px}
 .hero .lead strong{color:#fff;font-weight:500}
 .hcta{display:flex;gap:12px;flex-wrap:wrap}
@@ -70,10 +131,9 @@ a:hover{color:#fff}
    Chaque rangée contient deux fois la même suite : un décalage de -50 % la
    ramène exactement à son point de départ, la boucle ne se voit pas. Seul
    transform est animé, le navigateur n'a rien à redessiner. */
-.mur{position:relative;height:620px;overflow:hidden;--th:172px;
-  margin-right:calc(-1 * max(40px, (100cqw - 1200px) / 2 + 40px));
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);
-  -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 90%,transparent),linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);
+.mur{position:absolute;top:0;right:0;bottom:0;width:50%;overflow:hidden;--th:190px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 22%),linear-gradient(180deg,transparent,#000 12%,#000 84%,transparent);
+  -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 22%),linear-gradient(180deg,transparent,#000 12%,#000 84%,transparent);
   mask-composite:intersect}
 .mur-rot{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;gap:18px;transform:translate(-50%,-50%) rotate(-16deg)}
 .mrow{display:flex;gap:18px;width:max-content;animation:mur-g var(--d,80s) linear infinite}
@@ -84,17 +144,24 @@ a:hover{color:#fff}
 .tuile{flex:none;height:var(--th);width:calc(var(--th) * 1.6);border-radius:12px;overflow:hidden;border:1px solid var(--line2);background:#111}
 .tuile.tel{width:calc(var(--th) * .5);border-radius:14px}
 .tuile img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;opacity:.88}
-.mur-lien{position:absolute;left:12%;bottom:40px;z-index:2;display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;
+.mur-lien{position:absolute;left:24%;bottom:13%;z-index:2;display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;
   background:rgba(10,9,14,.86);border:1px solid var(--line2);backdrop-filter:blur(10px);font-size:13.5px;color:#fff}
 .mur-lien b{font-weight:600;color:var(--acc)}
 .mur-lien:hover{border-color:rgba(255,255,255,.4)}
-@media (prefers-reduced-motion: reduce){.mrow{animation:none}}
+@media (prefers-reduced-motion: reduce){.mrow,.noms{animation:none}}
 
 /* clients */
 .clients{padding:40px 0;border-top:1px solid var(--line)}
-.clients .wrap{display:flex;align-items:center;gap:48px}
-.clients p{font-size:13px;color:var(--faint);white-space:nowrap}
-.noms{display:flex;flex-wrap:wrap;gap:12px 36px;font-family:'Sora',sans-serif;font-size:17px;font-weight:500;letter-spacing:-.02em;color:rgba(245,244,248,.55)}
+.clients .wrap{display:flex;align-items:center;gap:32px}
+.clients p{font-size:13px;color:var(--faint);white-space:nowrap;flex:none}
+/* une seule ligne : les noms se répartissent sur la largeur ; quand elle
+   manque (sous 1200 px), ils défilent en boucle (deux groupes identiques,
+   décalage de -50 %) */
+.noms-vue{flex:1;min-width:0;overflow:hidden}
+.noms{display:flex;font-family:'Sora',sans-serif;font-size:14px;font-weight:500;letter-spacing:-.02em;color:rgba(245,244,248,.55);white-space:nowrap}
+.grp{display:flex;flex:1;justify-content:space-between;gap:18px}
+.grp.bis{display:none}
+@keyframes noms{to{transform:translate3d(-50%,0,0)}}
 
 /* réalisations */
 .reals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px 24px}
@@ -105,15 +172,26 @@ a:hover{color:#fff}
 .rmeta span{font-size:12.5px;color:var(--faint);white-space:nowrap}
 .real p{font-size:14.5px;color:var(--mut);margin-top:4px}
 
-/* avis */
-.avis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
-.avi{padding:36px;border:1px dashed rgba(180,165,255,.4);border-radius:20px}
-.avi blockquote{margin:0 0 28px;font-family:'Sora',sans-serif;font-size:21px;line-height:1.45;letter-spacing:-.02em;color:#fff}
-.avi footer{display:flex;align-items:center;gap:14px;font-size:14px;color:var(--mut)}
-.avi footer i{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);border:1px dashed var(--line2)}
-.avi footer b{display:block;color:#fff;font-weight:500}
-.etoiles{display:flex;gap:3px;margin-bottom:20px;color:var(--acc)}
+/* avis : façon fiches Google (logo, étoiles jaunes, avatar à initiale), en version sombre */
+.gnote{display:flex;align-items:center;gap:18px;padding:18px 22px;border:1px solid var(--line2);border-radius:18px;background:rgba(255,255,255,.03)}
+.gnote .g{width:34px;height:34px;flex:none}
+.gnote b{display:block;font-family:'Sora',sans-serif;font-size:30px;font-weight:600;line-height:1;letter-spacing:-.03em;color:#fff}
+.gnote small{display:block;font-size:12.5px;color:var(--faint);margin-top:6px;white-space:nowrap}
+.gnote a{font-size:13.5px;font-weight:500;color:#fff;text-decoration:underline;text-underline-offset:4px;margin-left:8px;white-space:nowrap}
+.etoiles{display:flex;gap:2px;color:#FBBC04}
 .etoiles svg{width:16px;height:16px;fill:currentColor}
+.avis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.gavis{margin:0;padding:24px 26px;border-radius:16px;background:#111015;border:1px solid var(--line2);color:rgba(245,244,248,.82);font-family:'Inter',Roboto,Arial,sans-serif}
+.gtete{display:flex;align-items:center;gap:12px}
+.gav{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff;font-size:17px;font-weight:500}
+.gtete b{display:block;font-size:15px;font-weight:500;color:#fff}
+.gtete span{font-size:12.5px;color:var(--faint)}
+.gtete .gav{color:#fff;font-size:17px}
+.gtete .g{width:20px;height:20px;margin-left:auto;flex:none}
+.gligne{display:flex;align-items:center;gap:8px;margin:14px 0 10px;font-size:12.5px;color:var(--faint)}
+.gavis blockquote{margin:0;font-size:15px;line-height:1.6;color:rgba(245,244,248,.82)}
+.gavis blockquote p + p{margin-top:8px}
+.gvisite{margin-top:12px !important;font-size:12.5px;color:var(--faint)}
 
 /* offres */
 .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line2);border-radius:20px;overflow:hidden}
@@ -163,12 +241,14 @@ a:hover{color:#fff}
 .metier .fl{margin-left:auto;color:var(--faint)}
 
 /* fondateur */
-.fgrid{display:grid;grid-template-columns:420px minmax(0,1fr);gap:80px;align-items:center}
-.photo{aspect-ratio:4/5;border-radius:20px;border:1px dashed var(--line2);display:grid;place-items:center;text-align:center;padding:24px;
-  color:var(--faint);font-size:14px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.02) 0 12px,transparent 12px 24px)}
+.fgrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:80px;align-items:start}
+.avatar{width:64px;height:64px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 0 5px rgba(180,165,255,.12)}
+.avatar{width:64px;height:64px;border-radius:50%;flex:none;display:grid;place-items:center;
+  font-family:'Sora',sans-serif;font-weight:600;font-size:21px;letter-spacing:-.02em;color:#0B0A10;
+  background:linear-gradient(135deg,#E4DEFF,#B4A5FF 55%,#8FA6FF);box-shadow:0 0 0 4px rgba(180,165,255,.14)}
 .fgrid h2{font-size:44px;line-height:1.1;margin-bottom:24px}
 .fgrid .txt p{color:var(--mut);font-size:17px;margin-bottom:16px;max-width:560px}
-.signe{display:flex;align-items:center;gap:16px;margin:32px 0;padding-top:28px;border-top:1px solid var(--line);max-width:560px}
+.signe{display:flex;align-items:center;gap:16px;margin:28px 0;padding-top:28px;border-top:1px solid var(--line);max-width:560px}
 .signe b{display:block;font-family:'Sora',sans-serif;font-weight:500;font-size:18px}
 .signe span{font-size:13.5px;color:var(--faint)}
 
@@ -210,53 +290,60 @@ form.cform{padding:56px 48px;border-left:1px solid var(--line);display:grid;grid
 .cform .note{font-size:12.5px;color:var(--faint);text-align:center;margin-top:-6px}
 
 /* footer */
+/* wordmark en particules : repris de ParticleWordmark.astro */
+.pw{position:relative;width:100%;aspect-ratio:1600/340;overflow:hidden;margin:40px 0 0;user-select:none;-webkit-user-select:none}
+.pw canvas{display:block;width:100%;height:100%}
 .foot{border-top:1px solid var(--line);padding:64px 0 40px}
 .fcols{display:grid;grid-template-columns:1.4fr repeat(3,minmax(0,1fr));gap:40px}
 .fcols p{font-size:14px;color:var(--faint);margin-top:16px;max-width:280px}
 .fcols h4{margin:0 0 16px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .fcols ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--mut)}
-.fbas{display:flex;justify-content:space-between;gap:20px;margin-top:56px;padding-top:24px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)}
+.fbas{display:flex;justify-content:space-between;gap:20px;margin-top:16px;padding-top:24px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)}
 
 /* barre d'appel fixe, téléphone uniquement */
-.barre{display:none;position:fixed;left:12px;right:12px;bottom:16px;z-index:50;gap:8px;padding:8px;border-radius:999px;
+.barre{font-family:'Inter',system-ui,sans-serif;transform:translateY(140%);transition:transform .45s cubic-bezier(.2,.8,.2,1);
+  display:none;position:fixed;left:12px;right:12px;bottom:16px;z-index:50;gap:8px;padding:8px;border-radius:999px;
   background:rgba(14,13,20,.92);border:1px solid var(--line2);backdrop-filter:blur(12px);box-shadow:0 20px 40px -10px rgba(0,0,0,.8)}
 .barre .btn{min-height:46px}
 .barre .btn-p{flex:1}
 .barre .btn-g{width:46px;padding:0}
 
 /* ---------- tablette ---------- */
+@container page (max-width: 1199px){
+  .clients .wrap{flex-direction:column;align-items:stretch;gap:14px}
+  .noms-vue{-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .noms{width:max-content;animation:noms 32s linear infinite}
+  .grp{flex:none;justify-content:flex-start;gap:36px;padding-right:36px}
+  .grp.bis{display:flex}
+}
 @container page (max-width: 1100px){
-  .hgrid{grid-template-columns:1fr;gap:48px}
-  .mur{height:460px;margin-inline:-40px}
-  .mur-lien{left:40px}
+  .hero{display:flex;flex-direction:column;align-items:stretch;min-height:0;padding:128px 0 0}
+  .hgrid > div{max-width:none}
+  .hero .lead{max-width:600px}
+  .mur{position:relative;order:2;width:auto;height:480px;margin-top:40px;--th:150px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent);mask-image:linear-gradient(180deg,transparent,#000 14%,#000 84%,transparent)}
+  .mur-lien{left:40px;bottom:40px}
   .reals{grid-template-columns:repeat(2,minmax(0,1fr))}
   .metiers{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .fgrid{grid-template-columns:320px minmax(0,1fr);gap:48px}
-  .links{display:none}
+  .fgrid{gap:48px}
 }
 /* ---------- téléphone ---------- */
 @container page (max-width: 700px){
   .wrap{padding:0 20px}
-  .nav{height:68px}
-  .tel,.nav .btn{display:none}
-  .burger{display:inline-flex}
-  .hero{padding:48px 0 72px}
+  .hero{padding:112px 0 0}
   .pill{margin-bottom:24px;font-size:12px}
   .hero h1{font-size:40px;line-height:1.05}
   .hero .lead{font-size:16px;margin:20px 0 28px}
   .hcta .btn{flex:1 1 100%}
-  .mur{height:340px;margin-inline:-20px;--th:112px}
+  .mur{height:360px;margin-top:32px;--th:112px}
   .mur-lien{left:20px;bottom:24px;font-size:12.5px}
   .preuves{flex-direction:column;gap:10px;margin-top:28px}
-  .clients .wrap{flex-direction:column;align-items:flex-start;gap:16px}
-  .noms{font-size:15px;gap:8px 22px}
   .sec{padding:80px 0}
   .shead{flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:36px}
   .shead h2,.fgrid h2,.fsplit h2,.cinfo h2{font-size:32px}
   .reals{grid-template-columns:1fr;gap:36px}
   .avis{grid-template-columns:1fr}
-  .avi{padding:26px}
-  .avi blockquote{font-size:18px}
+  .gnote{flex-wrap:wrap}
   .plans{grid-template-columns:1fr}
   .plan{padding:28px 22px 30px}
   .plan + .plan{border-left:0;border-top:1px solid var(--line)}
@@ -269,8 +356,7 @@ form.cform{padding:56px 48px;border-left:1px solid var(--line);display:grid;grid
   .srow p{grid-column:2}
   .srow .tlink{grid-column:2;justify-self:start;margin-top:6px}
   .metiers{grid-template-columns:1fr;gap:8px}
-  .fgrid{grid-template-columns:1fr;gap:36px}
-  .photo{aspect-ratio:1/1}
+  .fgrid{grid-template-columns:1fr;gap:20px}
   .fsplit{grid-template-columns:1fr;gap:36px}
   .cbox{grid-template-columns:1fr}
   .cinfo{padding:36px 22px}
@@ -278,43 +364,52 @@ form.cform{padding:56px 48px;border-left:1px solid var(--line);display:grid;grid
   .fcols{grid-template-columns:1fr 1fr;gap:32px 20px}
   .fcols > div:first-child{grid-column:1/-1}
   .fbas{flex-direction:column}
+  .pw{aspect-ratio:1600/440;margin-top:28px}
   .foot{padding-bottom:110px}
 }
 @media (max-width: 700px){.barre{display:flex}}
+.barre.visible{transform:none}
+@media (prefers-reduced-motion: reduce){.barre{transition:none}}
 </style>
 </head>
 <body>
-<div class="page" style="--acc: #B4A5FF">
-
-<!-- ============ NAV ============ -->
-<div class="wrap">
-<nav class="nav" aria-label="Navigation principale">
-<a class="brand" href="#top">
-<svg viewBox="0 0 255 174" aria-hidden="true"><rect x="25" y="0" width="230" height="34" rx="17" fill="#fff"></rect><rect x="0" y="70" width="190" height="34" rx="17" fill="#fff"></rect><rect x="20" y="140" width="92" height="34" rx="17" fill="#fff"></rect><rect x="132" y="140" width="98" height="34" rx="17" fill="#A78BFA"></rect></svg>
-MADARIA
-</a>
-<div class="links">
-<a href="#realisations">Réalisations</a>
-<a href="#offres">Offres</a>
-<a href="#methode">Méthode</a>
-<a href="#secteurs">Métiers</a>
-<a href="#faq">FAQ</a>
-</div>
-<div class="nav-r">
-<a class="tel" href="tel:+33699681957"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>06 99 68 19 57</a>
-<a class="btn btn-p" href="#contact">Devis en 24 h</a>
-<button class="burger" type="button" aria-label="Ouvrir le menu"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"></path></svg></button>
+<header class="sh" id="sh">
+<nav class="sh-nav" aria-label="Navigation principale">
+<a class="sh-brand" href="#top"><svg viewBox="0 0 255 174" aria-hidden="true"><defs><linearGradient id="gn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#A78BFA"/><stop offset="1" stop-color="#4F80F0"/></linearGradient></defs><rect x="25" y="0" width="230" height="34" rx="17" fill="#fff"/><rect x="0" y="70" width="190" height="34" rx="17" fill="#fff"/><rect x="20" y="140" width="92" height="34" rx="17" fill="#fff"/><rect x="132" y="140" width="98" height="34" rx="17" fill="url(#gn)"/></svg>MADARIA</a>
+<div class="sh-links"><a href="#services">Services</a><a href="#methode">Méthode</a><a href="#realisations">Réalisations</a><a href="#secteurs">Secteurs</a><a href="#offres">Offres</a><a href="#faq">FAQ</a></div>
+<div class="sh-actions">
+<a href="#contact" class="sh-btn">Devis en 24&nbsp;h</a>
+<button class="sh-burger" id="burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu"><i></i><i></i></button>
 </div>
 </nav>
+</header>
+<div class="mmenu" id="mmenu">
+<nav class="mmenu-links" aria-label="Navigation mobile"><a href="#services">Services</a><a href="#methode">Méthode</a><a href="#realisations">Réalisations</a><a href="#secteurs">Secteurs</a><a href="#offres">Offres</a><a href="#faq">FAQ</a></nav>
+<div class="mmenu-bas">
+<a href="#contact" class="sh-btn">Demander un devis</a>
+<div class="mmenu-coord"><a href="mailto:contact@madaria.fr">contact@madaria.fr</a><a href="tel:+33699681957">06 99 68 19 57</a></div>
 </div>
+</div>
+<div class="page" style="--acc: #B4A5FF">
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
+<div class="mur" id="mur">
+<div class="mur-rot" aria-hidden="true">
+<div class="mrow" style="--d: 90s"><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div></div>
+<div class="mrow d" style="--d: 75s"><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div></div>
+<div class="mrow" style="--d: 105s"><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div></div>
+<div class="mrow d" style="--d: 82s"><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div></div>
+<div class="mrow" style="--d: 96s"><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/munda-kfe-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/munda-kfe-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div></div>
+<div class="mrow d" style="--d: 88s"><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/chateau-tourelles-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/chateau-tourelles-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" decoding="async"></div></div>
+</div>
+<a class="mur-lien" href="#realisations"><b>11 sites</b> livrés par Madaria · voir les projets<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
 <div class="wrap hgrid">
 <div>
 <div class="pill"><b>49 €/mois</b>Création incluse, rien à payer au départ</div>
 <h1>Votre site internet en ligne en 7 jours. <span class="acc">Pas dans trois mois.</span></h1>
-<p class="lead">Sites vitrines, automatisations et outils métier pour les indépendants et les PME. Vous parlez directement à <strong>la personne qui dessine et code votre site</strong>, du premier appel à la mise en ligne.</p>
+<p class="lead">Madaria conçoit vos <strong>sites internet</strong>, <strong>automatisations</strong> et <strong>outils métier</strong>. Un interlocuteur direct, du premier échange à la mise en ligne.</p>
 <div class="hcta">
 <a class="btn btn-p" href="#contact">Recevoir mon devis en 24 h<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
 <a class="btn btn-g" href="#realisations">Voir les réalisations</a>
@@ -325,15 +420,6 @@ MADARIA
 <span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>Basé à Lyon, partout en France</span>
 </div>
 </div>
-<div class="mur" id="mur">
-<div class="mur-rot" aria-hidden="true">
-<div class="mrow" style="--d: 90s"><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="mrow d" style="--d: 75s"><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/munda-kfe-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="mrow" style="--d: 105s"><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/chateau-tourelles-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/kami-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/klientmap-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/appat-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/aurore-piercing-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="mrow d" style="--d: 82s"><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/lucas-morin-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-social-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kami-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile tel"><img src="public/realisations/shots/tom-carvalho-mobile.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/aurore-piercing-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/recharge-clim-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/kingdomads-thumb.webp" alt="" loading="lazy" decoding="async"></div><div class="tuile"><img src="public/realisations/shots/tom-carvalho-thumb.webp" alt="" loading="lazy" decoding="async"></div></div>
-</div>
-<a class="mur-lien" href="#realisations"><b>11 sites</b> livrés par Madaria · voir les projets<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-</div>
 </div>
 </section>
 
@@ -341,7 +427,7 @@ MADARIA
 <div class="clients">
 <div class="wrap">
 <p>Ils ont confié leur site à Madaria</p>
-<div class="noms"><span>Kami</span><span>Munda-Kfé</span><span>KingdomAds</span><span>Tom Carvalho</span><span>Aurore Piercing</span><span>Recharge Clim Auto</span><span>Château des Tourelles</span></div>
+<div class="noms-vue"><div class="noms"><div class="grp"><span>Kami</span><span>Munda-Kfé</span><span>KingdomAds</span><span>Tom Carvalho</span><span>Aurore Piercing</span><span>Recharge Clim Auto</span><span>Château des Tourelles</span></div><div class="grp bis" aria-hidden="true"><span>Kami</span><span>Munda-Kfé</span><span>KingdomAds</span><span>Tom Carvalho</span><span>Aurore Piercing</span><span>Recharge Clim Auto</span><span>Château des Tourelles</span></div></div></div>
 </div>
 </div>
 
@@ -363,23 +449,25 @@ MADARIA
 </div>
 </section>
 
-<!-- ============ AVIS (à recueillir) ============ -->
+<!-- ============ AVIS GOOGLE ============ -->
 <section class="sec" id="avis">
 <div class="wrap">
 <div class="shead">
-<div><span class="lab">Ils en parlent</span><h2>Ce que les clients disent après la mise en ligne.</h2></div>
-<p>Emplacement à remplir avec de vrais avis : c'est l'élément qui rassure le plus un artisan ou un commerçant avant de signer.</p>
+<div><span class="lab">Avis Google</span><h2>Ce que les clients disent après la mise en ligne.</h2></div>
+<div class="gnote"><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg><div><b>5,0</b><small>Note moyenne sur Google</small></div><span class="etoiles" role="img" aria-label="5 étoiles sur 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg></span><a href="#">Voir les avis</a></div>
 </div>
 <div class="avis">
-<figure class="avi" style="margin: 0">
-<div class="etoiles"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></div>
-<blockquote>[Avis d'un client de Kami : ce qui a changé depuis le nouveau site, en deux ou trois phrases.]</blockquote>
-<footer><i></i><div><b>[Prénom Nom]</b>Kami, Capbreton</div></footer>
+<figure class="gavis">
+<div class="gtete"><span class="gav" style="background:#7B1FA2">V</span><div><b>vantablack vanta</b><span>Avis de Google</span></div><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></div>
+<div class="gligne"><span class="etoiles" role="img" aria-label="5 étoiles sur 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg></span><span>5/5 · il y a un mois</span></div>
+<blockquote><p>Très bonne agence, le référencement seo est super !</p></blockquote>
+<p class="gvisite">Visité en février</p>
 </figure>
-<figure class="avi" style="margin: 0">
-<div class="etoiles"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path></svg></div>
-<blockquote>[Avis de Recharge Clim Auto : par exemple les appels ou les demandes reçues grâce au site.]</blockquote>
-<footer><i></i><div><b>[Prénom Nom]</b>Recharge Clim Auto, Montpellier</div></footer>
+<figure class="gavis">
+<div class="gtete"><span class="gav" style="background:#00796B">T</span><div><b>Tom Carvalho</b><span>Avis de Google</span></div><svg class="g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></div>
+<div class="gligne"><span class="etoiles" role="img" aria-label="5 étoiles sur 5"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 17.3l-5.9 3.2 1.3-6.5L2.5 9.4l6.6-.8z"/></svg></span><span>5/5 · il y a un mois</span></div>
+<blockquote><p>J’ai utilisé les services de Madaria et franchement, je ne suis pas déçu !</p><p>J’ai créé mon site pour accompagner le développement de mon entreprise, et chacun de mes clients est stupéfait par la qualité de mon site !</p></blockquote>
+<p class="gvisite">Visité en août</p>
 </figure>
 </div>
 </div>
@@ -501,13 +589,14 @@ MADARIA
 <!-- ============ FONDATEUR ============ -->
 <section class="sec" id="agence">
 <div class="wrap fgrid">
-<div class="photo">[Photo d'Aurélien, portrait naturel, au bureau ou en extérieur]</div>
-<div class="txt">
+<div>
 <span class="lab">Votre interlocuteur</span>
 <h2>Vous parlez à celui qui <span class="acc">code votre site.</span></h2>
+</div>
+<div class="txt">
 <p>Je m'appelle Aurélien Branco. Je suis basé à Lyon et je réalise moi-même chaque projet Madaria, à distance, partout en France.</p>
 <p>Vous avez mon numéro. C'est moi qui fais la maquette, le code et la mise en ligne, et c'est encore moi que vous appelez dans six mois pour changer un horaire.</p>
-<div class="signe"><div><b>Aurélien Branco</b><span>Fondateur de Madaria · Développeur</span></div></div>
+<div class="signe"><img class="avatar" src="public/assets/aurelien-branco-avatar.webp" width="64" height="64" alt="Aurélien Branco" loading="lazy" decoding="async"><div><b>Aurélien Branco</b><span>Fondateur de Madaria · Développeur</span></div></div>
 <div class="hcta">
 <a class="btn btn-p" href="tel:+33699681957"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>06 99 68 19 57</a>
 <a class="btn btn-g" href="#contact">Écrire plutôt</a>
@@ -579,29 +668,178 @@ MADARIA
 <div><h4>Agence</h4><ul><li><a href="#realisations">Réalisations</a></li><li><a href="#offres">Offres</a></li><li><a href="#secteurs">Métiers</a></li><li><a href="#faq">FAQ</a></li></ul></div>
 <div><h4>Contact</h4><ul><li><a href="mailto:contact@madaria.fr">contact@madaria.fr</a></li><li><a href="tel:+33699681957">06 99 68 19 57</a></li><li><a href="#contact">Demander un devis</a></li></ul></div>
 </div>
+<div class="pw" id="pw" aria-hidden="true"><canvas id="pw-canvas"></canvas></div>
 <div class="fbas"><span>© 2026 Madaria</span><span><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></span></div>
 </div>
 </footer>
 
+
+</div>
 <div class="barre">
 <a class="btn btn-p" href="#contact">Devis gratuit en 24 h</a>
 <a class="btn btn-g" href="tel:+33699681957" aria-label="Appeler Madaria"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a>
 </div>
-
-</div>
 <script>
+  // header : se densifie dès qu'on défile ; menu plein écran sur mobile
+  var sh = document.getElementById('sh');
+  var majHeader = function () { sh.classList.toggle('scrolled', window.scrollY > 24); };
+  majHeader(); window.addEventListener('scroll', majHeader, { passive: true });
+  var burger = document.getElementById('burger'), menu = document.getElementById('mmenu');
+  var ouvrir = function (o) {
+    menu.classList.toggle('open', o); burger.classList.toggle('open', o);
+    document.body.classList.toggle('locked', o);
+    burger.setAttribute('aria-expanded', String(o));
+    burger.setAttribute('aria-label', o ? 'Fermer le menu' : 'Ouvrir le menu');
+  };
+  burger.addEventListener('click', function () { ouvrir(burger.getAttribute('aria-expanded') !== 'true'); });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { ouvrir(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ouvrir(false); });
   // pastilles « Formule envisagée » : une seule active à la fois
   document.querySelectorAll('.choix label').forEach(function (l) {
     l.addEventListener('click', function () {
       document.querySelectorAll('.choix label').forEach(function (x) { x.classList.toggle('on', x === l); });
     });
   });
+  // barre d'appel mobile : seulement une fois les boutons du haut de page sortis de l'écran
+  var barre = document.querySelector('.barre'), cta = document.querySelector('.hero .hcta');
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (e) {
+    barre.classList.toggle('visible', !e[0].isIntersecting && e[0].boundingClientRect.top < 0);
+  }).observe(cta); else barre.classList.add('visible');
   // le mur ne tourne que lorsqu'il est visible
   var mur = document.getElementById('mur');
   if ('IntersectionObserver' in window) new IntersectionObserver(function (e) {
     mur.classList.toggle('pause', !e[0].isIntersecting);
   }).observe(mur);
   document.querySelector('.cform').addEventListener('submit', function (e) { e.preventDefault(); });
+
+  // ---- MADARIA en particules (ParticleWordmark.astro, sans les types) ----
+  (function () {
+    var host = document.getElementById('pw'), canvas = document.getElementById('pw-canvas');
+    if (!host || !canvas) return;
+    var start = function () {
+      var ctx = canvas.getContext('2d');
+      var PALETTE = [[237,233,254],[196,181,253],[129,140,248]];
+      var FORMATS = ['dot','dot','square'];
+      var SIZE_SMALL = [1.4,2.8], SIZE_BIG = [3,4.2], BIG_CHANCE = .07, GAP = 6, ETROIT = 560, GAP_ETROIT = 3.6;
+      var SPEED = 2, SEED = 1337, GAMMA = .8, DUR = 8, TAU = Math.PI * 2;
+      var WORDMARK = '<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="340" viewBox="0 0 1600 340">' +
+        '<text x="800" y="272" text-anchor="middle" textLength="1540" lengthAdjust="spacing" fill="#fff" ' +
+        'font-family="Sora, \'Helvetica Neue\', Helvetica, Arial, sans-serif" font-size="300" font-weight="800">MADARIA</text></svg>';
+      var noise = function (x, y, t) {
+        var a = x + .7 * Math.sin(1.2 * y + t), r = y + .7 * Math.cos(1.1 * x - t);
+        return (Math.sin(1.3 * a + .6 * t) + Math.cos(1.5 * r - .5 * t) + Math.sin((a + r) * .9 + .3 * t)) / 3;
+      };
+      var chute = function (p, t) {
+        var swirl = .14 * noise(3 * p.nx, 3 * p.ny, .5 * t);
+        var derive = .14 * Math.sin(.8 * t + p.offset * TAU + 4 * p.ny) + swirl;
+        var o = p.ny * 5 - t * .26 + p.offset * 5 + derive + .8 * p.nx, s = o - Math.floor(o);
+        return s < .4 ? 1 - s / .4 : 0;
+      };
+      var champ = function (p, t) {
+        var bande = .35 + .65 * Math.pow(.5 + .5 * Math.sin(3 * p.nx - .5 * t), 2);
+        return .14 + .86 * bande * Math.pow(chute(p, t), 1.8);
+      };
+      var melange = function (v) {
+        var e = Math.max(0, Math.min(1, v)) * (PALETTE.length - 1), i = Math.floor(e), f = e - i;
+        var a = PALETTE[i], b = PALETTE[Math.min(PALETTE.length - 1, i + 1)];
+        return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
+      };
+      var lcg = function (seed) { var e = seed >>> 0; return function () { e = (1664525 * e + 0x3c6ef35f) >>> 0; return e / 0xffffffff; }; };
+      var RAYON = 150, sourisX = -1e5, sourisY = -1e5, clientX = 0, clientY = 0, lampe = 0;
+      var particules = [], masque = null, tNow = 0, t0 = performance.now(), visible = true;
+      var motion = matchMedia('(prefers-reduced-motion: reduce)'), reduit = motion.matches, frame = 0, survol = false;
+      var construireMasque = function (w, h) {
+        if (!masque || !masque.width || !masque.height) return null;
+        var off = document.createElement('canvas'); off.width = w; off.height = h;
+        var g = off.getContext('2d'); if (!g) return null;
+        var k = Math.min(w / masque.width, h / masque.height), dw = masque.width * k, dh = masque.height * k;
+        g.drawImage(masque, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        var data; try { data = g.getImageData(0, 0, w, h).data; } catch (e) { return null; }
+        return function (x, y) {
+          var ix = Math.min(w - 1, Math.max(0, Math.round(x))), iy = Math.min(h - 1, Math.max(0, Math.round(y))), i = (iy * w + ix) * 4;
+          var lum = (.299 * data[i] + .587 * data[i + 1] + .114 * data[i + 2]) / 255;
+          return Math.pow(lum * (data[i + 3] / 255), GAMMA);
+        };
+      };
+      var reconstruire = function () {
+        var w = host.clientWidth, h = host.clientHeight;
+        if (!w || !h || !masque) return;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.max(1, Math.floor(w * dpr)); canvas.height = Math.max(1, Math.floor(h * dpr));
+        canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var ech = construireMasque(w, h), rand = lcg(SEED), pas = w < ETROIT ? GAP_ETROIT : GAP, finesse = pas / GAP;
+        var cols = Math.ceil(w / pas), rows = Math.ceil(h / pas), ox = (w - (cols - 1) * pas) / 2, oy = (h - (rows - 1) * pas) / 2;
+        particules = [];
+        for (var y = 0; y < rows; y++) for (var x = 0; x < cols; x++) {
+          var plage = rand() < BIG_CHANCE ? SIZE_BIG : SIZE_SMALL, px = ox + x * pas, py = oy + y * pas;
+          var format = FORMATS[Math.floor(rand() * FORMATS.length)], size = (plage[0] + rand() * (plage[1] - plage[0])) * finesse;
+          var offset = rand(), mask = ech ? ech(px, py) : 1, path = format === 'dot' && mask > .005 ? new Path2D() : null;
+          if (path) path.arc(px, py, size / 2, 0, TAU);
+          particules.push({ cx: px, cy: py, nx: cols > 1 ? x / (cols - 1) : .5, ny: rows > 1 ? y / (rows - 1) : .5,
+            format: format, size: size, offset: offset, color: melange(.7 * offset), mask: mask, path: path });
+        }
+      };
+      var dessiner = function (t) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        var portee = RAYON * RAYON;
+        for (var k = 0; k < particules.length; k++) {
+          var p = particules[k], lueur = 0;
+          if (lampe > .002) {
+            var dx = p.cx - sourisX, dy = p.cy - sourisY, d2 = dx * dx + dy * dy;
+            if (d2 < portee) { var q = 1 - Math.sqrt(d2) / RAYON; lueur = q * q * lampe; }
+          }
+          if (p.mask <= .005 && lueur === 0) continue;
+          var alpha = Math.max(0, Math.min(1, champ(p, t)));
+          if (p.mask < 1) alpha = p.mask * (.3 + .7 * alpha);
+          if (lueur > 0) alpha = Math.min(1, alpha + lueur * (.25 + .75 * p.mask));
+          if (alpha <= .005) continue;
+          var r = p.color[0], g = p.color[1], b = p.color[2];
+          if (lueur > 0) { var v = lueur * .85; r += (255 - r) * v; g += (255 - g) * v; b += (255 - b) * v; }
+          ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+          var d = p.size * (1 + lueur * .85), demi = d / 2;
+          if (p.format === 'square') ctx.fillRect(p.cx - demi, p.cy - demi, d, d);
+          else if (lueur === 0 && p.path) ctx.fill(p.path);
+          else { ctx.beginPath(); ctx.arc(p.cx, p.cy, demi, 0, TAU); ctx.fill(); }
+        }
+      };
+      var boucle = function (now) {
+        frame = 0;
+        if (!reduit && visible && !document.hidden) {
+          if (survol) { var r = host.getBoundingClientRect(); sourisX = clientX - r.left; sourisY = clientY - r.top; }
+          lampe += ((survol ? 1 : 0) - lampe) * .12;
+          tNow = ((now - t0) / 1000) % DUR;
+          dessiner(tNow * SPEED);
+          frame = requestAnimationFrame(boucle);
+        }
+      };
+      host.addEventListener('pointermove', function (e) { clientX = e.clientX; clientY = e.clientY; survol = true; });
+      host.addEventListener('pointerleave', function () { survol = false; });
+      var img = new Image();
+      img.onload = function () { masque = img; reconstruire(); dessiner(tNow * SPEED); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(WORDMARK);
+      if (!reduit) frame = requestAnimationFrame(boucle);
+      var lastW = host.clientWidth, lastH = host.clientHeight;
+      new ResizeObserver(function () {
+        if (host.clientWidth === lastW && host.clientHeight === lastH) return;
+        lastW = host.clientWidth; lastH = host.clientHeight; reconstruire(); dessiner(tNow * SPEED);
+      }).observe(host);
+      new IntersectionObserver(function (en) {
+        var on = !!(en[0] && en[0].isIntersecting);
+        if (on === visible) return; visible = on;
+        if (visible) { t0 = performance.now() - tNow * 1000; if (!reduit && !document.hidden && !frame) frame = requestAnimationFrame(boucle); }
+        else { cancelAnimationFrame(frame); frame = 0; }
+      }, { rootMargin: '120px' }).observe(canvas);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
+        else { t0 = performance.now() - tNow * 1000; if (visible && !reduit && !frame) frame = requestAnimationFrame(boucle); }
+      });
+    };
+    var activation = new IntersectionObserver(function (en) {
+      if (en.some(function (e) { return e.isIntersecting; })) { activation.disconnect(); start(); }
+    }, { rootMargin: '120px' });
+    activation.observe(host);
+  })();
 </script>
 </body>
 </html>
