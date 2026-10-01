@@ -2,77 +2,20 @@
 import Icon from './Icon.astro';
 import SectionHead from './SectionHead.astro';
 import { secteurs } from '../data/secteurs';
-
-/** Métiers visibles d'emblée ; les suivants attendent un clic. */
-const VISIBLES = 4;
-const caches = secteurs.length - VISIBLES;
-const libelleOuvrir = `Voir les ${caches} autres métiers`;
 ---
 
-<section id="secteurs">
+<section class="sec" id="secteurs">
   <div class="wrap">
-    <SectionHead label="Secteurs">
-      <Fragment slot="titre">
-        Des sites internet pensés<br />pour <span class="grad">votre métier</span>.
-      </Fragment>
-      Un site de coiffeur n'a rien à voir avec un site de restaurant. Nous connaissons les besoins
-      concrets de ces métiers et construisons ce qui fait vraiment gagner des clients.
+    <SectionHead label="Métiers">
+      <Fragment slot="titre">Un site pensé pour votre métier.</Fragment>
+      <p>Un barbier a besoin de réservations, un restaurant de sa carte à jour. Chaque page métier montre ce qu'on construit pour vous.</p>
     </SectionHead>
-
-    <!-- Formes néon derrière les tuiles de verre : bâton incliné, anneau,
-         cône — le dépoli des tuiles les floute, les interstices les révèlent -->
-    <div class="neons" aria-hidden="true">
-      <i class="n1"></i><i class="n2"></i><i class="n3"></i>
-    </div>
-
-    <div class="secteurs" id="grille-secteurs">
-      {secteurs.map((s, i) => (
-        <a
-          class:list={['secteur', 'rv', { extra: i >= VISIBLES }]}
-          href={`/site-internet/${s.slug}/`}
-        >
-          <div class="ico"><Icon name={s.icon} /></div>
-          <div class="sbody">
-            <h3>{s.nom}</h3>
-            <p>{s.text}</p>
-            <div class="tags">{s.besoins.map((b) => <b>{b}</b>)}</div>
-          </div>
-          <span class="voir" aria-hidden="true"><Icon name="arrow" class="i" /></span>
+    <div class="metiers rv">
+      {secteurs.map((s) => (
+        <a class="metier" href={`/site-internet/${s.slug}/`}>
+          <span class="ico"><Icon name={s.icon} /></span>{s.nom}<Icon name="arrow" class="i fl" />
         </a>
       ))}
     </div>
-
-    {caches > 0 && (
-      <button
-        type="button"
-        class="btn btn-g deplier"
-        id="voir-secteurs"
-        aria-expanded="false"
-        aria-controls="grille-secteurs"
-        data-ouvrir={libelleOuvrir}
-        data-fermer="Réduire la liste"
-      >
-        {libelleOuvrir}
-      </button>
-    )}
   </div>
 </section>
-
-<script>
-  /* Repli des métiers au-delà des quatre premiers : huit tuiles d'affilée
-     noyaient la section, surtout au téléphone. */
-  const bouton = document.getElementById('voir-secteurs');
-  const grille = document.getElementById('grille-secteurs');
-
-  bouton?.addEventListener('click', () => {
-    const ouvert = grille?.classList.toggle('ouvert') ?? false;
-    bouton.setAttribute('aria-expanded', String(ouvert));
-    bouton.textContent = ouvert
-      ? (bouton.dataset.fermer ?? 'Réduire la liste')
-      : (bouton.dataset.ouvrir ?? 'Voir plus');
-
-    // En repliant, la page se raccourcit sous le curseur : on remonte au
-    // bouton pour ne pas se retrouver projeté au milieu de la section suivante.
-    if (!ouvert) bouton.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  });
-</script>

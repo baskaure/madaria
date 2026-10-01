@@ -27,28 +27,9 @@ export const contact = {
   telLien: '+33699681957',
   zone: 'Basé à Lyon · 100 % à distance',
   delai: 'Réponse sous 24 h',
+  /** fiche Google Business, par son identifiant Knowledge Graph (stable) */
+  google: 'https://www.google.com/search?kgmid=/g/11zf9zzc34',
 } as const;
-
-export const budgets = [
-  'Abonnement mensuel (dès 49 € HT/mois)',
-  '690 – 1 490 € HT',
-  '1 500 – 3 000 € HT',
-  '3 000 – 6 000 € HT',
-  '6 000 – 15 000 € HT',
-  '15 000 € HT et plus',
-  'Je ne sais pas encore',
-] as const;
-
-export const clients = [
-  'Barbiers',
-  'Coiffeurs',
-  'Tatoueurs',
-  'Perceurs',
-  'Restaurants',
-  'Instituts de beauté',
-  'Organismes de formation',
-  'BTP & artisans',
-] as const;
 
 export const footerColumns = [
   {

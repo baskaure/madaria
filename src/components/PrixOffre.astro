@@ -1,8 +1,7 @@
 ---
 /**
  * Prix d'une formule : la mensualité en grand, puis l'engagement et le prix
- * d'achat en une fois. Partagé par toutes les cartes de formule, pour que
- * l'accueil, les pages métier et les pages service disent la même chose.
+ * d'achat en une fois (ou la note d'une formule sur devis).
  */
 import { ENGAGEMENT_MOIS, type Offre } from '../data/offres';
 
@@ -10,23 +9,11 @@ interface Props {
   o: Offre;
 }
 const { o } = Astro.props;
-// « € HT/mois » : la devise au-dessus, la période en dessous
-const [devise, periode] = (o.unite ?? '').split('/');
+// « € HT/mois » devient « € HT / mois »
+const unite = o.unite?.replace('/', ' / ');
 ---
 
-<div class="plan-prix">
-  {o.unite ? (
-    <div class="price">
-      {o.prix}
-      <span class="pu"><span>{devise}</span>{periode && <span>par {periode}</span>}</span>
-    </div>
-  ) : (
-    <div class="price devis">{o.prix}</div>
-  )}
-  {o.achat && (
-    <p class="achat">
-      <span>Engagement {ENGAGEMENT_MOIS} mois</span>
-      <span>ou <b>{o.achat}&nbsp;€&nbsp;HT</b> en une fois</span>
-    </p>
-  )}
-</div>
+{o.unite ? <div class="prix">{o.prix}<small>{unite}</small></div> : <div class="prix devis">{o.prix}</div>}
+<p class="achat">
+  {o.achat ? <>Engagement {ENGAGEMENT_MOIS} mois · ou <b>{o.achat}&nbsp;€&nbsp;HT</b> en une fois</> : o.note}
+</p>

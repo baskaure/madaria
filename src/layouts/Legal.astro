@@ -1,9 +1,6 @@
 ---
-import Icon from '../components/Icon.astro';
 import Base from './Base.astro';
-import Background from '../components/Background.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Ariane from '../components/Ariane.astro';
 
 interface Props {
   title: string;
@@ -16,20 +13,17 @@ interface Props {
 const { title, description, h1, majDate } = Astro.props;
 ---
 
-<Base title={title} description={description}>
-  <Background />
-  <Header />
-
-  <main id="contenu" class="legal">
+<Base title={title} description={description} barre="/#contact">
+  <section class="ph">
     <div class="wrap">
-      <a class="retour" href="/"><Icon name="arrowLeft" class="i" /> Retour à l'accueil</a>
+      <Ariane etapes={[{ label: h1 }]} />
       <h1>{h1}</h1>
       <p class="maj">Dernière mise à jour : {majDate}</p>
-      <div class="glass corps">
-        <slot />
-      </div>
     </div>
-  </main>
-
-  <Footer />
+  </section>
+  <section class="sec court">
+    <div class="wrap">
+      <div class="prose"><slot /></div>
+    </div>
+  </section>
 </Base>

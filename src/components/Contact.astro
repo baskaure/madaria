@@ -1,119 +1,149 @@
 ---
-import { contact, budgets } from '../data/site';
+/**
+ * Demande de devis. Formulaire court (nom, un moyen de vous joindre, métier,
+ * formule) : chaque champ en moins, c'est une demande de plus. Le message
+ * reste facultatif, on rappelle de toute façon pour cadrer.
+ * Envoi par Netlify Forms (champs cachés form-name et bot-field).
+ */
+import Icon from './Icon.astro';
+import { contact } from '../data/site';
 import { realisations } from '../data/realisations';
+import { secteurs } from '../data/secteurs';
 import { offres } from '../data/offres';
-interface Props { secteur?: string; projet?: string; }
+
+interface Props {
+  /** métier ou prestation de la page d'origine, transmis avec la demande */
+  secteur?: string;
+  /** projet de référence (page d'une réalisation) */
+  projet?: string;
+}
 const { secteur = '', projet = '' } = Astro.props;
-const champs = [
-  { id: 'n-nom', name: 'nom', label: 'Nom', type: 'text', placeholder: 'Votre nom', required: true, auto: 'name' },
-  { id: 'n-mail', name: 'email', label: 'Email', type: 'email', placeholder: 'vous@entreprise.fr', required: true, auto: 'email' },
-  { id: 'n-tel', name: 'telephone', label: 'Téléphone (facultatif)', type: 'tel', placeholder: '06 12 34 56 78', required: false, auto: 'tel' },
-  { id: 'n-soc', name: 'societe', label: 'Société (facultatif)', type: 'text', placeholder: 'Votre entreprise', required: false, auto: 'organization' },
-];
+const metiers = [...secteurs.map((s) => s.nom), 'Autre activité'];
+const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · ${o.prix} €/mois` : o.nom })), { id: '', nom: 'Je ne sais pas' }];
 ---
-<section id="contact-section">
-  <div class="wrap cgrid">
-    <div class="glass cinfo rv">
-      <span class="lab">Votre projet commence ici</span>
-      <h2>Parlons de votre projet.<br /><span class="grad">Le devis est offert.</span></h2>
-      <p>Décrivez votre besoin. Nous revenons vers vous sous 24 h pour préciser le périmètre, le budget et le calendrier.</p>
-      <div class="crow"><span>Mail</span><a href={`mailto:${contact.email}`}>{contact.email}</a></div>
-      <div class="crow"><span>Téléphone</span><a href={`tel:${contact.telLien}`}>{contact.tel}</a></div>
-      <div class="crow"><span>Zone</span><span>{contact.zone}</span></div>
-      <p>Vous échangez directement avec Aurélien Branco, fondateur de Madaria.</p>
+
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="cbox rv">
+      <div class="cinfo">
+        <span class="lab">Devis gratuit</span>
+        <h2>Votre devis <span class="acc">sous 24&nbsp;h.</span></h2>
+        <p>Deux lignes sur votre activité suffisent. On vous rappelle pour préciser le périmètre, le budget et la date de mise en ligne.</p>
+        {(secteur || projet) && <p class="contexte">{projet ? `À propos du projet ${projet}` : `Votre demande : ${secteur}`}</p>}
+        <p class="contexte" id="form-contexte" hidden></p>
+        <div class="coord">
+          <a href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}<small>Ligne directe</small></a>
+          <a href={`mailto:${contact.email}`}><Icon name="mail" class="i" />{contact.email}<small>Réponse sous 24&nbsp;h</small></a>
+          <div><Icon name="pin" class="i" />Lyon, et à distance partout en France</div>
+        </div>
+      </div>
+
+      <form class="cform" id="form-devis" name="contact" method="POST" action="/merci/"
+        data-netlify="true" data-netlify-honeypot="bot-field" aria-label="Demande de devis"
+        data-projets={JSON.stringify(realisations.map((p) => ({ id: p.id, nom: p.nom })))}>
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="secteur" value={secteur} />
+        <input type="hidden" name="projet" value={projet} />
+        <p hidden aria-hidden="true"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+        <div class="f">
+          <label for="n-nom">Nom *</label>
+          <input id="n-nom" name="nom" type="text" placeholder="Votre nom" autocomplete="name" required maxlength="200" aria-describedby="fmsg" />
+        </div>
+        <div class="f">
+          <label for="n-joindre">Téléphone ou e-mail *</label>
+          <input id="n-joindre" name="coordonnees" type="text" placeholder="06 12 34 56 78" autocomplete="tel" required maxlength="200" aria-describedby="fmsg" />
+        </div>
+        <div class="f full">
+          <label for="n-activite">Votre activité</label>
+          <select id="n-activite" name="activite">
+            <option value="">Choisir votre métier</option>
+            {metiers.map((m) => <option selected={m === secteur}>{m}</option>)}
+          </select>
+        </div>
+        <fieldset class="choix f full">
+          <legend>Formule envisagée</legend>
+          {formules.map((o) => (
+            <label><input type="radio" name="offre" value={o.id} checked={o.id === ''} />{o.nom}</label>
+          ))}
+        </fieldset>
+        <div class="f full">
+          <label for="n-msg">Votre projet (facultatif)</label>
+          <textarea id="n-msg" name="message" placeholder="Ce que vous voulez sur votre site, une échéance…" maxlength="10000"></textarea>
+        </div>
+        <div class="f full">
+          <button type="submit" class="btn btn-p">Recevoir mon devis gratuit<Icon name="arrow" class="i" /></button>
+          <div class="fmsg" id="fmsg" role="status" aria-live="polite" aria-atomic="true"></div>
+        </div>
+        <p class="note f full">Sans engagement. Vos coordonnées servent uniquement à vous répondre. <a href="/confidentialite/">Vos données et vos droits</a></p>
+      </form>
     </div>
-    <form class="glass" id="contact" name="contact" method="POST" action="/merci/"
-      data-projets={JSON.stringify(realisations.map(p => ({ id: p.id, nom: p.nom })))} data-netlify="true" data-netlify-honeypot="bot-field" aria-labelledby="form-title">
-      <div class="f full">
-        <h2 id="form-title" class="form-title">Décrivez votre projet</h2>
-        <p class="form-help">Les champs marqués * sont obligatoires.</p>
-        <p class="form-context" id="form-project-context" hidden></p>
-        {(secteur || projet) && <p class="form-context">{projet ? `À propos du projet ${projet}` : `Votre métier : ${secteur}`}</p>}
-      </div>
-      <input type="hidden" name="form-name" value="contact" />
-      <input type="hidden" name="secteur" value={secteur} />
-      <input type="hidden" name="projet" value={projet} />
-      <p class="pot" hidden aria-hidden="true"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
-      {champs.map(c => <div class="f">
-        <label for={c.id}>{c.label}{c.required ? ' *' : ''}</label>
-        <input id={c.id} name={c.name} type={c.type} placeholder={c.placeholder} required={c.required}
-          autocomplete={c.auto} maxlength="200" aria-describedby="fmsg" />
-      </div>)}
-      <div class="f full">
-        <label for="n-offre">Offre envisagée (facultatif)</label>
-        <select id="n-offre" name="offre">
-          <option value="">À définir ensemble</option>
-          {offres.map(o => <option value={o.id}>{o.nom} — {o.prix}{o.unite ? ` ${o.unite}` : ''}</option>)}
-        </select>
-      </div>
-      <div class="f full">
-        <label for="n-bud">Budget (facultatif)</label>
-        <select id="n-bud" name="budget"><option value="">Choisir un budget</option>{budgets.map(b => <option>{b}</option>)}</select>
-      </div>
-      <div class="f full">
-        <label for="n-msg">Votre projet *</label>
-        <textarea id="n-msg" name="message" placeholder="Votre activité, ce que vous souhaitez créer et votre échéance…" required maxlength="10000" aria-describedby="fmsg"></textarea>
-      </div>
-      <div class="f full">
-        <p class="form-help" id="form-privacy">Madaria utilise ces informations pour répondre à votre demande et établir un devis. <a href="/confidentialite/">Utilisation des données et vos droits</a>.</p>
-        <button type="submit" class="btn btn-p">Envoyer ma demande de devis</button>
-        <div class="fmsg" id="fmsg" role="status" aria-live="polite" aria-atomic="true"></div>
-      </div>
-    </form>
   </div>
 </section>
+
 <script>
   const form = document.querySelector<HTMLFormElement>('form[name="contact"]');
   if (form) {
     const msg = form.querySelector<HTMLElement>('#fmsg')!;
-    const offre = form.querySelector<HTMLSelectElement>('#n-offre')!;
-    const selectionner = (value: string | null) => {
-      if (value && Array.from(offre.options).some(o => o.value === value)) offre.value = value;
+    const radio = (valeur: string | null) =>
+      valeur === null ? null : form.querySelector<HTMLInputElement>(`input[name="offre"][value="${CSS.escape(valeur)}"]`);
+    const selectionner = (valeur: string | null) => {
+      const r = radio(valeur);
+      if (r) r.checked = true;
+      return r;
     };
+
+    // ?offre=visibilite et ?projet=kami : la demande arrive déjà renseignée
     const params = new URLSearchParams(location.search);
     selectionner(params.get('offre'));
-    const projet = params.get('projet');
-    const references: {id: string; nom: string}[] = JSON.parse(form.dataset.projets ?? '[]');
-    const reference = references.find(p => p.id === projet);
+    const references: { id: string; nom: string }[] = JSON.parse(form.dataset.projets ?? '[]');
+    const reference = references.find((p) => p.id === params.get('projet'));
     if (reference) {
       (form.elements.namedItem('projet') as HTMLInputElement).value = reference.nom;
-      const contexte = form.querySelector<HTMLElement>('#form-project-context')!;
-      contexte.hidden = false;
-      contexte.textContent = `Projet de référence : ${reference.nom}`;
+      const contexte = document.getElementById('form-contexte');
+      if (contexte) {
+        contexte.hidden = false;
+        contexte.textContent = `Projet de référence : ${reference.nom}`;
+      }
     }
-    document.querySelectorAll<HTMLAnchorElement>('a[data-offre]').forEach(a => a.addEventListener('click', e => {
-      e.preventDefault();
-      selectionner(a.dataset.offre ?? null);
-      const url = new URL(location.href);
-      url.searchParams.set('offre', offre.value);
-      url.hash = 'contact';
-      history.replaceState(null, '', url);
-      form.scrollIntoView({ behavior: 'instant', block: 'start' });
-      offre.focus({ preventScroll: true });
-    }));
-    const dire = (text: string, ok: boolean) => {
+
+    // boutons « Choisir Vitrine »… : formule cochée, sans recharger la page
+    document.querySelectorAll<HTMLAnchorElement>('a[data-offre]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const r = selectionner(a.dataset.offre ?? null);
+        const url = new URL(location.href);
+        url.searchParams.set('offre', a.dataset.offre ?? '');
+        url.hash = 'contact';
+        history.replaceState(null, '', url);
+        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        r?.focus({ preventScroll: true });
+      }),
+    );
+
+    const dire = (texte: string, ok: boolean) => {
       msg.dataset.state = ok ? 'ok' : 'error';
-      msg.textContent = text;
+      msg.textContent = texte;
     };
-    form.addEventListener('invalid', e => {
-      const input = e.target as HTMLInputElement;
-      input.setAttribute('aria-invalid', 'true');
+    form.addEventListener('invalid', (e) => {
+      (e.target as HTMLElement).setAttribute('aria-invalid', 'true');
       dire('Vérifiez les champs signalés avant d’envoyer votre demande.', false);
     }, true);
-    form.addEventListener('input', e => {
-      const input = e.target as HTMLInputElement;
-      input.removeAttribute('aria-invalid');
-      input.setCustomValidity?.('');
+    form.addEventListener('input', (e) => {
+      const champ = e.target as HTMLInputElement;
+      champ.removeAttribute('aria-invalid');
+      champ.setCustomValidity?.('');
       if (msg.dataset.state === 'error') msg.textContent = '';
     });
-    form.addEventListener('submit', async e => {
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      for (const name of ['nom', 'message']) {
-        const field = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement;
-        if (!field.value.trim()) {
-          field.setCustomValidity('Veuillez renseigner ce champ.');
-          field.reportValidity();
-          field.focus();
+      for (const nom of ['nom', 'coordonnees']) {
+        const champ = form.elements.namedItem(nom) as HTMLInputElement;
+        if (!champ.value.trim()) {
+          champ.setCustomValidity('Veuillez renseigner ce champ.');
+          champ.reportValidity();
+          champ.focus();
           return;
         }
       }
@@ -121,19 +151,19 @@ const champs = [
         dire('Aperçu local : aucune demande n’est envoyée. La réception se vérifie sur Netlify après déploiement.', false);
         return;
       }
-      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
-      button.disabled = true;
+      const bouton = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      bouton.disabled = true;
       form.setAttribute('aria-busy', 'true');
       dire('Envoi en cours…', true);
       try {
-        const body = new URLSearchParams();
-        new FormData(form).forEach((value, key) => body.append(key, String(value)));
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+        const corps = new URLSearchParams();
+        new FormData(form).forEach((valeur, cle) => corps.append(cle, String(valeur)));
+        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: corps });
         if (!res.ok) throw new Error(String(res.status));
         location.assign('/merci/');
       } catch {
         dire('L’envoi a échoué. Votre texte est conservé. Réessayez ou écrivez à contact@madaria.fr.', false);
-        button.disabled = false;
+        bouton.disabled = false;
         form.removeAttribute('aria-busy');
       }
     });

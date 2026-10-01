@@ -29,20 +29,24 @@ for (const [file, html] of pages) {
   }
 }
 const home = pages.get(path.join(root,'index.html'));
-// Séquence du hero (HeroSequence.astro) : captures WebP en lazy, rien de préchargé
-const sequence = home.match(/<div class="mockwrap[^"]*\bsq\b[\s\S]*?<\/script>/)?.[0];
-assert.ok(sequence,'Séquence du hero présente');
-assert.ok(!/<video\b/.test(sequence),'Aucune vidéo dans le hero');
-const captures = [...sequence.matchAll(/<img\b[^>]*>/g)].map(([tag]) => tag);
-assert.ok(captures.length >= 3,'Captures de la séquence présentes');
-for (const tag of captures) {
-  assert.equal(attr(tag,'loading'),'lazy','Capture de la séquence en lazy');
+// Mur du haut de page (Mur.astro) : vignettes WebP optimisées, aucune vidéo
+const mur = home.match(/<div class="mur"[\s\S]*?<\/script>/)?.[0];
+assert.ok(mur,'Mur de réalisations présent');
+assert.ok(!/<video\b/.test(mur),'Aucune vidéo dans le mur');
+const tuiles = [...mur.matchAll(/<img\b[^>]*>/g)].map(([tag]) => tag);
+assert.ok(tuiles.length >= 20,'Tuiles du mur présentes');
+for (const tag of tuiles) {
+  assert.equal(attr(tag,'loading'),'lazy','Tuile du mur en lazy');
   for (const src of (attr(tag,'srcset') || '').split(',').map(s => s.trim().split(' ')[0]).filter(Boolean))
-    assert.ok(src.endsWith('.webp') && fs.existsSync(path.join(root,src)),`Capture disponible ${src}`);
+    assert.ok(src.endsWith('.webp') && fs.existsSync(path.join(root,src)),`Tuile disponible ${src}`);
 }
 assert.ok(![...home.matchAll(/<link\b[^>]*>/g)].some(([tag]) => attr(tag,'rel') === 'preload' && attr(tag,'as') === 'image'),'Aucune image préchargée');
-assert.match(home,/<option value="">Choisir un budget<\/option>/);
+// formulaire de devis : champs requis, formules cochables depuis les offres
+assert.match(home,/name="contact"[^>]*data-netlify="true"|data-netlify="true"[^>]*name="contact"/,'Formulaire Netlify');
+assert.match(home,/<input[^>]*name="nom"[^>]*required/,'Nom requis');
+assert.match(home,/<input[^>]*name="coordonnees"[^>]*required/,'Coordonnées requises');
 assert.match(home,/data-offre="vitrine"/);
+assert.match(home,/name="offre" value="vitrine"/);
 assert.ok(!home.includes('novalidate'),'Validation native active');
 for (const file of ['merci/index.html','404.html']) assert.match(pages.get(path.join(root,file)),/content="noindex, follow"/);
 const sitemap = fs.readFileSync(path.join(root,'sitemap-0.xml'),'utf8');
@@ -58,4 +62,4 @@ for (const [route,field,value] of [
  assert.ok(sitemap.includes(`https://madaria.fr/${route}/`),`${route}: sitemap`);
 }
 assert.ok(!fs.existsSync(path.join(root,'assets/chrome-capture-2026-09-06.gif')),'GIF archivé hors publication');
-console.log(`${files.length} pages vérifiées, ${links} liens et médias internes valides. SEO, contextes des formulaires, sitemap et séquence du hero : OK.`);
+console.log(`${files.length} pages vérifiées, ${links} liens et médias internes valides. SEO, formulaires, sitemap et mur du haut de page : OK.`);

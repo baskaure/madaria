@@ -1,0 +1,17 @@
+---
+/** Fil d'Ariane : l'accueil, puis les étapes ; la dernière est la page courante. */
+interface Props {
+  etapes: { label: string; href?: string }[];
+}
+const { etapes } = Astro.props;
+---
+
+<nav class="ariane" aria-label="Fil d’Ariane">
+  <a href="/">Accueil</a>
+  {etapes.map((e) => (
+    <>
+      <span aria-hidden="true">/</span>
+      {e.href ? <a href={e.href}>{e.label}</a> : <span aria-current="page">{e.label}</span>}
+    </>
+  ))}
+</nav>

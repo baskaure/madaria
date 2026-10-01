@@ -1,0 +1,60 @@
+---
+/**
+ * Mur de réalisations du haut de page : rangées de captures qui défilent en
+ * biais, en sens alternés. Vues bureau de tous les projets, avec quelques
+ * vues téléphone glissées dedans pour qu'on reconnaisse des sites.
+ * Décoratif (aria-hidden) : le lien « voir les projets » porte l'info.
+ */
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { realisations } from '../data/realisations';
+import { capture, existe } from '../lib/projets';
+
+type Tuile = { id: string; tel: boolean };
+const bureau = realisations.map((r) => r.id);
+const tel = realisations.filter((r) => existe(r.id, 'mobile')).map((r) => r.id);
+
+/** Une rangée : sept vues bureau à partir de `debut`, des vues téléphone aux positions données. */
+const rangee = (debut: number, posTel: number[]): Tuile[] => {
+  const suite: Tuile[] = Array.from({ length: 7 }, (_, k) => ({ id: bureau[(debut + k) % bureau.length], tel: false }));
+  posTel.forEach((pos, k) => suite.splice(pos, 0, { id: tel[(debut + k) % tel.length], tel: true }));
+  return suite;
+};
+// sens alternés, durées toutes différentes pour que les rangées ne se calent jamais
+const rangees = [
+  { t: rangee(0, [2, 6]), sens: '', d: 90 },
+  { t: rangee(3, [4]), sens: 'd', d: 75 },
+  { t: rangee(6, [1, 5]), sens: '', d: 105 },
+  { t: rangee(9, [3]), sens: 'd', d: 82 },
+  { t: rangee(2, [5]), sens: '', d: 96 },
+  { t: rangee(5, [2, 6]), sens: 'd', d: 88 },
+];
+---
+
+<div class="mur" id="mur">
+  <div class="mur-rot" aria-hidden="true">
+    {rangees.map((r) => (
+      <div class:list={['mrow', r.sens]} style={`--d: ${r.d}s`}>
+        {[0, 1].map(() =>
+          r.t.map((t) => (
+            <div class:list={['tuile', { tel: t.tel }]}>
+              {t.tel ? (
+                <Image src={capture(t.id, 'mobile')} widths={[120, 240]} sizes="(max-width: 700px) 60px, 95px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
+              ) : (
+                <Image src={capture(t.id, 'thumb')} widths={[320, 640]} sizes="(max-width: 700px) 180px, 304px" format="webp" quality={70} alt="" loading="lazy" decoding="async" />
+              )}
+            </div>
+          )),
+        )}
+      </div>
+    ))}
+  </div>
+  <a class="mur-lien" href="/realisations/"><b>{realisations.length} sites</b> livrés par Madaria · voir les projets<Icon name="arrow" class="i" /></a>
+</div>
+
+<script>
+  // le mur ne tourne que lorsqu'il est à l'écran
+  const mur = document.getElementById('mur');
+  if (mur && 'IntersectionObserver' in window)
+    new IntersectionObserver(([e]) => mur.classList.toggle('pause', !e.isIntersecting)).observe(mur);
+</script>

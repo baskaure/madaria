@@ -1,35 +1,30 @@
 ---
-import HeroSequence from './HeroSequence.astro';
-import { prixEntree, achatEntree } from '../data/offres';
+import Icon from './Icon.astro';
+import Mur from './Mur.astro';
+import { offres } from '../data/offres';
 
-// Première ligne du titre découpée en mots pour l'entrée en cascade (--i :
-// rang du mot). La seconde reste d'un bloc : son dégradé en `background-clip`
-// doit couvrir toute la ligne.
-const ligne1 = 'Votre site internet en ligne en 7 jours.'.split(' ');
+const entree = offres[0];
 ---
 
-<div class="wrap hero">
-  <div class="heroglow"></div>
-
-  <div class="badge">
-    <i></i><span>Sites, automatisations et outils métier</span>
+<section class="hero">
+  <Mur />
+  <div class="wrap">
+    <div class="htxt">
+      <div class="pill"><b>{entree.prix}&nbsp;€/mois</b>Création incluse, rien à payer au départ</div>
+      <h1>Votre site internet en ligne en 7&nbsp;jours. <span class="acc">Pas dans trois mois.</span></h1>
+      <p class="lead">
+        Madaria conçoit vos <strong>sites internet</strong>, <strong>automatisations</strong> et <strong>outils métier</strong>.
+        Un interlocuteur direct, du premier échange à la mise en ligne.
+      </p>
+      <div class="hcta" data-seuil>
+        <a class="btn btn-p" href="#contact">Recevoir mon devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
+        <a class="btn btn-g" href="#realisations">Voir les réalisations</a>
+      </div>
+      <div class="preuves">
+        <span><Icon name="check" class="i" />Maquette validée avant le code</span>
+        <span><Icon name="check" class="i" />Nom de domaine à votre nom</span>
+        <span><Icon name="check" class="i" />Basé à Lyon, partout en France</span>
+      </div>
+    </div>
   </div>
-
-  <h1>
-    {ligne1.map((mot, i) => <><span class="mot" style={`--i:${i}`}>{mot}</span>{' '}</>)}<br />
-    <span class="grad mot" style={`--i:${ligne1.length + 1}`}>Pas dans trois mois.</span>
-  </h1>
-
-  <p class="lead">
-    Madaria conçoit vos <b>sites internet</b>, <b>automatisations</b> et <b>outils métier</b>.
-    Un interlocuteur direct, du premier échange à la mise en ligne.
-  </p>
-
-  <div class="hcta">
-    <a href="#contact" class="btn btn-p">Devis en 24 h</a>
-    <a href="#realisations" class="btn btn-g">Voir les réalisations</a>
-  </div>
-
-  <p class="hero-note">Site vitrine dès {prixEntree}, création incluse · ou {achatEntree} en une fois.</p>
-  <HeroSequence />
-</div>
+</section>

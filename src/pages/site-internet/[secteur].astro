@@ -1,16 +1,15 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Background from '../../components/Background.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import Ariane from '../../components/Ariane.astro';
 import Icon from '../../components/Icon.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import CarteProjet from '../../components/CarteProjet.astro';
 import Contact from '../../components/Contact.astro';
 import OfferTerms from '../../components/OfferTerms.astro';
-import { realisations } from '../../data/realisations';
-import { secteurs } from '../../data/secteurs';
 import PlanCard from '../../components/PlanCard.astro';
+import { secteurs } from '../../data/secteurs';
 import { offres, offresLd } from '../../data/offres';
-import { contact } from '../../data/site';
+import { projet } from '../../lib/projets';
 
 export function getStaticPaths() {
   return secteurs.map((s) => ({ params: { secteur: s.slug }, props: { s } }));
@@ -56,99 +55,96 @@ const ld = {
 };
 
 const projetsMetier: Record<string, string[]> = { restaurant: ['kami', 'munda-kfe'], perceur: ['aurore-piercing'], 'btp-artisan': ['recharge-clim'] };
-const exemples = realisations.filter(r => (projetsMetier[s.slug] ?? []).includes(r.id));
+const exemples = (projetsMetier[s.slug] ?? []).map(projet);
 const autres = secteurs.filter((x) => x.slug !== s.slug);
 ---
 
 <Base title={s.metaTitle} description={s.metaDesc}>
-  <Background />
-  <Header />
-
-  <main id="contenu" class="metier">
+  <section class="ph">
     <div class="wrap">
-      <nav class="ariane" aria-label="Fil d'Ariane">
-        <a href="/">Accueil</a> <span>/</span> <span>{s.nom}</span>
-      </nav>
-
-      <div class="metier-hero">
-        <div class="ico-grand"><Icon name={s.icon} /></div>
-        <h1>{s.h1} <span class="grad">à Lyon et partout en France</span></h1>
-        {s.intro.map((p) => <p class="chapo">{p}</p>)}
-        <div class="hcta">
-          <a href="#contact" class="btn btn-p">Devis en 24 h</a>
-          <a href="#tarifs" class="btn btn-g">Voir les tarifs</a>
-        </div>
+      <Ariane etapes={[{ label: s.nom }]} />
+      <div class="ico" aria-hidden="true"><Icon name={s.icon} /></div>
+      <h1>{s.h1} <span class="acc">à Lyon et partout en France.</span></h1>
+      {s.intro.map((p) => <p class="chapo">{p}</p>)}
+      <div class="hcta" data-seuil>
+        <a href="#contact" class="btn btn-p">Devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
+        <a href="#tarifs" class="btn btn-g">Voir les tarifs</a>
       </div>
-
-      <section class="bloc">
-        <h2>Ce dont un {s.singulier} a <span class="grad">vraiment besoin</span></h2>
-        <div class="enjeux">
-          {s.enjeux.map((e, i) => (
-            <div class="glass enjeu rv">
-              <div class="num">{String(i + 1).padStart(2, '0')}</div>
-              <h3>{e.titre}</h3>
-              <p>{e.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section class="bloc">
-        <div class="split">
-          <div>
-            <h2>Ce que nous <span class="grad">livrons</span></h2>
-            <p class="chapo">
-              Chaque site est construit sur mesure, sans thème acheté ni constructeur générique, et
-              livré selon le calendrier convenu. Pour une vitrine, le planning de sept jours démarre après cadrage et réception des éléments nécessaires. La maquette est incluse dans la prestation : vous validez
-              le design avant la moindre ligne de code.
-            </p>
-            <div class="hcta">
-              <a href="#contact" class="btn btn-p">Demander un devis</a>
-            </div>
-          </div>
-          <ul class="glass livrables rv">
-            {s.livrables.map((l) => <li>{l}</li>)}
-          </ul>
-        </div>
-      </section>
-
-      {exemples.length > 0 && <section class="bloc"><h2>Des projets <span class="grad">dans votre univers</span></h2><div class="case-grid">{exemples.map(p => <a class="case-card" href={`/realisations/${p.id}/`}><img src={`/realisations/shots/${p.id}-thumb.webp`} width="640" height="400" loading="lazy" alt={`Aperçu de ${p.nom}`} /><h3>{p.nom}</h3><p>{p.accroche}</p><span class="text-link">Découvrir le projet <Icon name="arrow" class="i" /></span></a>)}</div></section>}
-      <section class="bloc" id="tarifs">
-        <h2>Combien coûte un site internet pour{' '}
-          <span class="grad">{s.singulier}</span> ?</h2>
-        <div class="plans deux rv">
-          {offresPage.map((o) => <PlanCard o={o} href={`?offre=${o.id}#contact`} />)}
-        </div>
-        <OfferTerms />
-      </section>
-
-      <section class="bloc">
-        <h2>Questions fréquentes</h2>
-        <div class="faq rv">
-          {s.faq.map((q, i) => (
-            <details open={i === 0}>
-              <summary>{q.q}<span class="pm">+</span></summary>
-              <p>{q.r}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <section class="bloc">
-        <h2>Autres métiers accompagnés</h2>
-        <div class="liens-metiers">
-          {autres.map((a) => (
-            <a href={`/site-internet/${a.slug}/`}>
-              <Icon name={a.icon} />{a.nom}
-            </a>
-          ))}
-        </div>
-      </section>
     </div>
-    <Contact secteur={s.nom} />
-  </main>
+  </section>
 
-  <Footer />
+  <section class="sec">
+    <div class="wrap">
+      <SectionHead label="Les enjeux">
+        <Fragment slot="titre">Ce dont un {s.singulier} a <span class="acc">vraiment besoin.</span></Fragment>
+      </SectionHead>
+      <div class="points deux rv">
+        {s.enjeux.map((e, i) => (
+          <article class="point"><span class="num">{String(i + 1).padStart(2, '0')}</span><h3>{e.titre}</h3><p>{e.text}</p></article>
+        ))}
+      </div>
+    </div>
+  </section>
 
+  <section class="sec">
+    <div class="wrap split">
+      <div class="txt rv">
+        <span class="lab">Le périmètre</span>
+        <h2>Ce que nous <span class="acc">livrons.</span></h2>
+        <p>
+          Chaque site est construit sur mesure, sans thème acheté ni constructeur générique. Pour une vitrine,
+          le planning de sept jours démarre après cadrage et réception des éléments nécessaires. La maquette est
+          incluse : vous validez le design avant la moindre ligne de code.
+        </p>
+        <div class="hcta"><a href="#contact" class="btn btn-p">Demander un devis</a></div>
+      </div>
+      <ul class="coches rv">{s.livrables.map((l) => <li><Icon name="check" class="i" />{l}</li>)}</ul>
+    </div>
+  </section>
+
+  {exemples.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <SectionHead label="Réalisations">
+          <Fragment slot="titre">Des projets <span class="acc">dans votre univers.</span></Fragment>
+          <a class="tlink" href="/realisations/">Toutes les réalisations<Icon name="arrow" class="i" /></a>
+        </SectionHead>
+        <div class="projets">{exemples.map((p) => <CarteProjet p={p} />)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec" id="tarifs">
+    <div class="wrap">
+      <SectionHead label="Tarifs">
+        <Fragment slot="titre">Combien coûte un site internet pour {s.singulier}&nbsp;?</Fragment>
+        <p>Création incluse dans l'abonnement, ou prix d'achat en une fois. Rien à payer au départ.</p>
+      </SectionHead>
+      <div class="plans deux rv">{offresPage.map((o) => <PlanCard o={o} href={`?offre=${o.id}#contact`} />)}</div>
+      <OfferTerms />
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap fsplit">
+      <div class="intro rv"><span class="lab">Questions</span><h2>Questions fréquentes.</h2><p>Une réponse manque ? Écrivez-nous, vous l'aurez sous 24&nbsp;h.</p></div>
+      <div class="faq rv">
+        {s.faq.map((q, i) => (
+          <details open={i === 0}><summary>{q.q}<Icon name="plus" class="i" /></summary><p>{q.r}</p></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <span class="lab">Autres métiers accompagnés</span>
+      <div class="pastilles">
+        {autres.map((a) => <a href={`/site-internet/${a.slug}/`}><span class="ico"><Icon name={a.icon} /></span>{a.nom}</a>)}
+      </div>
+    </div>
+  </section>
+
+  <Contact secteur={s.nom} />
   <script type="application/ld+json" set:html={JSON.stringify(ld)} />
 </Base>

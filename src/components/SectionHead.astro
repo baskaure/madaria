@@ -1,16 +1,18 @@
 ---
+/**
+ * En-tête de section : étiquette et titre à gauche, texte ou lien à droite
+ * (slot par défaut, posé tel quel : <p> ou <a class="tlink">).
+ */
 interface Props {
-  /** Petite étiquette au-dessus du titre */
   label: string;
-  /** `gauche` : titre à gauche, paragraphe en colonne droite (défaut : centré) */
-  align?: 'centre' | 'gauche';
 }
-
-const { label, align = 'centre' } = Astro.props;
+const { label } = Astro.props;
 ---
 
-<div class:list={['shead', 'rv', { gauche: align === 'gauche' }]}>
-  <div class="lab">{label}</div>
-  <h2><slot name="titre" /></h2>
-  {Astro.slots.has('default') && <p><slot /></p>}
+<div class="shead rv">
+  <div>
+    <span class="lab">{label}</span>
+    <h2><slot name="titre" /></h2>
+  </div>
+  <slot />
 </div>

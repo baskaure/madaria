@@ -1,22 +1,20 @@
 ---
+import Icon from './Icon.astro';
 import { questions } from '../data/faq';
 ---
 
-<section id="faq">
+<section class="sec" id="faq">
   <div class="wrap fsplit">
-    <div class="fintro rv">
-      <div class="lab">FAQ</div>
-      <h2>
-        Tout ce que vous vous demandez <span class="grad">avant</span> de nous écrire.
-      </h2>
-      <p>Une réponse manque ? Écrivez-nous, vous l'aurez sous 24 h.</p>
+    <div class="intro rv">
+      <span class="lab">FAQ</span>
+      <h2>Les questions qu'on nous pose avant de signer.</h2>
+      <p>Une réponse manque ? Écrivez-nous, vous l'aurez sous 24&nbsp;h.</p>
       <a href="#contact" class="btn btn-g">Poser une question</a>
     </div>
-
     <div class="faq rv">
       {questions.map((item, i) => (
         <details open={i === 0}>
-          <summary>{item.q}<span class="pm">+</span></summary>
+          <summary>{item.q}<Icon name="plus" class="i" /></summary>
           <p>{item.r}</p>
         </details>
       ))}

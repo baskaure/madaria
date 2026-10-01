@@ -1,0 +1,51 @@
+---
+/**
+ * Carte d'une réalisation : cadre de navigateur, puis nom, secteur et
+ * accroche. Au survol, le défilement filmé joue s'il existe ; sinon la page
+ * entière défile dans le cadre. Sur écran tactile, même chose quand la carte
+ * passe devant les yeux (scripts/projets.ts). Un clic ouvre la page du projet.
+ */
+import { Image } from 'astro:assets';
+import type { Realisation } from '../data/realisations';
+import { aVideo, capture, existe, hote, shot } from '../lib/projets';
+
+interface Props {
+  p: Realisation;
+  /** niveau du titre : h3 sous un h2 de section, h2 sur la page Réalisations */
+  titre?: 'h2' | 'h3';
+}
+const { p, titre: Titre = 'h3' } = Astro.props;
+const complet = existe(p.id, 'full');
+const video = aVideo(p.id);
+---
+
+<article class="projet rv" data-secteur={p.secteur}>
+  <a class="browser" href={`/realisations/${p.id}/`} aria-label={`Découvrir le projet ${p.nom}`}>
+    <div class="bbar" aria-hidden="true"><i></i><i></i><i></i><span>{hote(p.url) || p.nom}</span></div>
+    <div class:list={['ecran', { fixe: !complet, 'a-video': video }]}>
+      <Image
+        class="pleine"
+        src={capture(p.id, 'thumb')}
+        widths={[320, 480, 640]}
+        sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1100px) calc((100vw - 104px) / 2), 368px"
+        format="webp"
+        quality={85}
+        data-full={complet ? shot(p.id, 'full') : undefined}
+        alt={`Capture du site ${p.nom}`}
+        loading="lazy"
+        decoding="async"
+      />
+      {video && <video class="defile" data-video={`/realisations/shots/${p.id}`} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>}
+    </div>
+  </a>
+  <div class="pmeta">
+    <Titre><a href={`/realisations/${p.id}/`}>{p.nom}</a></Titre>
+    <span>{p.secteur} · {p.ville}</span>
+  </div>
+  <p>{p.accroche}</p>
+</article>
+
+<script>
+  import { initProjets } from '../scripts/projets';
+  initProjets();
+</script>

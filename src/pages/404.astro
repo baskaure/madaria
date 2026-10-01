@@ -1,43 +1,26 @@
 ---
-import Icon from '../components/Icon.astro';
 import Base from '../layouts/Base.astro';
-import Background from '../components/Background.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
 import { secteurs } from '../data/secteurs';
 
 // Netlify sert dist/404.html pour toute URL inconnue, avec un vrai statut 404.
 ---
 
-<Base noindex title="Page introuvable | Madaria" description="Cette page n'existe pas ou a été déplacée.">
-  <Background />
-  <Header />
-
-  <main id="contenu" class="legal">
+<Base noindex title="Page introuvable | Madaria" description="Cette page n'existe pas ou a été déplacée." barre="/#contact">
+  <section class="ph">
     <div class="wrap">
-      <a class="retour" href="/"><Icon name="arrowLeft" class="i" /> Retour à l'accueil</a>
-      <h1>Page introuvable</h1>
-      <p class="maj">Erreur 404</p>
-      <div class="glass corps">
-        <p>
-          L'adresse que vous avez suivie ne mène nulle part : la page a été déplacée, ou le lien
-          comportait une erreur.
-        </p>
-        <h2>Vous cherchiez peut-être</h2>
-        <ul>
-          <li><a href="/">L'accueil</a> — sites internet, automatisations, outils métier</li>
-          <li><a href="/#offres">Les offres et tarifs</a></li>
-          <li><a href="/#contact">Demander un devis</a></li>
-        </ul>
-        <h2>Un site pour votre métier</h2>
-        <ul>
-          {secteurs.map((s) => (
-            <li><a href={`/site-internet/${s.slug}/`}>{s.nom}</a></li>
-          ))}
-        </ul>
+      <span class="lab">Erreur 404</span>
+      <h1>Cette page <span class="acc">n'existe pas.</span></h1>
+      <p class="chapo">L'adresse ne mène nulle part : la page a été déplacée, ou le lien comportait une erreur.</p>
+      <div class="hcta"><a class="btn btn-p" href="/">Retour à l'accueil<Icon name="arrow" class="i" /></a><a class="btn btn-g" href="/#contact">Demander un devis</a></div>
+    </div>
+  </section>
+  <section class="sec court">
+    <div class="wrap">
+      <span class="lab">Un site pour votre métier</span>
+      <div class="pastilles">
+        {secteurs.map((s) => <a href={`/site-internet/${s.slug}/`}><span class="ico"><Icon name={s.icon} /></span>{s.nom}</a>)}
       </div>
     </div>
-  </main>
-
-  <Footer />
+  </section>
 </Base>

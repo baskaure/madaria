@@ -1,29 +1,24 @@
 ---
-/**
- * Carte d'une formule. Partagée par l'accueil, les pages métier et les pages
- * service : les trois affichent les offres exactement de la même façon.
- */
+/** Colonne d'une formule, dans le bloc à filets des offres. */
 import Icon from './Icon.astro';
 import PrixOffre from './PrixOffre.astro';
 import type { Offre } from '../data/offres';
 
 interface Props {
   o: Offre;
-  /** lien du bouton : `#contact` de la page courante ou de l'accueil */
+  /** lien du bouton : `#contact` de la page courante */
   href: string;
 }
 const { o, href } = Astro.props;
 ---
 
 <article class:list={['plan', { feat: o.feat }]}>
-  <div class="plan-tete">
+  <div class="ptete">
     <h3>{o.nom}</h3>
-    {o.badge && <span class="plan-badge">{o.badge}</span>}
+    {o.badge && <span class="pbadge">{o.badge}</span>}
   </div>
   <p class="d">{o.accroche}</p>
   <PrixOffre o={o} />
-  <a href={href} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>
-    {o.cta} <Icon name="arrow" class="i" />
-  </a>
+  <a href={href} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}<Icon name="arrow" class="i" /></a>
   <ul>{o.inclus.map((i) => <li><Icon name="check" class="i" />{i}</li>)}</ul>
 </article>

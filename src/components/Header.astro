@@ -6,20 +6,15 @@ import { nav, contact } from '../data/site';
 <!-- Lien d'évitement : invisible tant qu'il n'a pas le focus clavier -->
 <a class="skip" href="#contenu">Aller au contenu</a>
 
-<header>
-  <nav class="nav" aria-label="Navigation principale">
-    <a class="brand" href="/#top">
-      <Logo />
-      MADARIA
-    </a>
-
-    <div class="links">
+<header class="sh">
+  <nav class="sh-nav" aria-label="Navigation principale">
+    <a class="sh-brand" href="/#top"><Logo />MADARIA</a>
+    <div class="sh-links">
       {nav.map((item) => <a href={item.href}>{item.label}</a>)}
     </div>
-
-    <div class="nav-actions">
-      <a href="/#contact" class="btn btn-p">Devis en 24 h</a>
-      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
+    <div class="sh-actions">
+      <a href="/#contact" class="sh-btn">Devis en 24&nbsp;h</a>
+      <button class="sh-burger" id="burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu">
         <i></i><i></i>
       </button>
     </div>
@@ -30,9 +25,8 @@ import { nav, contact } from '../data/site';
   <nav class="mmenu-links" aria-label="Navigation mobile">
     {nav.map((item) => <a href={item.href}>{item.label}</a>)}
   </nav>
-
   <div class="mmenu-bas">
-    <a href="/#contact" class="btn btn-p">Demander un devis</a>
+    <a href="/#contact" class="sh-btn">Demander un devis</a>
     <div class="mmenu-coord">
       <a href={`mailto:${contact.email}`}>{contact.email}</a>
       <a href={`tel:${contact.telLien}`}>{contact.tel}</a>
@@ -44,7 +38,7 @@ import { nav, contact } from '../data/site';
   const burger = document.getElementById('burger');
   const menu = document.getElementById('mmenu');
   if (burger && menu) {
-    const background = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip'));
+    const background = Array.from(document.querySelectorAll<HTMLElement>('main, footer, .skip, .barre'));
     const setOpen = (open: boolean, restore = true) => {
       menu.classList.toggle('open', open);
       burger.classList.toggle('open', open);
@@ -70,7 +64,7 @@ import { nav, contact } from '../data/site';
       if (e.matches) setOpen(false, false);
     });
   }
-  const header = document.querySelector('header');
+  const header = document.querySelector('header.sh');
   const sentinel = document.getElementById('nav-sentinel');
   if (header && sentinel) new IntersectionObserver(entries => {
     header.classList.toggle('scrolled', !entries[0]?.isIntersecting);

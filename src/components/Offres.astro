@@ -5,16 +5,15 @@ import PlanCard from './PlanCard.astro';
 import { offres, ENGAGEMENT_MOIS } from '../data/offres';
 ---
 
-<section id="offres">
+<section class="sec" id="offres">
   <div class="wrap">
     <SectionHead label="Offres">
-      <Fragment slot="titre">
-        Votre site internet dès {`${offres[0].prix}\u00a0€\u00a0par\u00a0mois`},<br /><span class="grad">création incluse</span>.
-      </Fragment>
-      Rien à payer au départ : la création, l'hébergement et les mises à jour sont compris dans l'abonnement.
-      Engagement {ENGAGEMENT_MOIS} mois, puis résiliable à tout moment. Vous préférez payer en une fois ? Le prix d'achat est affiché.
+      <Fragment slot="titre">Votre site dès {offres[0].prix}&nbsp;€ par mois, création incluse.</Fragment>
+      <p>
+        Rien à payer au départ : création, hébergement et mises à jour sont dans l'abonnement.
+        Engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.
+      </p>
     </SectionHead>
-
     <div class="plans rv">
       {offres.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
     </div>

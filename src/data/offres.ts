@@ -12,6 +12,8 @@ export type Offre = {
   /** offre mise en avant */
   feat?: boolean;
   badge?: string;
+  /** ligne sous le prix quand il n'y a pas de prix d'achat */
+  note?: string;
 };
 
 /**
@@ -49,7 +51,7 @@ export const offres: Offre[] = [
     prix: '79',
     unite: '€ HT/mois',
     achat: '1 490',
-    badge: 'Pour développer votre visibilité',
+    badge: 'Recommandé',
     accroche: 'Le site complet, pensé pour être trouvé sur Google et dans les moteurs de réponse IA.',
     inclus: [
       'Tout Vitrine, avec pages et blog définis au devis',
@@ -67,6 +69,7 @@ export const offres: Offre[] = [
     id: 'sur-mesure',
     nom: 'Sur-mesure',
     prix: 'Sur devis',
+    note: 'Chiffré sous 24 h après un appel',
     accroche: "Site complet et back-office : espace client, base de données, automatisations métier.",
     inclus: [
       'Maquette incluse, validée avant développement',

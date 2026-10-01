@@ -1,0 +1,36 @@
+---
+/** Avis Google, présentés comme sur la fiche : logo, étoiles, avatar à initiale. */
+import SectionHead from './SectionHead.astro';
+import GoogleG from './GoogleG.astro';
+import Etoiles from './Etoiles.astro';
+import { avis, noteGoogle } from '../data/avis';
+import { contact } from '../data/site';
+---
+
+<section class="sec" id="avis">
+  <div class="wrap">
+    <SectionHead label="Avis Google">
+      <Fragment slot="titre">Ce que les clients disent après la mise en ligne.</Fragment>
+      <div class="gnote">
+        <GoogleG />
+        <div><b>{noteGoogle}</b><small>Note moyenne sur Google</small></div>
+        <Etoiles />
+        <a href={contact.google} target="_blank" rel="noopener noreferrer">Voir les avis</a>
+      </div>
+    </SectionHead>
+    <div class="avis">
+      {avis.map((a) => (
+        <figure class="gavis rv">
+          <div class="gtete">
+            <span class="gav" style={`background:${a.couleur}`} aria-hidden="true">{a.nom.charAt(0).toUpperCase()}</span>
+            <div><b>{a.nom}</b><small>Avis de Google</small></div>
+            <GoogleG />
+          </div>
+          <div class="gligne"><Etoiles /><span>5/5 · {a.date}</span></div>
+          <blockquote>{a.texte.map((t) => <p>{t}</p>)}</blockquote>
+          <p class="gvisite">{a.visite}</p>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,12 +1,71 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
-import Background from '../../components/Background.astro';
-import Realisations from '../../components/Realisations.astro';
+import Ariane from '../../components/Ariane.astro';
+import CarteProjet from '../../components/CarteProjet.astro';
+import Contact from '../../components/Contact.astro';
+import { realisations, secteurs } from '../../data/realisations';
+
+const filtres = secteurs
+  .map((s) => ({ s, n: realisations.filter((p) => p.secteur === s).length }))
+  .filter((f) => f.n > 0);
 ---
+
 <Base title="Réalisations : sites internet et outils métier | Madaria" description="Découvrez les sites vitrines, portfolios et outils métier réalisés par Madaria. Captures, fonctionnalités et présentation de chaque projet.">
-  <Background /><Header />
-  <main id="contenu" class="portfolio-page"><div class="wrap"><nav class="ariane" aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>/</span><span aria-current="page">Réalisations</span></nav><h1>Des projets, <span class="grad">des univers différents.</span></h1></div><Realisations complet /></main>
-  <Footer />
+  <section class="ph">
+    <div class="wrap">
+      <Ariane etapes={[{ label: 'Réalisations' }]} />
+      <span class="lab">Réalisations</span>
+      <h1>Des projets, <span class="acc">des univers différents.</span></h1>
+      <p class="chapo">Sites vitrines, portfolios et outils métier livrés par Madaria. Chaque projet a sa page : le contexte, les fonctionnalités et le site en images.</p>
+      <div class="hcta" data-seuil><a class="btn btn-p" href="#contact">Je veux un site comme ça</a></div>
+    </div>
+  </section>
+
+  <section class="sec court">
+    <div class="wrap">
+      <div class="filtres" role="group" aria-label="Filtrer par secteur">
+        <button type="button" class="chip on" data-filtre="tous" aria-pressed="true">Tous <span class="nb">{realisations.length}</span></button>
+        {filtres.map((f) => (
+          <button type="button" class="chip" data-filtre={f.s} aria-pressed="false">{f.s} <span class="nb">{f.n}</span></button>
+        ))}
+      </div>
+      <div class="projets" id="grille-projets">
+        {realisations.map((p) => <CarteProjet p={p} titre="h2" />)}
+      </div>
+      <p class="vide" id="vide-projets" hidden>Aucun projet dans ce secteur pour l'instant.</p>
+    </div>
+  </section>
+
+  <Contact />
 </Base>
+
+<script>
+  // filtres par secteur : les cartes du filtre choisi arrivent en cascade
+  const filtres = document.querySelector<HTMLElement>('.filtres');
+  const cartes = Array.from(document.querySelectorAll<HTMLElement>('#grille-projets .projet'));
+  const vide = document.getElementById('vide-projets');
+  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  filtres?.addEventListener('click', (e) => {
+    const chip = (e.target as HTMLElement).closest<HTMLElement>('.chip');
+    const f = chip?.dataset.filtre;
+    if (!f) return;
+    filtres.querySelectorAll<HTMLElement>('.chip').forEach((c) => {
+      const on = c === chip;
+      c.classList.toggle('on', on);
+      c.setAttribute('aria-pressed', String(on));
+    });
+    let n = 0;
+    cartes.forEach((c) => {
+      const visible = f === 'tous' || c.dataset.secteur === f;
+      c.hidden = !visible;
+      if (!visible) return;
+      c.classList.remove('rv-pending');
+      if (!calme)
+        c.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], {
+          duration: 550, delay: n * 50, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards',
+        });
+      n++;
+    });
+    if (vide) vide.hidden = n > 0;
+  });
+</script>

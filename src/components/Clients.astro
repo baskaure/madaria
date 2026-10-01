@@ -1,0 +1,19 @@
+---
+/**
+ * Bandeau des clients : une ligne. Quand la largeur manque (sous 1200 px),
+ * les noms défilent en boucle : deux groupes identiques, décalage de -50 %.
+ */
+const noms = ['Kami', 'Munda-Kfé', 'KingdomAds', 'Tom Carvalho', 'Aurore Piercing', 'Recharge Clim Auto', 'Château des Tourelles'];
+---
+
+<div class="clients">
+  <div class="wrap">
+    <p>Ils ont confié leur site à Madaria</p>
+    <div class="noms-vue">
+      <div class="noms">
+        <div class="grp">{noms.map((n) => <span>{n}</span>)}</div>
+        <div class="grp bis" aria-hidden="true">{noms.map((n) => <span>{n}</span>)}</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,60 +1,23 @@
 ---
+import SectionHead from './SectionHead.astro';
 import Delai from './Delai.astro';
 import { etapes } from '../data/methode';
 ---
 
-<section id="methode">
-  <div class="wrap msplit">
-    <div class="mintro rv">
-      <div class="lab">Méthode</div>
-      <h2>
-        Votre site internet en quatre étapes.<br /><span class="grad">Sept jours.</span>
-      </h2>
-      <p>
-        Un cadre clair, un point chaque jour, un accès permanent à l'avancement. Vous savez
-        toujours où en est votre projet.
-      </p>
-      <div class="mjours">
-        <b>J+7</b>
-        <span>votre site est en ligne, formation comprise</span>
-      </div>
-    </div>
-
-    <div class="tl">
+<section class="sec" id="methode">
+  <div class="wrap">
+    <SectionHead label="Méthode">
+      <Fragment slot="titre">Quatre étapes. <span class="acc">Sept jours.</span></Fragment>
+      <p>Un point chaque jour et une préproduction ouverte en continu : vous voyez votre site avancer.</p>
+    </SectionHead>
+    <div class="etapes rv">
       {etapes.map((e) => (
-        <div class="tnode">
-          <div class="tdot">{e.num}</div>
-          <div class="tbody">
-            <div class="h">
-              <h3>{e.titre}</h3>
-              <span class="t"><Delai texte={e.delai} /></span>
-            </div>
-            <p>{e.text}</p>
-          </div>
+        <div class="etape">
+          <div class="jour"><Delai texte={e.delai} /></div>
+          <h3>{e.titre}</h3>
+          <p>{e.text}</p>
         </div>
       ))}
     </div>
   </div>
 </section>
-
-<script>
-  // Chaque étape s'allume quand son losange passe la ligne de lecture (deux
-  // tiers de l'écran) et s'éteint si l'on remonte au-dessus. Un
-  // IntersectionObserver fait ce suivi hors du fil principal : l'ancien
-  // écouteur de défilement mesurait la frise à chaque image, sur toute la
-  // page, et forçait une mise en page par étape.
-  const nodes = Array.from(document.querySelectorAll<HTMLElement>('.tnode'));
-  const calme = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!calme && 'IntersectionObserver' in window) {
-    // Zone observée : de très haut au-dessus de l'écran jusqu'à la ligne de
-    // lecture. Une étape y est donc exactement quand elle est au-dessus de la
-    // ligne, qu'elle soit encore visible ou déjà sortie par le haut.
-    const io = new IntersectionObserver(
-      (entrees) => entrees.forEach((e) => e.target.closest('.tnode')?.classList.toggle('atteint', e.isIntersecting)),
-      { rootMargin: '100000px 0px -34% 0px' },
-    );
-    nodes.forEach((n) => io.observe(n.querySelector('.tdot') ?? n));
-  } else {
-    nodes.forEach((n) => n.classList.add('atteint'));
-  }
-</script>
