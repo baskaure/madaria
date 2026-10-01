@@ -31,6 +31,13 @@ const ld = {
     { '@type': 'ListItem', position: 3, name: p.nom, item: url },
   ],
 };
+// description de la page : la plus complète qui tienne dans les ~160
+// caractères affichés par Google
+const description = [
+  `${p.nom} : ${p.accroche} Découvrez le projet ${p.type.toLowerCase()}, ses fonctionnalités et ses captures, réalisé par Madaria.`,
+  `${p.nom} : ${p.accroche} ${p.type} réalisé par Madaria, captures et fonctionnalités.`,
+  `${p.nom} : ${p.accroche} Réalisé par Madaria.`,
+].find((d) => d.length <= 160) ?? `${p.nom} : ${p.accroche}`;
 const infos = [
   ['Client', p.client],
   ['Activité', p.activite],
@@ -40,7 +47,7 @@ const infos = [
 ];
 ---
 
-<Base title={`${p.nom} — ${p.type} réalisé par Madaria`} description={`${p.nom} : ${p.accroche} Découvrez le projet ${p.type.toLowerCase()}, ses fonctionnalités et ses captures, réalisé par Madaria.`}>
+<Base title={`${p.nom} — ${p.type} réalisé par Madaria`} description={description}>
   <section class="ph">
     <div class="wrap">
       <Ariane etapes={[{ label: 'Réalisations', href: '/realisations/' }, { label: p.nom }]} />
@@ -63,8 +70,11 @@ const infos = [
         <div class="ecran fixe">
           {/* l'image reste le contenu de la page (référencement, affichage
               immédiat) ; la vidéo se pose dessus une fois qu'elle tourne */}
+          {/* même fichier que l'affiche de la vidéo : un seul téléchargement */}
           <img class="pleine" src={shot(p.id, 'desktop')} width="1200" height="750" alt={`Vue du site ${p.nom} sur ordinateur`} fetchpriority="high" />
-          {video && <video class="defile" data-video={`/realisations/shots/${p.id}`} muted loop playsinline preload="none" aria-hidden="true"></video>}
+          {/* l'affiche (poster) est la même capture : la vidéo est visible
+              dès le premier rendu, sans flash quand le film démarre */}
+          {video && <video class="defile" data-video={`/realisations/shots/${p.id}`} poster={shot(p.id, 'desktop')} muted loop playsinline preload="none" aria-hidden="true"></video>}
         </div>
         {video && (
           <button type="button" class="vd-pause" aria-pressed="false" aria-label="Mettre la vidéo en pause">
@@ -157,9 +167,14 @@ const infos = [
   if (v && b) {
     brancher(v);
     const lectureAuto = boutonPause(v, b);
-    new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && lectureAuto()) jouer(v);
-      else arreter(v, false);
-    }, { threshold: 0.3 }).observe(v);
+    // la vidéo attend la fin du chargement : la capture fixe s'affiche
+    // d'abord, la page est utilisable tout de suite, puis le film démarre
+    const suivre = () =>
+      new IntersectionObserver(([e]) => {
+        if (e.isIntersecting && lectureAuto()) jouer(v);
+        else arreter(v, false);
+      }, { threshold: 0.3 }).observe(v);
+    if (document.readyState === 'complete') setTimeout(suivre, 600);
+    else addEventListener('load', () => setTimeout(suivre, 600), { once: true });
   }
 </script>
