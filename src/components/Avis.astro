@@ -4,7 +4,6 @@ import SectionHead from './SectionHead.astro';
 import GoogleG from './GoogleG.astro';
 import Etoiles from './Etoiles.astro';
 import { avis, noteGoogle } from '../data/avis';
-import { contact } from '../data/site';
 ---
 
 <section class="sec" id="avis">
@@ -15,7 +14,6 @@ import { contact } from '../data/site';
         <GoogleG />
         <div><b>{noteGoogle}</b><small>Note moyenne sur Google</small></div>
         <Etoiles />
-        <a href={contact.google} target="_blank" rel="noopener noreferrer">Voir les avis</a>
       </div>
     </SectionHead>
     <div class="avis">
