@@ -86,7 +86,7 @@ Changer de titulaire est une autre opération (l'Afnic parle de transmission). C
 | Site statique sur une plateforme spécialisée | Des pages préparées à l'avance, servies depuis un réseau de serveurs | Presque rien côté serveur |
 | Serveur privé (VPS) ou dédié | Une machine ou une partie de machine pour vous seul | Toute l'administration du serveur |
 
-Pour une vitrine d'artisan ou de commerce, un serveur privé n'a guère d'intérêt : il demande des compétences d'administration pour un trafic qui n'en a pas besoin. Le choix se joue plutôt entre les trois premières lignes. Le site de Madaria, par exemple, est un site statique hébergé chez Netlify.
+Pour une vitrine d'artisan ou de commerce, un serveur privé n'a guère d'intérêt : il demande des compétences d'administration pour un trafic qui n'en a pas besoin. Le choix se joue plutôt entre les trois premières lignes.
 
 Regardez aussi où se trouvent les serveurs. Si l'hébergeur est hors de l'Union européenne et que votre site recueille des données (un formulaire de contact, par exemple), votre politique de confidentialité doit le signaler.
 

@@ -127,7 +127,7 @@ Ce sont des plafonds. Pour les dossiers simples, la CNIL dispose d'une procédur
 
 ## En pratique
 
-Pour un site vitrine, la mise en conformité tient en deux pages (mentions légales et confidentialité), quelques lignes sous le formulaire et un choix d'outils qui évite le bandeau de cookies quand c'est possible. Ces éléments sont prévus dans chaque projet de [création de site internet](/services/creation-site-internet/) chez Madaria. Pour le budget, notre guide sur le [prix d'un site internet](/guides/prix-site-internet/) détaille ce qui est inclus et ce qui ne l'est pas.
+Pour un site vitrine, la mise en conformité tient en deux pages (mentions légales et confidentialité), quelques lignes sous le formulaire et un choix d'outils qui évite le bandeau de cookies quand c'est possible. Si vous le souhaitez, Madaria peut rédiger et mettre en place ces pages lors de la [création de votre site](/services/creation-site-internet/) : il suffit de le demander au moment du devis. Pour le budget, notre guide sur le [prix d'un site internet](/guides/prix-site-internet/) détaille ce qui est inclus et ce qui ne l'est pas.
 
 Si vous voulez qu'on regarde votre site actuel ou qu'on chiffre un nouveau projet, décrivez-nous votre activité en deux lignes : vous recevez un devis détaillé sous 24 heures.
 
