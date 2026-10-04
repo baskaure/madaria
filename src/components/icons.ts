@@ -32,6 +32,11 @@ export const icons = {
   photographe: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
   garage: '<path d="M3 13l2-6h14l2 6v5H3z"/><path d="M3 13h18"/><circle cx="7" cy="16" r="1.2"/><circle cx="17" cy="16" r="1.2"/>',
   fleuriste: '<path d="M12 21v-9"/><path d="M7 4l2.5 3L12 4l2.5 3L17 4v4a5 5 0 0 1-10 0z"/><path d="M12 17c-2.5 0-4.5-1.5-5-4 2.5 0 4.5 1.5 5 4z"/>',
+  osteopathe: '<rect x="9" y="2.5" width="6" height="3" rx="1.2"/><rect x="8.5" y="7.5" width="7" height="3" rx="1.2"/><rect x="8.5" y="12.5" width="7" height="3" rx="1.2"/><rect x="9" y="17.5" width="6" height="3" rx="1.2"/><path d="M12 5.5v2M12 10.5v2M12 15.5v2"/>',
+  coach: '<rect x="4" y="7" width="3" height="10" rx="1"/><rect x="17" y="7" width="3" height="10" rx="1"/><path d="M7 12h10M2 12h2M20 12h2"/>',
+  boulangerie: '<path d="M6.8 20.8L20.8 6.8a2.5 2.5 0 0 0-3.6-3.6L3.2 17.2a2.5 2.5 0 0 0 3.6 3.6z"/><path d="M8.3 14.2l2 1.6M11.3 11.2l2 1.6M14.3 8.2l2 1.6"/>',
+  autoecole: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M3.2 11l6.8 1M20.8 11l-6.8 1M12 14v7"/>',
+  paysagiste: '<path d="M12 14c-3.9 0-6-2.2-6-5.2C6 5.5 8.7 3 12 3s6 2.5 6 5.8c0 3-2.1 5.2-6 5.2z"/><path d="M12 21v-7M12 17.5l2.5-2M8 21h8"/>',
   btp: '<path d="M3 18h18M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M10 8.2V5h4v3.2"/>',
 } as const;
 

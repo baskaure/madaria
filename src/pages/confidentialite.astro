@@ -1,5 +1,6 @@
 ---
 import Legal from '../layouts/Legal.astro';
+import { umami } from '../data/site';
 ---
 
 <Legal
@@ -44,7 +45,7 @@ import Legal from '../layouts/Legal.astro';
   <h2>Destinataires</h2>
   <p>
     Les données sont destinées au seul éditeur du site. Elles peuvent transiter par nos
-    prestataires techniques, qui n'y accèdent que pour les besoins de leur mission — notamment
+    prestataires techniques, qui n'y accèdent que pour les besoins de leur mission, notamment
     Netlify, Inc. (États-Unis), qui héberge le site et réceptionne les soumissions du formulaire. Netlify adhère au cadre de protection des
     données UE–États-Unis (Data Privacy Framework), qui encadre ce transfert.
   </p>
@@ -54,17 +55,28 @@ import Legal from '../layouts/Legal.astro';
     Le site ne dépose <strong>aucun cookie</strong> de suivi ou de publicité et n'utilise aucun
     outil de mesure d'audience nécessitant un consentement.
   </p>
-  <p>
-    Les polices de caractères sont hébergées sur le site lui-même : aucune ressource n'est
-    chargée depuis un service tiers lors de votre visite.
-  </p>
+  {umami.id ? (
+    <p>
+      Pour savoir quelles pages sont consultées et d'où viennent les visiteurs, le site utilise
+      Umami, un outil de mesure d'audience qui fonctionne sans cookie. Nous n'en consultons que
+      des statistiques globales : nombre de visites, pages vues, site de provenance, type
+      d'appareil, ainsi que le nombre de clics sur le téléphone et l'e-mail et de demandes de
+      devis envoyées. Le script d'Umami est le seul élément chargé depuis un service tiers ; les
+      polices de caractères sont hébergées sur le site lui-même.
+    </p>
+  ) : (
+    <p>
+      Les polices de caractères sont hébergées sur le site lui-même : aucune ressource n'est
+      chargée depuis un service tiers lors de votre visite.
+    </p>
+  )}
 
   <h2>Vos droits</h2>
   <p>
     Conformément au RGPD et à la loi Informatique et Libertés, vous disposez d'un droit d'accès,
     de rectification, d'effacement, de limitation, d'opposition et de portabilité sur vos
     données. Pour l'exercer, écrivez à{' '}
-    <a href="mailto:contact@madaria.fr">contact@madaria.fr</a> — réponse sous 30 jours au plus.
+    <a href="mailto:contact@madaria.fr">contact@madaria.fr</a> : réponse sous 30 jours au plus.
   </p>
   <p>
     Si vous estimez que vos droits ne sont pas respectés, vous pouvez saisir la CNIL

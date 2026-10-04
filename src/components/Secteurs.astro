@@ -2,6 +2,10 @@
 import Icon from './Icon.astro';
 import SectionHead from './SectionHead.astro';
 import { secteurs } from '../data/secteurs';
+
+/** Métiers visibles d'emblée (deux lignes de quatre) ; les autres attendent un clic. */
+const VISIBLES = 8;
+const caches = secteurs.length - VISIBLES;
 ---
 
 <section class="sec" id="secteurs">
@@ -10,16 +14,38 @@ import { secteurs } from '../data/secteurs';
       <Fragment slot="titre">Un site pensé pour votre métier.</Fragment>
       <p>Un barbier a besoin de réservations, un restaurant de sa carte à jour. Chaque page métier montre ce qu'on construit pour vous.</p>
     </SectionHead>
-    <div class="metiers rv">
-      {secteurs.map((s) => (
-        <a class="metier" href={`/site-internet/${s.slug}/`}>
+    {/* les métiers repliés restent dans le HTML : leurs liens sont suivis par les moteurs */}
+    <div class="metiers rv" id="grille-metiers">
+      {secteurs.map((s, i) => (
+        <a class:list={['metier', { extra: i >= VISIBLES }]} href={`/site-internet/${s.slug}/`}>
           <span class="ico"><Icon name={s.icon} /></span>{s.nom}<Icon name="arrow" class="i fl" />
         </a>
       ))}
       {/* complète la dernière ligne quand le nombre de métiers ne tombe pas juste */}
-      <a class="metier autre" href="#contact" style={`grid-column: span ${(4 - (secteurs.length % 4)) % 4 || 4}`}>
+      <a class="metier autre extra" href="#contact" style={`grid-column: span ${(4 - (secteurs.length % 4)) % 4 || 4}`}>
         <span class="ico"><Icon name="plus" /></span>Votre métier n'est pas listé ? Parlons-en<Icon name="arrow" class="i fl" />
       </a>
     </div>
+    {caches > 0 && (
+      <div class="voir-tout">
+        <button type="button" class="btn btn-g" id="voir-metiers" aria-expanded="false" aria-controls="grille-metiers"
+          data-ouvrir={`Voir tous les métiers (${secteurs.length})`} data-fermer="Réduire la liste">
+          Voir tous les métiers ({secteurs.length})<Icon name="plus" class="i" />
+        </button>
+      </div>
+    )}
+    <noscript><style>.metier.extra{display:flex!important}.voir-tout{display:none}</style></noscript>
   </div>
 </section>
+
+<script>
+  const bouton = document.getElementById('voir-metiers');
+  const grille = document.getElementById('grille-metiers');
+  bouton?.addEventListener('click', () => {
+    const ouvert = grille?.classList.toggle('ouvert') ?? false;
+    bouton.setAttribute('aria-expanded', String(ouvert));
+    bouton.firstChild!.textContent = (ouvert ? bouton.dataset.fermer : bouton.dataset.ouvrir) ?? '';
+    // en repliant, la page raccourcit : on ramène le bouton sous les yeux
+    if (!ouvert) bouton.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
+</script>

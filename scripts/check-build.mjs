@@ -16,6 +16,9 @@ for (const [file, html] of pages) {
   assert.match(html,/<link rel="canonical" href="https:\/\/madaria.fr\//,file);
   assert.ok(!html.includes('dateModified'),`${file}: pas de date artificielle`);
   for (const m of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) JSON.parse(m[1]);
+  // image de partage : présente dans dist
+  const og = html.match(/<meta property="og:image" content="https:\/\/madaria\.fr([^"]+)"/)?.[1];
+  assert.ok(og && fs.existsSync(path.join(root,og)),`${file}: image de partage absente ${og}`);
   const route = '/'+path.relative(root,file).replace(/index\.html$/,'');
   for (const tag of html.matchAll(/<(?:a|img|source)\b[^>]*>/g)) {
     const value = attr(tag[0],tag[0].startsWith('<a')?'href':'src');

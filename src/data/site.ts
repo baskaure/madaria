@@ -32,6 +32,18 @@ export const contact = {
   google: 'https://www.google.com/search?kgmid=/g/11zf9zzc34',
 } as const;
 
+/**
+ * Mesure d'audience Umami (sans cookies, donc sans bandeau de consentement).
+ * Coller ici l'identifiant du site (Umami > Paramètres > le site >
+ * « Website ID ») et, si le compte est dans la région Europe, l'adresse du
+ * script indiquée dans le code de suivi. Vide : aucun script n'est chargé.
+ * Le script ne compte que les visites sur madaria.fr (pas l'aperçu local).
+ */
+export const umami = {
+  id: '',
+  script: 'https://cloud.umami.is/script.js',
+} as const;
+
 export const footerColumns = [
   {
     title: 'Services',

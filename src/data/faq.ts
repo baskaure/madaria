@@ -20,7 +20,7 @@ export const questions: Question[] = [
   },
   {
     q: "Concrètement, qu'est-ce qu'une automatisation ?",
-    r: "Un formulaire rempli qui crée la fiche client, envoie le devis, programme la relance et met à jour votre tableau de bord — sans intervention humaine. Nous identifions avec vous les tâches à automatiser et mesurons le temps économisé une fois le flux en place.",
+    r: "Un formulaire rempli qui crée la fiche client, envoie le devis, programme la relance et met à jour votre tableau de bord, sans intervention humaine. Nous identifions avec vous les tâches à automatiser et mesurons le temps économisé une fois le flux en place.",
   },
   {
     q: 'À qui appartient le site une fois livré ?',

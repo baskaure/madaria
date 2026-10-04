@@ -90,7 +90,7 @@ export const secteurs: Secteur[] = [
     h1: 'Création de site internet pour salon de coiffure',
     intro: [
       "Le téléphone qui sonne pendant une couleur, c'est un client mal servi d'un côté et un rendez-vous mal noté de l'autre. Un site de salon bien conçu absorbe ces appels : il montre vos prestations, vos tarifs, votre équipe, et laisse le client choisir son créneau tout seul.",
-      "Nous concevons des sites de coiffeur qui libèrent votre temps au lieu d'en consommer — pensés pour être mis à jour en deux minutes, depuis votre téléphone, entre deux clients.",
+      "Nous concevons des sites de coiffeur qui libèrent votre temps au lieu d'en consommer, pensés pour être mis à jour en deux minutes, depuis votre téléphone, entre deux clients.",
     ],
     enjeux: [
       {
@@ -121,7 +121,7 @@ export const secteurs: Secteur[] = [
     faq: [
       {
         q: 'Je ne suis pas à l’aise avec l’informatique, je pourrai gérer ?',
-        r: "Oui. Vous recevez une interface simplifiée — modifier un tarif ou ajouter une photo se fait comme sur une application de téléphone — et une formation enregistrée que vous pouvez revoir autant de fois que nécessaire.",
+        r: "Oui. Vous recevez une interface simplifiée (modifier un tarif ou ajouter une photo se fait comme sur une application de téléphone) et une formation enregistrée que vous pouvez revoir autant de fois que nécessaire.",
       },
       {
         q: 'Le site fonctionnera-t-il si j’ai plusieurs salons ?',
@@ -147,11 +147,11 @@ export const secteurs: Secteur[] = [
     enjeux: [
       {
         titre: 'Un portfolio à la hauteur du travail',
-        text: "Vos photos méritent mieux qu'une compression de réseau social. Nous les affichons en haute définition, organisées par style, avec un chargement rapide — condition indispensable pour que le visiteur reste et fasse défiler.",
+        text: "Vos photos méritent mieux qu'une compression de réseau social. Nous les affichons en haute définition, organisées par style, avec un chargement rapide : c'est ce qui fait que le visiteur reste et fait défiler.",
       },
       {
         titre: 'Filtrer les demandes en amont',
-        text: "Un formulaire de projet structuré — emplacement, taille, style, budget, photos de référence, disponibilités — vous évite dix allers-retours par message. Vous recevez des demandes exploitables et vous répondez une seule fois.",
+        text: "Un formulaire de projet structuré (emplacement, taille, style, budget, photos de référence, disponibilités) vous évite dix allers-retours par message. Vous recevez des demandes exploitables et vous répondez une seule fois.",
       },
       {
         titre: "Sécuriser les créneaux avec un acompte",
@@ -193,7 +193,7 @@ export const secteurs: Secteur[] = [
     metaDesc: `Site internet pour perceur : catalogue des poses, prise de rendez-vous et documents d'information. Vitrine dès ${prixEntree}, options sur devis.`,
     h1: 'Création de site internet pour perceur',
     intro: [
-      "Le piercing se décide vite mais se renseigne longuement : quelle pose, quel bijou, quelle cicatrisation, quel prix, quelles conditions pour les mineurs. Chaque question sans réponse sur votre site devient un appel — ou un client qui va voir ailleurs.",
+      "Le piercing se décide vite mais se renseigne longuement : quelle pose, quel bijou, quelle cicatrisation, quel prix, quelles conditions pour les mineurs. Chaque question sans réponse sur votre site devient un appel, ou un client qui va voir ailleurs.",
       "Nous construisons des sites de perceur qui répondent à ces questions avant la prise de contact, et qui inspirent la confiance qu'exige un acte sur le corps.",
     ],
     enjeux: [
@@ -246,12 +246,12 @@ export const secteurs: Secteur[] = [
     h1: 'Création de site internet pour restaurant',
     intro: [
       "Les plateformes de livraison et de réservation prélèvent une commission sur chaque couvert. C'est un loyer que vous payez pour parler à vos propres clients. Un site qui vous appartient transforme cette dépense récurrente en investissement fait une fois.",
-      "Nous construisons des sites de restaurant qui reprennent la main sur la réservation et la vente à emporter — et qui gardent la carte à jour sans que vous ayez à appeler qui que ce soit.",
+      "Nous construisons des sites de restaurant qui reprennent la main sur la réservation et la vente à emporter, et qui gardent la carte à jour sans que vous ayez à appeler qui que ce soit.",
     ],
     enjeux: [
       {
         titre: 'Une carte toujours juste',
-        text: "Une carte périmée en PDF fait fuir. Vous modifiez un plat, un prix ou une suggestion du jour depuis votre téléphone, et la carte est à jour partout en quelques secondes — y compris sur votre fiche Google.",
+        text: "Une carte périmée en PDF fait fuir. Vous modifiez un plat, un prix ou une suggestion du jour depuis votre téléphone, et la carte est à jour partout en quelques secondes, y compris sur votre fiche Google.",
       },
       {
         titre: 'Réserver sans commission',
@@ -298,7 +298,7 @@ export const secteurs: Secteur[] = [
     h1: 'Création de site internet pour institut de beauté',
     intro: [
       "L'esthétique vit de la fidélité : une cliente satisfaite revient toutes les quatre à six semaines, pendant des années. Le problème n'est pas de la convaincre une fois, mais de ne pas la perdre entre deux rendez-vous.",
-      "Nous construisons des sites d'institut qui facilitent la première réservation et automatisent le retour — sans que vous ayez à relancer chaque cliente à la main.",
+      "Nous construisons des sites d'institut qui facilitent la première réservation et automatisent le retour, sans que vous ayez à relancer chaque cliente à la main.",
     ],
     enjeux: [
       {
@@ -311,7 +311,7 @@ export const secteurs: Secteur[] = [
       },
       {
         titre: 'Automatiser le retour',
-        text: "Un soin se renouvelle à intervalle régulier. Une relance envoyée automatiquement au bon moment — quelques semaines après la séance — ramène des clientes qui seraient simplement passées à autre chose.",
+        text: "Un soin se renouvelle à intervalle régulier. Une relance envoyée automatiquement au bon moment, quelques semaines après la séance, ramène des clientes qui seraient simplement passées à autre chose.",
       },
       {
         titre: 'Vendre des cartes cadeaux',
@@ -349,7 +349,7 @@ export const secteurs: Secteur[] = [
     metaDesc: `Site internet pour organisme de formation : catalogue de sessions, inscription en ligne et informations de financement. Périmètre et calendrier sur devis.`,
     h1: 'Création de site internet pour organisme de formation',
     intro: [
-      "Un candidat en formation compare, hésite, et surtout se demande comment financer. Si votre site ne répond pas clairement à cette question, il ira chercher un organisme qui le fait — même si votre programme est meilleur.",
+      "Un candidat en formation compare, hésite, et surtout se demande comment financer. Si votre site ne répond pas clairement à cette question, il ira chercher un organisme qui le fait, même si votre programme est meilleur.",
       "Nous construisons des sites de formation qui présentent votre offre avec la rigueur attendue et transforment les visiteurs en candidatures qualifiées.",
     ],
     enjeux: [
@@ -411,7 +411,7 @@ export const secteurs: Secteur[] = [
       },
       {
         titre: 'Des demandes de devis exploitables',
-        text: "Un formulaire structuré — type de travaux, surface, délai souhaité, photos de l'existant — vous permet de qualifier la demande avant de vous déplacer, et d'éliminer les curieux qui font faire cinq devis pour rien.",
+        text: "Un formulaire structuré (type de travaux, surface, délai souhaité, photos de l'existant) vous permet de qualifier la demande avant de vous déplacer, et d'éliminer les curieux qui font faire cinq devis pour rien.",
       },
       {
         titre: 'Être trouvé dans votre zone',
@@ -433,7 +433,7 @@ export const secteurs: Secteur[] = [
     faq: [
       {
         q: 'Je n’ai pas de belles photos de chantier, c’est bloquant ?',
-        r: "Non. Nous vous indiquons quoi photographier et comment, avec un simple téléphone — le cadrage avant-après compte davantage que le matériel. Vous alimentez ensuite la galerie chantier après chantier.",
+        r: "Non. Nous vous indiquons quoi photographier et comment, avec un simple téléphone : le cadrage avant-après compte davantage que le matériel. Vous alimentez ensuite la galerie chantier après chantier.",
       },
       {
         q: 'Le site peut-il couvrir plusieurs zones d’intervention ?',
@@ -718,6 +718,286 @@ export const secteurs: Secteur[] = [
       {
         q: 'Mes créations changent toutes les semaines, comment tenir le site à jour ?',
         r: "Vous pouvez mettre à jour vos bouquets depuis votre téléphone, ou nous envoyer les photos : en abonnement, les modifications mensuelles comprennent ce genre de mise à jour.",
+      },
+    ],
+  },
+
+  {
+    slug: 'osteopathe',
+    icon: 'osteopathe',
+    nom: 'Ostéopathes',
+    singulier: 'ostéopathe',
+    text: "Un site sobre et informatif : votre formation, le déroulé d'une consultation, vos tarifs et l'accès à votre agenda en ligne.",
+    besoins: ['Informations', 'Diplôme', 'Rendez-vous'],
+    metaTitle: 'Création de site internet pour ostéopathe | Madaria',
+    metaDesc: `Site internet pour ostéopathe : site informatif respectueux de votre déontologie, diplôme affiché, tarifs et lien vers votre agenda. Vitrine dès ${prixEntree}.`,
+    h1: 'Création de site internet pour ostéopathe',
+    intro: [
+      "Avant un premier rendez-vous chez un ostéopathe, un patient cherche des réponses simples : où se trouve le cabinet, comment se passe une consultation, combien elle coûte, quand il reste de la place. Ces informations sont souvent dispersées entre un annuaire, une fiche Google et un agenda en ligne, et pas toujours à jour.",
+      "Nous construisons des sites d'ostéopathe qui les rassemblent sur quelques pages sobres, dans le cadre de votre profession : les codes de déontologie des ostéopathes interdisent les procédés publicitaires, Internet compris. Le site informe, puis laisse le patient décider.",
+    ],
+    enjeux: [
+      {
+        titre: 'Informer sans faire de publicité',
+        text: "Les codes de déontologie de la profession proscrivent les procédés de publicité directs ou indirects, quel que soit le support, et la Cour de cassation s'est appuyée sur cette règle en 2019 pour annuler un contrat publicitaire passé par un ostéopathe. Nous écrivons donc un site factuel : pas de slogan, pas de promesse de résultat, pas de témoignages de patients.",
+      },
+      {
+        titre: 'Votre diplôme bien en vue',
+        text: "Le décret n° 2007-435 demande aux ostéopathes d'indiquer leur diplôme sur leur plaque et sur tout document, ainsi que leurs diplômes d'État s'ils sont aussi professionnels de santé en exercice. Le site les présente clairement, avec votre parcours de formation.",
+      },
+      {
+        titre: 'Expliquer une consultation',
+        text: "Durée, déroulé, tenue à prévoir, tarif, moyens de paiement : ce sont les questions d'un patient qui n'a jamais consulté. Si vous recevez des nourrissons, la page peut aussi rappeler qu'avant six mois, les manipulations du crâne, de la face et du rachis demandent un diagnostic médical attestant l'absence de contre-indication, comme le prévoit le décret de 2007.",
+      },
+      {
+        titre: 'Un accès direct à votre agenda',
+        text: "Si vous utilisez déjà un agenda en ligne, Doctolib par exemple, qui référence des ostéopathes, le site y renvoie depuis chaque page. Le patient lit les informations pratiques, puis réserve sur l'outil que vous avez choisi.",
+      },
+    ],
+    livrables: [
+      'Présentation de votre formation, de votre diplôme et de votre parcours',
+      'Page sur le déroulé d’une consultation, sa durée et son tarif',
+      'Lien vers votre agenda en ligne sur chaque page',
+      'Adresse, accès et horaires du cabinet',
+      'Fiche Google à jour et cohérente avec le site',
+      'Textes sobres et informatifs, sans ton publicitaire',
+    ],
+    faq: [
+      {
+        q: 'Un site internet est-il compatible avec l’interdiction de publicité ?',
+        r: "Les codes de déontologie de la profession visent les procédés publicitaires et demandent que les mentions, y compris sur Internet, aient un objet informatif. Un site qui présente votre formation, votre cabinet, le déroulé des séances et vos tarifs reste dans ce cadre. En cas de doute sur une formulation, votre syndicat ou votre association professionnelle peut relire les textes avant la mise en ligne.",
+      },
+      {
+        q: 'Puis-je afficher les avis de mes patients ?',
+        r: "Nous ne le proposons pas sur un site d'ostéopathe. Mettre en avant des témoignages de patients nous paraît trop proche d'un procédé publicitaire, que les codes de déontologie de la profession interdisent. Le site s'en tient à des informations vérifiables.",
+      },
+      {
+        q: 'Je suis aussi kinésithérapeute, comment le présenter ?',
+        r: "Le décret de 2007 prévoit justement que les ostéopathes qui exercent aussi une profession de santé indiquent leurs diplômes d'État. Le site présente vos deux formations, chacune avec son diplôme, sans les mélanger.",
+      },
+    ],
+  },
+
+  {
+    slug: 'coach-sportif',
+    icon: 'coach',
+    nom: 'Coachs sportifs',
+    singulier: 'coach sportif',
+    text: "Vos formules et vos tarifs lisibles, des demandes de séance d'essai bien renseignées et vos qualifications affichées.",
+    besoins: ['Formules', 'Séance d’essai', 'Qualifications'],
+    metaTitle: 'Création de site internet pour coach sportif | Madaria',
+    metaDesc: `Site internet pour coach sportif : formules et tarifs clairs, demande de séance d'essai, carte professionnelle mise en avant. Vitrine dès ${prixEntree}.`,
+    h1: 'Création de site internet pour coach sportif',
+    intro: [
+      "On choisit un coach sportif pour un objectif précis : reprendre après une grossesse, préparer un premier trail, se remettre au sport après dix ans d'arrêt, garder la forme à soixante ans. Le futur client cherche quelqu'un qui travaille ce sujet, près de chez lui ou à domicile, et il veut savoir combien coûte une séance avant d'écrire.",
+      "Nous construisons des sites de coach qui présentent vos spécialités, vos formules et vos lieux d'intervention, et qui font venir des demandes de séance d'essai assez complètes pour que vous sachiez à qui vous parlez.",
+    ],
+    enjeux: [
+      {
+        titre: 'Une page par objectif',
+        text: "« Coach sportif à domicile », « préparation physique trail », « remise en forme senior » : chaque objectif a sa recherche et son client. Une page dédiée, qui explique votre façon de travailler et le format des séances, vous fait trouver par les personnes qui cherchent exactement cela.",
+      },
+      {
+        titre: 'Des formules lisibles',
+        text: "Séance à l'unité, carnet de dix, abonnement mensuel, petit groupe en extérieur, cours en visio : un tableau clair évite les messages qui ne servent qu'à demander un prix, et laisse le client se projeter avant de vous contacter.",
+      },
+      {
+        titre: 'Montrer vos qualifications',
+        text: "Encadrer une activité sportive contre rémunération demande un diplôme reconnu et une carte professionnelle d'éducateur sportif, à renouveler tous les cinq ans. Afficher votre diplôme et votre carte rassure, et le client peut vérifier vos qualifications sur le site public du ministère des Sports.",
+      },
+      {
+        titre: 'Une séance d’essai bien préparée',
+        text: "Objectif, niveau actuel, blessures ou contre-indications éventuelles, disponibilités, lieu souhaité : le formulaire pose ces questions en amont. Vous arrivez à la première séance en connaissant la personne, ou vous l'orientez ailleurs si sa demande ne correspond pas à votre pratique.",
+      },
+    ],
+    livrables: [
+      'Une page par spécialité ou par public',
+      'Formules et tarifs modifiables en deux clics',
+      "Formulaire de demande de séance d'essai",
+      'Diplôme et carte professionnelle mis en avant',
+      "Zone d'intervention à domicile ou en extérieur",
+      'Réservation et paiement des séances en ligne (sur devis)',
+    ],
+    faq: [
+      {
+        q: 'Je coache surtout à domicile, comment apparaître dans les recherches locales ?',
+        r: "Une page qui liste vos communes d'intervention, une fiche Google réglée sur une zone desservie plutôt que sur une adresse, et des pages par objectif suffisent dans la plupart des cas. Votre adresse personnelle n'a pas à apparaître.",
+      },
+      {
+        q: 'Puis-je vendre des carnets de séances en ligne ?',
+        r: "Oui. Le paiement en ligne de carnets ou d'abonnements se cadre au devis, selon l'outil que vous utilisez déjà pour vos réservations. Si vous préférez commencer simplement, le site recueille d'abord les demandes, et le paiement s'ajoute plus tard.",
+      },
+      {
+        q: 'Je donne aussi des cours en visio, le site peut-il les présenter ?',
+        r: "Oui, avec une page dédiée qui explique le déroulé, le matériel à prévoir et les horaires. Ces cours ne dépendent pas de votre ville : la page vise donc des recherches plus larges que votre secteur.",
+      },
+    ],
+  },
+
+  {
+    slug: 'boulangerie',
+    icon: 'boulangerie',
+    nom: 'Boulangeries',
+    singulier: 'boulangerie',
+    text: "Des horaires et des fermetures toujours justes, les commandes de gâteaux prises en ligne, et une boutique trouvée dans son quartier.",
+    besoins: ['Horaires', 'Commandes', 'Google Maps'],
+    metaTitle: 'Création de site internet pour boulangerie | Madaria',
+    metaDesc: `Site internet pour boulangerie : horaires à jour, commandes de gâteaux et pièces montées, allergènes affichés. Vitrine dès ${prixEntree}, paiement sur devis.`,
+    h1: 'Création de site internet pour boulangerie',
+    intro: [
+      "On connaît la boulangerie de sa rue. Le site sert aux autres moments : le dimanche, quand on cherche celle qui est ouverte ; en déplacement, dans un quartier qu'on ne connaît pas ; ou trois semaines avant un anniversaire, quand il faut commander un entremets pour vingt personnes.",
+      "Nous construisons des sites de boulangerie pour ces moments-là : des horaires et des fermetures qui ne trompent personne, des commandes de gâteaux prises sans le téléphone aux heures de pointe, et une fiche Google qui dit la même chose que le site.",
+    ],
+    enjeux: [
+      {
+        titre: 'Des horaires qui ne trompent pas',
+        text: "Jour de fermeture, congés d'été, horaires des jours fériés : un client qui trouve porte close à cause d'un horaire faux hésitera à revenir. Vous modifiez vos horaires depuis votre téléphone, et nous vous montrons comment faire la même chose sur votre fiche Google.",
+      },
+      {
+        titre: 'Les commandes de gâteaux sans le téléphone',
+        text: "Entremets d'anniversaire, pièce montée, plateaux pour une réception : ces commandes se préparent à l'avance et se prennent mal au comptoir quand la file attend. Un formulaire avec la date de retrait, le nombre de parts et le parfum vous arrive complet, et vous confirmez quand vous avez le temps.",
+      },
+      {
+        titre: 'Les allergènes consultables',
+        text: "La présence d'allergènes dans vos produits doit être portée à la connaissance du client, comme le prévoit le décret n° 2015-447. Sur le site, une fiche par gâteau ou par produit phare répond à la question avant même qu'on vous la pose.",
+      },
+      {
+        titre: 'Les temps forts de l’année',
+        text: "Galette des rois en janvier, bûches à Noël, chocolats à Pâques : une page de saison, ouverte quelques semaines avant, présente vos créations et prend les précommandes, pour que vous puissiez prévoir la production.",
+      },
+    ],
+    livrables: [
+      'Horaires et fermetures modifiables depuis votre téléphone',
+      'Formulaire de commande de gâteaux et pièces montées',
+      'Allergènes indiqués pour chaque produit présenté',
+      'Pages de saison pour les précommandes',
+      'Commande payée en ligne et retrait en boutique (sur devis)',
+      'Fiche Google optimisée et reliée au site',
+    ],
+    faq: [
+      {
+        q: 'Un site sert-il vraiment à une boulangerie de quartier ?',
+        r: "Vos habitués n'en ont pas besoin. Il sert aux nouveaux habitants, aux gens de passage et à ceux qui préparent une fête : ils cherchent sur leur téléphone, regardent vos horaires et vos créations, puis commandent. Il vous évite aussi les appels pour savoir si vous ouvrez un jour férié.",
+      },
+      {
+        q: 'Puis-je prendre des commandes avec paiement en ligne ?',
+        r: "Oui. Le paiement à la commande, avec retrait à une date et une heure choisies, se cadre et se chiffre au devis. Pour démarrer, un formulaire sans paiement suffit souvent : vous confirmez la commande par téléphone ou par e-mail.",
+      },
+      {
+        q: 'Ma vitrine change avec les saisons, qui met le site à jour ?',
+        r: "Vous pouvez le faire vous-même depuis votre téléphone, ou nous envoyer les photos et les textes : en abonnement, les modifications mensuelles comprennent ce type de mise à jour.",
+      },
+    ],
+  },
+
+  {
+    slug: 'auto-ecole',
+    icon: 'autoecole',
+    nom: 'Auto-écoles',
+    singulier: 'auto-école',
+    text: "Chaque formation expliquée, des tarifs lisibles pour les élèves et les parents, et des demandes d'inscription reçues en ligne.",
+    besoins: ['Formations', 'Tarifs', 'Inscription'],
+    metaTitle: 'Création de site internet pour auto-école | Madaria',
+    metaDesc: `Site internet pour auto-école : permis B, conduite accompagnée et supervisée expliqués, tarifs clairs. Vitrine dès ${prixEntree}, inscription en ligne sur devis.`,
+    h1: 'Création de site internet pour auto-école',
+    intro: [
+      "Le choix d'une auto-école se fait souvent à deux : l'élève, qui cherche sur son téléphone, et le parent, qui compare les prix et veut savoir ce qu'inclut le forfait. Les deux posent les mêmes questions : quelle formule, combien d'heures, à partir de quel âge, comment s'inscrire.",
+      "Nous construisons des sites d'auto-école qui répondent à ces questions avant le premier passage au bureau, et qui amènent des demandes d'inscription ou d'évaluation de départ plutôt que des appels pour connaître un prix.",
+    ],
+    enjeux: [
+      {
+        titre: 'Expliquer chaque filière',
+        text: "Permis B classique, apprentissage anticipé de la conduite dès 15 ans, conduite supervisée à partir de 18 ans, boîte automatique : vues de l'extérieur, ces formules se ressemblent. Une page par filière, avec ses conditions et son déroulé, aide chacun à choisir la sienne.",
+      },
+      {
+        titre: 'Des tarifs lisibles',
+        text: "Forfait de départ, heures de conduite supplémentaires, formation au code : des prix détaillés et à jour évitent les comparaisons faussées et les appels qui ne servent qu'à demander un chiffre.",
+      },
+      {
+        titre: 'Préparer l’inscription en ligne',
+        text: "Le code de la route prévoit que le contrat d'enseignement de la conduite peut être conclu dans l'établissement ou à distance, après une évaluation préalable du candidat. Le site recueille les premières informations et la demande de rendez-vous d'évaluation ; un parcours d'inscription complet en ligne se cadre au devis.",
+      },
+      {
+        titre: 'Être trouvé près de chez l’élève',
+        text: "« Auto-école » suivi du nom de la ville ou du quartier : la recherche est locale, et l'élève cherche une agence proche de chez lui, de son lycée ou de son travail. Une fiche Google bien réglée, reliée à un site rapide, vous place dans ces résultats.",
+      },
+    ],
+    livrables: [
+      'Une page par formation (B, AAC, supervisée, boîte automatique)',
+      'Tarifs et forfaits faciles à mettre à jour',
+      "Demande de rendez-vous pour l'évaluation de départ",
+      'Horaires du bureau et des séances de code',
+      'Fiche Google optimisée et reliée au site',
+      'Inscription et paiement en ligne (sur devis)',
+    ],
+    faq: [
+      {
+        q: 'Puis-je faire signer le contrat en ligne ?',
+        r: "Le code de la route permet de conclure le contrat à distance, après l'évaluation préalable du candidat. La signature et le paiement en ligne dépendent de votre logiciel de gestion : nous regardons au cadrage ce qu'il permet, et le périmètre est chiffré au devis.",
+      },
+      {
+        q: 'J’ai plusieurs agences, comment les présenter ?',
+        r: "Une page par agence, avec son adresse, ses horaires de bureau, ses séances de code et sa propre fiche Google. Chacune peut ainsi apparaître dans les recherches de son quartier.",
+      },
+      {
+        q: 'Le site peut-il parler des aides au financement du permis ?',
+        r: "Oui. Nous présentons les dispositifs que vous acceptez et renvoyons vers les pages officielles pour les conditions détaillées, qui peuvent évoluer. Le site reste juste sans que vous ayez à le réécrire à chaque changement de règle.",
+      },
+    ],
+  },
+
+  {
+    slug: 'paysagiste',
+    icon: 'paysagiste',
+    nom: 'Paysagistes',
+    singulier: 'paysagiste',
+    text: "Vos jardins en photos avant et après, des demandes de devis avec photos du terrain, et l'entretien présenté à part de la création.",
+    besoins: ['Réalisations', 'Devis en ligne', 'Entretien'],
+    metaTitle: 'Création de site internet pour paysagiste | Madaria',
+    metaDesc: `Site internet pour paysagiste : réalisations avant-après, devis avec photos du terrain, création et entretien présentés à part. Vitrine dès ${prixEntree}.`,
+    h1: 'Création de site internet pour paysagiste',
+    intro: [
+      "Un jardin se confie à quelqu'un dont on a vu le travail. Le particulier qui veut refaire sa terrasse ou planter une haie regarde d'abord des réalisations, puis compare deux ou trois paysagistes de son secteur. Pour l'entretien, les questions changent : qui passe chez moi, à quel rythme, et ai-je droit au crédit d'impôt ?",
+      "Nous construisons des sites de paysagiste qui séparent ces deux activités : la création, avec vos chantiers en photos et une demande de devis détaillée, et l'entretien, avec vos formules, votre zone et le crédit d'impôt quand vos prestations y ouvrent droit.",
+    ],
+    enjeux: [
+      {
+        titre: 'Montrer les jardins avant et après',
+        text: "Une terrasse, un massif, un aménagement complet se jugent sur photo. Une galerie classée par type de travaux, que vous complétez depuis le chantier avec votre téléphone, montre ce que vous savez faire mieux qu'une liste de prestations.",
+      },
+      {
+        titre: 'Séparer création et entretien',
+        text: "Ce sont deux clients, deux budgets et deux recherches : « aménagement de jardin » d'un côté, « entretien de jardin » ou « taille de haie » de l'autre. Une page pour chacun vous fait trouver sur les deux, et évite de mélanger devis de chantier et contrats à l'année.",
+      },
+      {
+        titre: 'Expliquer le crédit d’impôt',
+        text: "Les petits travaux de jardinage chez un particulier ouvrent droit à un crédit d'impôt de 50 %, dans la limite de 5 000 € de dépenses par an et par foyer, quand l'entreprise est déclarée en services à la personne. Si c'est votre cas, l'indiquer sur la page entretien change la façon dont le client lit votre tarif.",
+      },
+      {
+        titre: 'Des demandes de devis complètes',
+        text: "Surface, type de travaux, photos du terrain, accès pour les engins, période souhaitée : le formulaire pose ces questions pour que vous sachiez, avant de vous déplacer, si le projet correspond à votre activité.",
+      },
+    ],
+    livrables: [
+      'Galerie de réalisations avant-après',
+      'Pages séparées pour la création et l’entretien',
+      'Formulaire de devis avec photos du terrain',
+      "Zone d'intervention claire",
+      "Crédit d'impôt expliqué si vous y ouvrez droit",
+      'Fiche Google optimisée et reliée au site',
+    ],
+    faq: [
+      {
+        q: 'Mon activité est saisonnière, le site peut-il suivre ?',
+        r: "Oui. Vous mettez en avant la taille et la tonte au printemps, les plantations à l'automne, et la page d'accueil change avec la saison. En abonnement, ces mises à jour entrent dans les modifications mensuelles.",
+      },
+      {
+        q: 'Comment présenter le crédit d’impôt sans me tromper ?',
+        r: "Nous reprenons les conditions publiées sur service-public.fr et renvoyons vers la page officielle, plutôt que d'écrire des règles de mémoire. Seuls les petits travaux de jardinage y ouvrent droit : vous nous indiquez quelles prestations votre déclaration couvre, et la page le précise.",
+      },
+      {
+        q: 'Je travaille aussi pour des professionnels, le site peut-il s’adresser à eux ?',
+        r: "Oui, avec une page dédiée aux copropriétés, aux entreprises ou aux collectivités, qui parle de contrats d'entretien et de références plutôt que de jardins privés. Le formulaire de contact s'adapte au type de demande.",
       },
     ],
   },

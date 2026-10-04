@@ -3,7 +3,8 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { offresStructurees, prixEntree } from '../data/offres';
-import { site, contact } from '../data/site';
+import { site, contact, umami } from '../data/site';
+import { ogPour } from '../lib/og';
 
 interface Props {
   title?: string;
@@ -25,7 +26,9 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/og.png', Astro.site);
+// image de partage propre à la page (src/lib/og.ts), sinon l'image générale
+const ogImage = new URL((await ogPour(Astro.url.pathname)) ?? '/og.png', Astro.site);
+const ogType = ogImage.pathname.endsWith('.jpg') ? 'image/jpeg' : 'image/png';
 
 
 const jsonLd = {
@@ -37,7 +40,7 @@ const jsonLd = {
       name: site.name,
       url: 'https://madaria.fr/',
       logo: 'https://madaria.fr/assets/07_logo_fond_sombre.svg',
-      image: ogImage.href,
+      image: new URL('/og.png', Astro.site).href,
       description:
         "Agence digitale à Lyon : création de sites internet sur-mesure livrés en 7 jours, automatisations et outils métier, partout en France.",
       email: contact.email,
@@ -151,9 +154,10 @@ const jsonLd = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content={ogType} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Madaria — création de site internet livré en 7 jours" />
+    <meta property="og:image:alt" content={title} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -172,6 +176,7 @@ const jsonLd = {
     <noscript><style>.rv{opacity:1!important;transform:none!important}</style></noscript>
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {umami.id && <script is:inline defer src={umami.script} data-website-id={umami.id} data-domains="madaria.fr"></script>}
   </head>
   <body id="top">
     <div id="nav-sentinel" aria-hidden="true"></div>
@@ -183,7 +188,9 @@ const jsonLd = {
 
     <script>
       import { initReveal } from '../scripts/reveal';
+      import { initMesure } from '../scripts/mesure';
       initReveal();
+      initMesure();
     </script>
   </body>
 </html>

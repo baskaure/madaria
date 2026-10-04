@@ -281,6 +281,11 @@ video.defile.joue{opacity:1}
 .metier:hover{border-color:var(--line2);background:rgba(255,255,255,.03)}
 .ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.05);flex:none}
 .ico svg{width:18px;height:18px;fill:none;stroke:var(--acc);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.metier.extra{display:none}
+.metiers.ouvert .metier.extra{display:flex}
+.voir-tout{display:flex;justify-content:center;margin-top:28px}
+.voir-tout .i{transition:transform .3s}
+#voir-metiers[aria-expanded=true] .i{transform:rotate(45deg)}
 .metier.autre{border-style:dashed;color:var(--mut)}
 .metier.autre:hover{color:#fff}
 .metier .fl{margin-left:auto;color:var(--faint);transition:transform .3s,color .3s}

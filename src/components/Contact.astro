@@ -82,6 +82,8 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
 </section>
 
 <script>
+  import { suivre } from '../scripts/mesure';
+
   const form = document.querySelector<HTMLFormElement>('form[name="contact"]');
   if (form) {
     const msg = form.querySelector<HTMLElement>('#fmsg')!;
@@ -160,6 +162,7 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
         new FormData(form).forEach((valeur, cle) => corps.append(cle, String(valeur)));
         const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: corps });
         if (!res.ok) throw new Error(String(res.status));
+        suivre('devis', { page: location.pathname, offre: String(new FormData(form).get('offre') || 'aucune') });
         location.assign('/merci/');
       } catch {
         dire('L’envoi a échoué. Votre texte est conservé. Réessayez ou écrivez à contact@madaria.fr.', false);
