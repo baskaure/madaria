@@ -5,6 +5,7 @@
  *   email        clic sur une adresse e-mail
  *   choix-offre  clic sur « Choisir Vitrine », « Choisir Visibilité »…
  *   devis        demande de devis envoyée (Contact.astro)
+ *   presentation clic sur « Réserver ma présentation » (Cal.com)
  */
 type Umami = { track: (evenement: string, donnees?: Record<string, string>) => void };
 
@@ -21,6 +22,7 @@ export function initMesure() {
     const page = location.pathname;
     if (lien.href.startsWith('tel:')) suivre('appel', { page });
     else if (lien.href.startsWith('mailto:')) suivre('email', { page });
+    else if (lien.hasAttribute('data-presentation')) suivre('presentation', { page });
     else if (lien.dataset.offre) suivre('choix-offre', { offre: lien.dataset.offre, page });
   });
 }

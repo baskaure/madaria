@@ -2,7 +2,7 @@
 import Icon from './Icon.astro';
 import Mur from './Mur.astro';
 import { offres, achatEntree } from '../data/offres';
-import { contact } from '../data/site';
+import { contact, presentation } from '../data/site';
 
 const entree = offres[0];
 ---
@@ -18,7 +18,11 @@ const entree = offres[0];
         Un interlocuteur direct, du premier échange à la mise en ligne.
       </p>
       <div class="hcta">
-        <a class="btn btn-p" href="#contact">Recevoir mon devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
+        {presentation.lien ? (
+          <a class="btn btn-p" href={presentation.lien} target="_blank" rel="noopener" data-presentation>Réserver ma présentation de 15&nbsp;min<Icon name="arrow" class="i" /></a>
+        ) : (
+          <a class="btn btn-p" href="#contact">Recevoir mon devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
+        )}
         <a class="btn btn-g" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
       </div>
       <div class="preuves">

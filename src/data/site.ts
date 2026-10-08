@@ -44,6 +44,15 @@ export const umami = {
   script: 'https://cloud.umami.is/script.js',
 } as const;
 
+/**
+ * Prise de rendez-vous « Présentation 15 min » (Cal.com). Coller ici le lien
+ * public de l'événement, par ex. https://cal.com/madaria/presentation-15-min.
+ * Vide : les boutons restent sur la demande de devis (#contact).
+ */
+export const presentation = {
+  lien: '',
+} as const;
+
 export const footerColumns = [
   {
     title: 'Services',
