@@ -7,6 +7,18 @@ export const questions: Question[] = [
     r: `Un site vitrine sur-mesure démarre à ${prixEntree}, création incluse, et un site complet avec référencement à ${offres[1].prix} ${offres[1].unite}. Rien à payer au départ, engagement ${ENGAGEMENT_MOIS} mois. Vous pouvez aussi payer en une fois : ${achatEntree} pour la vitrine, ${offres[1].achat} € HT pour le site complet. Le devis est chiffré sous 24 heures, maquette incluse, options précisées avant engagement.`,
   },
   {
+    q: `Pourquoi ${ENGAGEMENT_MOIS} mois d'engagement ?`,
+    r: `La création du site est comprise dans l'abonnement : vous ne payez rien au départ. Les ${ENGAGEMENT_MOIS} mois couvrent ce travail. Ensuite, vous arrêtez quand vous voulez et le nom de domaine reste à vous. Vous préférez ne pas vous engager ? Le site s'achète aussi en une fois, à partir de ${achatEntree}.`,
+  },
+  {
+    q: "J'ai déjà Facebook et Instagram, ça ne suffit pas ?",
+    r: "Quand quelqu'un cherche « plombier Villeurbanne » ou « tatoueur Lyon » sur Google, ce sont des sites qui sortent. Une page Facebook ou Instagram y apparaît rarement. Votre site et vos réseaux se complètent : on relie l'un à l'autre.",
+  },
+  {
+    q: "Je n'ai pas le temps de m'en occuper.",
+    r: "Il vous faut 15 minutes au téléphone et quelques photos. On écrit les textes, on met le site en ligne, et en abonnement on fait les modifications chaque mois.",
+  },
+  {
     q: 'Combien de temps pour un site ?',
     r: "Sept jours pour un site vitrine après validation du périmètre et réception des contenus et accès nécessaires, avec vos retours aux dates convenues. Pour un e-commerce ou une application métier, le calendrier dépend des fonctionnalités et des intégrations : il est fixé au devis.",
   },
@@ -24,7 +36,7 @@ export const questions: Question[] = [
   },
   {
     q: 'À qui appartient le site une fois livré ?',
-    r: "À vous, intégralement : code, noms de domaine, comptes d'hébergement, contenus. Aucun verrouillage, aucune dépendance imposée.",
+    r: "Le nom de domaine et vos contenus sont à vous dès le premier jour. Acheté en une fois, le site est entièrement à vous : code et hébergement compris. En abonnement, si vous arrêtez, vous gardez le domaine et pouvez racheter les fichiers du site au prix indiqué au devis.",
   },
   {
     q: 'Et après la mise en ligne ?',

@@ -1,17 +1,23 @@
 ---
+/**
+ * Qui fait le site, avec les avis Google à côté : la preuve vient d'une
+ * personne joignable, pas d'un volume d'avis. Avis présentés comme sur la
+ * fiche Google (logo, étoiles, avatar à initiale).
+ */
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
+import GoogleG from './GoogleG.astro';
+import Etoiles from './Etoiles.astro';
 import portrait from '../assets/aurelien-branco.png';
 import { contact } from '../data/site';
+import { avis, noteGoogle } from '../data/avis';
 ---
 
 <section class="sec" id="agence">
-  <div class="wrap fgrid">
-    <div class="rv">
-      <span class="lab">Votre interlocuteur</span>
-      <h2>Vous parlez à celui qui <span class="acc">code votre site.</span></h2>
-    </div>
+  <div class="wrap fgrid moi">
     <div class="txt rv">
+      <span class="lab">Votre interlocuteur</span>
+      <h2>Pas une plateforme. <span class="acc">Une personne.</span></h2>
       <p>Je m'appelle Aurélien Branco. Je suis basé à Lyon et je réalise moi-même chaque projet Madaria, à distance, partout en France.</p>
       <p>Vous avez mon numéro. C'est moi qui fais la maquette, le code et la mise en ligne, et c'est encore moi que vous appelez dans six mois pour changer un horaire.</p>
       <div class="signe">
@@ -21,6 +27,26 @@ import { contact } from '../data/site';
       <div class="hcta">
         <a class="btn btn-p" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
         <a class="btn btn-g" href="#contact">Écrire plutôt</a>
+      </div>
+    </div>
+    <div class="rv" id="avis">
+      <div class="gnote">
+        <GoogleG />
+        <div><b>{noteGoogle}</b><small>Note moyenne sur Google</small></div>
+        <Etoiles />
+      </div>
+      <div class="avis une">
+        {avis.map((a) => (
+          <figure class="gavis">
+            <div class="gtete">
+              <span class="gav" style={`background:${a.couleur}`} aria-hidden="true">{a.nom.charAt(0).toUpperCase()}</span>
+              <div><b>{a.nom}</b><small>Avis de Google</small></div>
+              <GoogleG />
+            </div>
+            <div class="gligne"><Etoiles /><span>5/5 · {a.date}</span></div>
+            <blockquote>{a.texte.map((t) => <p>{t}</p>)}</blockquote>
+          </figure>
+        ))}
       </div>
     </div>
   </div>

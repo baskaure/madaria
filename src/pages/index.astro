@@ -4,7 +4,6 @@ import { questions } from '../data/faq';
 import Hero from '../components/Hero.astro';
 import Clients from '../components/Clients.astro';
 import Realisations from '../components/Realisations.astro';
-import Avis from '../components/Avis.astro';
 import Offres from '../components/Offres.astro';
 import Methode from '../components/Methode.astro';
 import Services from '../components/Services.astro';
@@ -29,12 +28,11 @@ const faqLd = {
   <Hero />
   <Clients />
   <Realisations />
-  <Avis />
+  <Agence />
   <Offres />
   <Methode />
   <Services />
   <Secteurs />
-  <Agence />
   <Faq />
   <Contact />
   <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />

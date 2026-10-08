@@ -6,7 +6,7 @@
  * Envoi par Netlify Forms (champs cachés form-name et bot-field).
  */
 import Icon from './Icon.astro';
-import { contact } from '../data/site';
+import { contact, presentation } from '../data/site';
 import { realisations } from '../data/realisations';
 import { secteurs } from '../data/secteurs';
 import { offres } from '../data/offres';
@@ -31,6 +31,7 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
         <p>Deux lignes sur votre activité suffisent. On vous rappelle pour préciser le périmètre, le budget et la date de mise en ligne.</p>
         {(secteur || projet) && <p class="contexte">{projet ? `À propos du projet ${projet}` : `Votre demande : ${secteur}`}</p>}
         <p class="contexte" id="form-contexte" hidden></p>
+        {presentation.lien && <p class="resa">Vous préférez choisir l'heure&nbsp;? <a href={presentation.lien} target="_blank" rel="noopener" data-presentation>Réservez une présentation de 15&nbsp;min</a></p>}
         <div class="coord">
           <a href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}<small>Ligne directe</small></a>
           <a href={`mailto:${contact.email}`}><Icon name="mail" class="i" />{contact.email}<small>Réponse sous 24&nbsp;h</small></a>

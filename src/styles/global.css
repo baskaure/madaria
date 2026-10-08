@@ -295,6 +295,9 @@ video.defile.joue{opacity:1}
 .fgrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:80px;align-items:start}
 .fgrid h2{font-size:44px;line-height:1.1}
 .fgrid .txt p{color:var(--mut);font-size:17px;margin-bottom:16px;max-width:560px}
+.moi{align-items:center}
+.moi h2{margin-bottom:28px}
+.avis.une{grid-template-columns:1fr;gap:14px;margin-top:14px}
 .signe{display:flex;align-items:center;gap:16px;margin:28px 0;padding-top:28px;border-top:1px solid var(--line);max-width:560px}
 .signe b{display:block;font-family:'Sora',sans-serif;font-weight:500;font-size:18px}
 .signe small{font-size:13.5px;color:var(--faint)}
@@ -318,6 +321,8 @@ video.defile.joue{opacity:1}
 .cinfo{padding:56px 48px;background:radial-gradient(120% 80% at 0% 0%,rgba(139,124,246,.14),transparent 60%)}
 .cinfo h2{font-size:44px;line-height:1.08;margin-bottom:20px}
 .cinfo > p{color:var(--mut);margin-bottom:40px;max-width:400px}
+.cinfo .resa{font-size:14.5px;color:var(--mut);margin:-16px 0 28px}
+.cinfo .resa a{color:#fff;border-bottom:1px solid var(--line2)}
 .cinfo .contexte{color:var(--acc);font-size:14px;margin:-24px 0 32px}
 .coord{display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .coord > *{display:flex;align-items:center;gap:14px;padding:18px 0;border-bottom:1px solid var(--line);font-size:15px}
