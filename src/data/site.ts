@@ -50,7 +50,7 @@ export const umami = {
  * Vide : les boutons restent sur la demande de devis (#contact).
  */
 export const presentation = {
-  lien: '',
+  lien: 'https://cal.com/madaria/presentation',
 } as const;
 
 export const footerColumns = [
