@@ -40,7 +40,7 @@ export const contact = {
  * Le script ne compte que les visites sur madaria.fr (pas l'aperçu local).
  */
 export const umami = {
-  id: '',
+  id: 'd908aea5-c6e3-4a01-872e-f5d4f74bda6d',
   script: 'https://cloud.umami.is/script.js',
 } as const;
 
