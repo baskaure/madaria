@@ -12,7 +12,7 @@ export const site = {
  * exactement comme `#services` — même document, pas de rechargement.
  */
 export const nav = [
-  { href: '/#services', label: 'Services' },
+  { href: '/services/creation-site-internet/', label: 'Services' },
   { href: '/#methode', label: 'Méthode' },
   { href: '/#realisations', label: 'Réalisations' },
   { href: '/#secteurs', label: 'Secteurs' },
@@ -59,8 +59,7 @@ export const footerColumns = [
     links: [
       { href: '/services/creation-site-internet/', label: 'Sites internet' },
       { href: '/services/automatisation/', label: 'Automatisations' },
-      { href: '/#services', label: 'Développement' },
-      { href: '/#services', label: 'SEO' },
+      { href: '/#offres', label: 'Développement sur-mesure' },
       { href: '/creation-site-internet/lyon/', label: 'Site internet à Lyon' },
       { href: '/creation-site-internet/montpellier/', label: 'Site internet à Montpellier' },
       { href: '/creation-site-internet/capbreton/', label: 'Site internet à Capbreton' },

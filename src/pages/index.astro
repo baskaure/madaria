@@ -1,12 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { questions } from '../data/faq';
+import { questionsAccueil as questions } from '../data/faq';
 import Hero from '../components/Hero.astro';
-import Clients from '../components/Clients.astro';
 import Realisations from '../components/Realisations.astro';
 import Offres from '../components/Offres.astro';
 import Methode from '../components/Methode.astro';
-import Services from '../components/Services.astro';
 import Secteurs from '../components/Secteurs.astro';
 import Agence from '../components/Agence.astro';
 import Faq from '../components/Faq.astro';
@@ -26,13 +24,11 @@ const faqLd = {
 
 <Base>
   <Hero />
-  <Clients />
   <Realisations />
-  <Agence />
+  <Secteurs />
   <Offres />
   <Methode />
-  <Services />
-  <Secteurs />
+  <Agence />
   <Faq />
   <Contact />
   <script type="application/ld+json" set:html={JSON.stringify(faqLd)} />

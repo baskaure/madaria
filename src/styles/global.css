@@ -276,6 +276,12 @@ video.defile.joue{opacity:1}
 .srow .tlink{justify-self:end;font-size:13.5px;color:var(--mut)}
 
 /* ============ MÉTIERS ============ */
+.metiers-ligne{padding-block:56px;border-top:1px solid var(--line)}
+.metiers-ligne h2{font-size:20px;letter-spacing:-.02em;margin-bottom:18px}
+.metiers-ligne nav{display:flex;flex-wrap:wrap;gap:8px}
+.metiers-ligne a{padding:7px 14px;border:1px solid var(--line2);border-radius:999px;font-size:14px;color:var(--mut);transition:color .2s,border-color .2s}
+.metiers-ligne a:hover{color:#fff;border-color:rgba(255,255,255,.35)}
+.metiers-ligne a.autre{border-style:dashed}
 .metiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .metier{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid var(--line);border-radius:14px;font-size:15px;font-weight:500;color:#fff;transition:border-color .25s,background .25s}
 .metier:hover{border-color:var(--line2);background:rgba(255,255,255,.03)}
