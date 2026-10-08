@@ -1,7 +1,8 @@
 ---
 import Icon from './Icon.astro';
 import Mur from './Mur.astro';
-import { offres } from '../data/offres';
+import { offres, achatEntree } from '../data/offres';
+import { contact } from '../data/site';
 
 const entree = offres[0];
 ---
@@ -10,7 +11,7 @@ const entree = offres[0];
   <Mur />
   <div class="wrap">
     <div class="htxt">
-      <div class="pill"><b>{entree.prix}&nbsp;€/mois</b>Création incluse, rien à payer au départ</div>
+      <div class="pill"><b>{entree.prix}&nbsp;€/mois</b>Rien à payer au départ, ou {achatEntree.replace(/ /g, '\u00a0')} en une fois</div>
       <h1>Votre site internet en ligne en 7&nbsp;jours. <span class="acc">Pas dans trois mois.</span></h1>
       <p class="lead">
         Madaria conçoit vos <strong>sites internet</strong>, <strong>automatisations</strong> et <strong>outils métier</strong>.
@@ -18,7 +19,7 @@ const entree = offres[0];
       </p>
       <div class="hcta">
         <a class="btn btn-p" href="#contact">Recevoir mon devis en 24&nbsp;h<Icon name="arrow" class="i" /></a>
-        <a class="btn btn-g" href="#realisations">Voir les réalisations</a>
+        <a class="btn btn-g" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
       </div>
       <div class="preuves">
         <span><Icon name="check" class="i" />Maquette validée avant le code</span>
