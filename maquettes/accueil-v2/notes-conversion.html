@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Madaria accueil v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;500;600&display=swap">
+<style>
+/* Mise en page : la maquette à gauche dans un cadre de navigateur, les notes de conversion à droite, ancrées section par section.
+   Thème unique sombre, volontaire : c'est celui du site Madaria. */
+:root{
+  --bg:#050407; --fg:#F5F4F8; --acc:#B4A5FF; --acc2:#8F7CFF;
+  --mut:rgba(245,244,248,.68); --faint:rgba(245,244,248,.48);
+  --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.17);
+  --encre:#0B0A10; --surface:#111015; --surface2:#17151E;
+  --note:#1A1726; --ok:#7FE0A8; --warn:#FFB36B;
+  --display:'Sora',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;margin:0}
+h1,h2,h3{font-family:var(--display);font-weight:500;letter-spacing:-.03em;line-height:1.1;margin:0;text-wrap:balance;color:#fff}
+p{margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:where(a,button,input,select):focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+
+.page{max-width:1320px;margin:0 auto;padding-block:40px 96px;padding-inline:24px}
+@media(max-width:600px){.page{padding-inline:16px}}
+
+/* ---------- En-tête du document ---------- */
+.intro{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;margin-bottom:48px;align-items:start}
+.intro .lab{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.intro h1{font-size:clamp(30px,4vw,44px);margin:10px 0 14px}
+.intro p{color:var(--mut);max-width:60ch}
+.alerte{border:1px solid rgba(255,179,107,.45);background:rgba(255,179,107,.07);border-radius:14px;padding:18px 20px}
+.alerte b{color:var(--warn);display:block;font-family:var(--display);font-weight:500;margin-bottom:6px}
+.alerte p{color:var(--fg);font-size:14px}
+.alerte p + p{margin-top:8px;color:var(--mut)}
+.top3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.top3 div{border-top:1px solid var(--line2);padding-top:12px;font-size:14px;color:var(--mut)}
+.top3 strong{display:block;color:#fff;font-weight:500;margin-bottom:2px}
+@media(max-width:900px){.intro{grid-template-columns:1fr}.top3{grid-template-columns:1fr}}
+
+/* ---------- Grille maquette + notes ---------- */
+.board{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px}
+@media(max-width:1000px){.board{grid-template-columns:1fr}}
+.frame{border:1px solid var(--line2);border-radius:16px;overflow:hidden;background:var(--bg);min-width:0}
+.bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.bar i{width:10px;height:10px;border-radius:50%;background:var(--line2)}
+.bar span{margin-left:10px;font-size:12px;color:var(--faint);background:var(--bg);padding:3px 12px;border-radius:99px}
+
+.row{display:contents}
+.notes{display:flex;flex-direction:column}
+.note{background:var(--note);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--mut)}
+.note h3{font-size:14.5px;font-family:var(--body);font-weight:600;letter-spacing:0;margin-bottom:6px;display:flex;gap:10px;align-items:baseline}
+.note .pin{flex:none}
+.note .meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.note .meta span{font-size:11.5px;padding:2px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--fg)}
+.note .meta .gain{border-color:rgba(127,224,168,.4);color:var(--ok)}
+.pin{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--acc);color:var(--encre);font-size:12px;font-weight:600;font-family:var(--body)}
+
+/* chaque section de maquette porte sa note ; sur grand écran la note est sortie dans la colonne de droite */
+.blk{position:relative}
+.blk > .pin{position:absolute;top:14px;right:14px;z-index:3;box-shadow:0 0 0 4px rgba(180,165,255,.18)}
+.side{display:flex;flex-direction:column;gap:14px}
+.inline-note{display:none}
+@media(max-width:1000px){
+  .side{display:none}
+  .inline-note{display:block;margin:0 16px 20px}
+}
+
+/* ---------- Maquette : composants Madaria ---------- */
+.m{--pad:clamp(18px,4vw,48px)}
+.mwrap{padding-inline:var(--pad)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:999px;font-size:14px;font-weight:500;border:1px solid transparent;white-space:nowrap;text-decoration:none;background:none}
+.btn-p{background:#fff;color:var(--encre)}
+.btn-p:hover{background:#ECE8FF}
+.btn-g{border-color:var(--line2);color:#fff}
+.btn-g:hover{background:rgba(255,255,255,.06)}
+.lab2{font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.msec{padding-block:56px;border-top:1px solid var(--line)}
+.msec h2{font-size:clamp(24px,3vw,34px);margin:8px 0 10px}
+.msec .sub{color:var(--mut);max-width:56ch}
+
+/* nav */
+.mnav{display:flex;align-items:center;gap:20px;padding:16px var(--pad);border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:600;letter-spacing:.08em;font-size:15px;display:flex;align-items:center;gap:8px}
+.brand::before{content:"";width:16px;height:16px;border-radius:4px;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+.mnav .links{display:flex;gap:18px;font-size:13.5px;color:var(--mut);margin-left:auto}
+.mnav .tel{font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.mnav .btn{min-height:38px;padding:0 16px;font-size:13px}
+@media(max-width:720px){.mnav .links,.mnav .tel{display:none}.mnav .btn{margin-left:auto}}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:36px;padding-block:44px 52px;align-items:center}
+@media(max-width:820px){.hero{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:22px}
+.chips small{color:var(--faint);font-size:12.5px;margin-right:4px}
+.chip{border:1px solid var(--line2);border-radius:99px;padding:5px 13px;font-size:13px;background:none;color:var(--mut)}
+.chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--encre);font-weight:500}
+.hero h1{font-size:clamp(28px,4.2vw,46px);letter-spacing:-.035em}
+.hero h1 .acc{color:var(--acc)}
+.hero .lead{color:var(--mut);margin:16px 0 22px;max-width:48ch;font-size:15.5px}
+.prix{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.prix b{font-family:var(--display);font-size:26px;font-weight:500;color:#fff}
+.prix span{color:var(--mut);font-size:13.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.rassure{margin-top:14px;font-size:13px;color:var(--mut);display:flex;gap:6px;align-items:center}
+.rassure::before{content:"✓";color:var(--ok);font-weight:600}
+
+/* téléphone d'exemple */
+.phone{justify-self:center;width:min(250px,100%);aspect-ratio:9/18.5;border-radius:34px;border:1px solid var(--line2);background:var(--surface);padding:10px;box-shadow:0 30px 80px -30px rgba(143,124,255,.45)}
+.screen{height:100%;border-radius:26px;overflow:hidden;background:#F3F1EC;color:#1B1A17;display:flex;flex-direction:column;font-size:11px;transition:background .3s}
+.s-top{padding:12px 14px;display:flex;justify-content:space-between;font-weight:600;font-size:11px}
+.s-hero{flex:1;padding:16px 14px;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;background-size:cover;background-position:center}
+.s-hero strong{font-family:var(--display);font-size:20px;line-height:1.05;letter-spacing:-.02em}
+.s-btn{align-self:flex-start;padding:7px 12px;border-radius:99px;font-weight:600;font-size:10.5px}
+.s-list{padding:12px 14px;display:grid;gap:6px}
+.s-list div{display:flex;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,.1);padding-bottom:5px}
+.s-tag{align-self:center;margin-top:10px;font-size:11.5px;color:var(--faint);text-align:center}
+
+/* preuves */
+.proofs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:26px}
+@media(max-width:720px){.proofs{grid-template-columns:1fr}}
+.proj{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.proj .shot{aspect-ratio:16/10;max-width:100%;display:grid;place-items:end start;padding:12px;font-family:var(--display);font-size:17px;color:#fff}
+.proj .info{padding:12px 14px;font-size:13px;color:var(--mut)}
+.proj .info b{color:#fff;font-weight:500;display:block}
+.proj .res{display:inline-block;margin-top:6px;font-size:12px;color:var(--ok)}
+.gnote{display:flex;align-items:center;gap:12px;margin-top:20px;font-size:13.5px;color:var(--mut)}
+.gnote b{color:#fff;font-family:var(--display);font-size:18px;font-weight:500}
+.stars{color:#FBBC04;letter-spacing:2px}
+
+/* calculateur */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;margin-top:26px;align-items:center}
+@media(max-width:720px){.calc{grid-template-columns:1fr}}
+.field{display:grid;gap:8px;margin-bottom:18px}
+.field label{font-size:13.5px;color:var(--mut);display:flex;justify-content:space-between}
+.field output{color:#fff;font-weight:500;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--acc)}
+.result{border:1px solid var(--line2);border-radius:16px;padding:24px;background:linear-gradient(160deg,rgba(180,165,255,.12),transparent 60%)}
+.result .big{font-family:var(--display);font-size:clamp(34px,5vw,48px);color:#fff;font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1}
+.result p{color:var(--mut);font-size:14px;margin-top:10px}
+.result .cmp{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:16px;padding-top:12px;font-size:13.5px;font-variant-numeric:tabular-nums}
+
+/* étapes */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:26px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+@media(max-width:720px){.steps{grid-template-columns:1fr}}
+.step{padding:20px;border-right:1px solid var(--line)}
+.step:last-child{border-right:0}
+@media(max-width:720px){.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+.step .day{font-family:var(--display);color:var(--acc);font-size:13px;font-weight:500;letter-spacing:.02em}
+.step h3{font-size:17px;margin:6px 0}
+.step p{color:var(--mut);font-size:13.5px}
+.step .pay{display:inline-block;margin-top:10px;font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid var(--line2)}
+
+/* tarifs */
+.toggle{display:inline-flex;border:1px solid var(--line2);border-radius:99px;padding:3px;margin-top:20px}
+.toggle button{border:0;background:none;padding:6px 14px;border-radius:99px;font-size:13px;color:var(--mut)}
+.toggle button[aria-pressed="true"]{background:#fff;color:var(--encre);font-weight:500}
+.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+@media(max-width:720px){.plans{grid-template-columns:1fr}}
+.plan{border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.plan.feat{border-color:var(--acc);background:linear-gradient(170deg,rgba(180,165,255,.1),transparent 50%)}
+.plan header{display:flex;justify-content:space-between;align-items:center}
+.plan h3{font-size:19px}
+.plan .badge{font-size:11.5px;padding:2px 10px;border-radius:99px;background:var(--acc);color:var(--encre);font-weight:500}
+.plan .p{font-family:var(--display);font-size:32px;color:#fff;font-variant-numeric:tabular-nums}
+.plan .p small{font-family:var(--body);font-size:13px;color:var(--mut);margin-left:4px}
+.plan .pour{font-size:13.5px;color:var(--mut)}
+.plan ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:13.5px}
+.plan li{display:flex;gap:8px}
+.plan li::before{content:"";flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-top:8px}
+.plan .btn{margin-top:auto}
+.cond{font-size:12.5px;color:var(--faint);margin-top:14px;max-width:70ch}
+
+/* FAQ */
+.faq{margin-top:22px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);padding:14px 0}
+.faq summary{cursor:pointer;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::after{content:"+";color:var(--acc);font-size:18px;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq details p{color:var(--mut);font-size:14px;margin-top:8px;max-width:64ch}
+
+/* formulaire en étapes */
+.fbox{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;margin-top:8px}
+@media(max-width:820px){.fbox{grid-template-columns:1fr}}
+.wiz{border:1px solid var(--line2);border-radius:18px;padding:22px;background:var(--surface)}
+.prog{display:flex;gap:6px;margin-bottom:18px}
+.prog i{flex:1;height:4px;border-radius:4px;background:var(--line2)}
+.prog i.on{background:var(--acc)}
+.wiz h3{font-size:18px;margin-bottom:14px}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.opt{border:1px solid var(--line2);background:none;border-radius:12px;padding:12px;text-align:left;font-size:14px}
+.opt:hover,.opt[aria-pressed="true"]{border-color:var(--acc);background:rgba(180,165,255,.08)}
+.wiz .in{display:grid;gap:6px;margin-bottom:12px}
+.wiz .in label{font-size:13px;color:var(--mut)}
+.wiz input[type=text],.wiz input[type=tel]{background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:11px 12px;color:var(--fg);font:inherit}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.slot{border:1px solid var(--line2);border-radius:10px;padding:8px 4px;background:none;font-size:12.5px;text-align:center;font-variant-numeric:tabular-nums}
+.slot[aria-pressed="true"]{background:var(--acc);color:var(--encre);border-color:var(--acc);font-weight:500}
+.wiz .nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:10px}
+.wiz .back{border:0;background:none;color:var(--faint);font-size:13px}
+.done{text-align:center;padding:20px 0}
+.done b{display:block;font-family:var(--display);font-size:20px;color:#fff;margin-bottom:6px;font-weight:500}
+.done p{color:var(--mut);font-size:14px}
+.coord{display:grid;gap:10px;margin-top:18px;font-size:14px}
+.coord div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px;gap:10px}
+.coord span{color:var(--mut)}
+.face{display:flex;gap:12px;align-items:center;margin-top:18px;font-size:13.5px;color:var(--mut)}
+.face i{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2a2440,#4b3f7a);flex:none;display:grid;place-items:center;font-style:normal;color:#fff;font-family:var(--display)}
+
+/* barre mobile collante (démontrée dans la maquette) */
+.sticky{position:sticky;bottom:0;z-index:4;display:none;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(5,4,7,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line2)}
+.sticky .btn{flex:1;min-height:44px}
+@media(max-width:720px){.sticky{display:flex}}
+
+.foot{margin-top:40px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+@media(max-width:800px){.foot{grid-template-columns:1fr}}
+.foot section{border:1px solid var(--line);border-radius:14px;padding:20px}
+.foot h2{font-size:18px;margin-bottom:10px}
+.foot li{color:var(--mut);font-size:14px;margin-bottom:6px}
+.foot ol,.foot ul{margin:0;padding-left:18px}
+.foot b{color:#fff;font-weight:500}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="intro">
+    <div>
+      <span class="lab">Proposition de maquette · accueil madaria.fr · 8 oct. 2026</span>
+      <h1>Une page qui parle à un artisan, pas à une agence.</h1>
+      <p>Le site actuel est beau mais généraliste : « sites, automatisations, outils métier », 11 sections, un bouton « devis ». Cette version vise tes deux cibles prioritaires (artisans du bâtiment, tatoueurs), montre le prix tout de suite et transforme la demande en <b>rendez-vous de présentation daté</b>. C'est là que tes maquettes se perdaient.</p>
+      <div class="top3">
+        <div><strong>1. Le métier d'abord</strong>Le visiteur choisit son métier, le titre, l'exemple et les preuves changent.</div>
+        <div><strong>2. Maquette, pas devis</strong>Le prix est affiché. On propose une maquette gratuite présentée en visio de 15 min.</div>
+        <div><strong>3. Un créneau, pas un formulaire</strong>Le formulaire se termine par le choix d'un créneau. La suite est datée.</div>
+      </div>
+    </div>
+    <div class="alerte" role="note">
+      <b>À faire avant tout changement : la mesure est coupée</b>
+      <p>L'identifiant Umami est vide dans <code>src/data/site.ts</code>. Aujourd'hui, aucune visite ni demande n'est comptée. Sans ça, impossible de savoir si cette maquette convertit mieux que l'actuelle.</p>
+      <p>Contre-vue : le site reçoit sans doute peu de visites. Il sert surtout à rassurer les prospects que tu contactes. La refonte aide le closing, elle ne remplace pas la prospection.</p>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="frame m" id="maquette">
+      <div class="bar"><i></i><i></i><i></i><span>madaria.fr</span></div>
+
+      <!-- 1 NAV -->
+      <div class="blk" data-n="1">
+        <span class="pin">1</span>
+        <nav class="mnav" aria-label="Maquette : navigation">
+          <span class="brand">MADARIA</span>
+          <div class="links"><span>Réalisations</span><span>Tarifs</span><span>Questions</span></div>
+          <span class="tel">06 99 68 19 57</span>
+          <a class="btn btn-p" href="#form">Maquette gratuite</a>
+        </nav>
+      </div>
+      <div class="inline-note" data-for="1"></div>
+
+      <!-- 2 HERO -->
+      <div class="blk" data-n="2">
+        <span class="pin">2</span>
+        <div class="mwrap hero">
+          <div>
+            <div class="chips" role="group" aria-label="Votre métier">
+              <small>Vous êtes</small>
+              <button class="chip" type="button" data-m="artisan" aria-pressed="true">Artisan du bâtiment</button>
+              <button class="chip" type="button" data-m="tatoueur" aria-pressed="false">Tatoueur, perceur</button>
+              <button class="chip" type="button" data-m="resto" aria-pressed="false">Restaurant</button>
+              <button class="chip" type="button" data-m="autre" aria-pressed="false">Autre</button>
+            </div>
+            <h1 id="h-titre"></h1>
+            <p class="lead" id="h-lead"></p>
+            <div class="prix"><b>49&nbsp;€ HT/mois</b><span>création incluse, rien à payer au départ · ou 690&nbsp;€ en une fois</span></div>
+            <div class="cta">
+              <a class="btn btn-p" href="#form">Voir ma maquette gratuite →</a>
+              <a class="btn btn-g" href="#form">Appeler Aurélien</a>
+            </div>
+            <p class="rassure">La maquette ne vous plaît pas ? Vous ne payez rien.</p>
+          </div>
+          <div>
+            <div class="phone" aria-hidden="true">
+              <div class="screen" id="s-screen">
+                <div class="s-top"><span id="s-nom"></span><span>☰</span></div>
+                <div class="s-hero" id="s-hero"><strong id="s-titre"></strong><span class="s-btn" id="s-btn"></span></div>
+                <div class="s-list" id="s-list"></div>
+              </div>
+            </div>
+            <p class="s-tag" id="s-tag"></p>
+          </div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="2"></div>
+
+      <!-- 3 PREUVES -->
+      <div class="blk" data-n="3">
+        <span class="pin">3</span>
+        <div class="mwrap msec">
+          <span class="lab2">Quelques sites que nous avons conçus</span>
+          <h2 id="p-titre"></h2>
+          <div class="proofs" id="p-liste"></div>
+          <div class="gnote"><b>5,0</b><span class="stars">★★★★★</span><span>sur Google</span></div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="3"></div>
+
+      <!-- 4 CALCULATEUR -->
+      <div class="blk" data-n="4">
+        <span class="pin">4</span>
+        <div class="mwrap msec">
+          <span class="lab2">Est-ce rentable pour vous ?</span>
+          <h2>Combien de clients pour payer votre site ?</h2>
+          <p class="sub">Bougez les curseurs avec vos vrais chiffres.</p>
+          <div class="calc">
+            <div>
+              <div class="field">
+                <label for="c-panier">Ce que vous rapporte un client <output id="o-panier"></output></label>
+                <input type="range" id="c-panier" min="20" max="3000" step="10" value="350">
+              </div>
+              <div class="field">
+                <label for="c-clients">Nouveaux clients par mois grâce au site <output id="o-clients"></output></label>
+                <input type="range" id="c-clients" min="1" max="10" step="1" value="2">
+              </div>
+            </div>
+            <div class="result" aria-live="polite">
+              <div class="big" id="r-big"></div>
+              <p id="r-txt"></p>
+              <div class="cmp"><span>Coût du site (Visibilité)</span><span>79 € HT/mois</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="4"></div>
+
+      <!-- 5 ÉTAPES -->
+      <div class="blk" data-n="5">
+        <span class="pin">5</span>
+        <div class="mwrap msec">
+          <span class="lab2">Comment ça se passe</span>
+          <h2>Vous voyez tout avant de payer. En ligne 7 jours après votre oui.</h2>
+          <div class="steps">
+            <div class="step"><span class="day">Jour 1</span><h3>Appel de 15 min</h3><p>Votre métier, votre zone, ce que vous voulez. Pas de jargon.</p><span class="pay">Gratuit</span></div>
+            <div class="step"><span class="day">Jour 3</span><h3>On vous montre la maquette</h3><p>En visio ou chez vous à Lyon. Vous dites oui, on corrige, ou on s'arrête là.</p><span class="pay">Gratuit</span></div>
+            <div class="step"><span class="day">Jour 10</span><h3>Votre site est en ligne</h3><p>Nom de domaine à votre nom, fiche Google reliée, vous êtes trouvable.</p><span class="pay">Premier paiement</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="5"></div>
+
+      <!-- 6 TARIFS -->
+      <div class="blk" data-n="6">
+        <span class="pin">6</span>
+        <div class="mwrap msec" id="tarifs">
+          <span class="lab2">Tarifs</span>
+          <h2>Deux formules. Le prix est le prix.</h2>
+          <div class="toggle" role="group" aria-label="Mode de paiement">
+            <button type="button" data-pay="mois" aria-pressed="true">Par mois</button>
+            <button type="button" data-pay="once" aria-pressed="false">En une fois</button>
+          </div>
+          <div class="plans">
+            <article class="plan">
+              <header><h3>Vitrine</h3></header>
+              <div class="p" data-mois="49" data-once="690"></div>
+              <p class="pour">Pour être joignable et crédible quand on vous cherche.</p>
+              <ul><li>Jusqu'à 5 pages, adaptées au téléphone</li><li>Formulaire de contact et bouton d'appel</li><li>Domaine, hébergement, mises à jour</li><li>30 min de modifications par mois</li></ul>
+              <a class="btn btn-g" href="#form">Commencer avec Vitrine</a>
+            </article>
+            <article class="plan feat">
+              <header><h3>Visibilité</h3><span class="badge">Conseillé aux artisans</span></header>
+              <div class="p" data-mois="79" data-once="1 490"></div>
+              <p class="pour">Pour sortir sur Google dans votre ville et votre métier.</p>
+              <ul><li>Tout Vitrine</li><li>Une page par service et par ville</li><li>Référencement local et fiche Google</li><li>Rédaction des textes faite pour vous</li><li>1 h de modifications par mois</li></ul>
+              <a class="btn btn-p" href="#form">Commencer avec Visibilité</a>
+            </article>
+          </div>
+          <p class="cond">Prix HT. Abonnement sur 12 mois, puis résiliable à tout moment. Le nom de domaine reste à vous. Besoin d'un espace client ou d'une réservation en ligne ? <u>Sur-mesure, chiffré en 24 h</u>.</p>
+        </div>
+      </div>
+      <div class="inline-note" data-for="6"></div>
+
+      <!-- 7 FAQ -->
+      <div class="blk" data-n="7">
+        <span class="pin">7</span>
+        <div class="mwrap msec">
+          <span class="lab2">Vos questions</span>
+          <h2>Ce qu'on nous demande avant de signer</h2>
+          <div class="faq">
+            <details open><summary>Pourquoi 12 mois d'engagement ?</summary><p>La création est incluse dans l'abonnement : vous ne payez rien au départ. Les 12 mois couvrent ce travail. Ensuite, vous arrêtez quand vous voulez et le domaine reste à vous.</p></details>
+            <details><summary>J'ai déjà une page Facebook ou Instagram, ça ne suffit pas ?</summary><p>Sur Google, quand on cherche « plombier Villeurbanne », ce sont les sites qui sortent. Une page Facebook n'y apparaît presque jamais.</p></details>
+            <details><summary>Je n'ai pas le temps de m'en occuper.</summary><p>Un appel de 15 min et quelques photos. On écrit les textes, on met en ligne, on fait les modifications.</p></details>
+            <details><summary>Et si la maquette ne me plaît pas ?</summary><p>Vous ne payez rien et on se quitte bons amis.</p></details>
+          </div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="7"></div>
+
+      <!-- 8 FORMULAIRE -->
+      <div class="blk" data-n="8">
+        <span class="pin">8</span>
+        <div class="mwrap msec" id="form">
+          <div class="fbox">
+            <div>
+              <span class="lab2">Maquette gratuite</span>
+              <h2>Voyez votre futur site avant de décider.</h2>
+              <p class="sub">Trois questions, puis vous choisissez quand on vous la montre.</p>
+              <div class="face"><i>A</i><span><b style="color:#fff;font-weight:500">Aurélien, fondateur</b><br>C'est moi qui vous appelle et qui fais votre site.</span></div>
+              <div class="coord">
+                <div><span>Téléphone</span><b>06 99 68 19 57</b></div>
+                <div><span>E-mail</span><b>contact@madaria.fr</b></div>
+                <div><span>Où</span><b>Lyon, et partout en visio</b></div>
+              </div>
+            </div>
+            <form class="wiz" id="wiz" novalidate>
+              <div class="prog"><i class="on"></i><i></i><i></i></div>
+              <div data-step="1">
+                <h3>Votre métier</h3>
+                <div class="opts">
+                  <button type="button" class="opt" aria-pressed="false">Plombier, chauffagiste</button>
+                  <button type="button" class="opt" aria-pressed="false">Électricien</button>
+                  <button type="button" class="opt" aria-pressed="false">Peintre, rénovation</button>
+                  <button type="button" class="opt" aria-pressed="false">Tatoueur, perceur</button>
+                  <button type="button" class="opt" aria-pressed="false">Restaurant</button>
+                  <button type="button" class="opt" aria-pressed="false">Autre</button>
+                </div>
+              </div>
+              <div data-step="2" hidden>
+                <h3>Vous avez déjà un site ?</h3>
+                <div class="opts">
+                  <button type="button" class="opt" aria-pressed="false">Non, rien</button>
+                  <button type="button" class="opt" aria-pressed="false">Juste Facebook / Instagram</button>
+                  <button type="button" class="opt" aria-pressed="false">Oui, mais il est vieux</button>
+                  <button type="button" class="opt" aria-pressed="false">Oui, il ne m'apporte rien</button>
+                </div>
+              </div>
+              <div data-step="3" hidden>
+                <h3>Quand vous montrer la maquette ?</h3>
+                <div class="slots" role="group" aria-label="Créneaux">
+                  <button type="button" class="slot" aria-pressed="false">Lun. 12<br>8 h 00</button>
+                  <button type="button" class="slot" aria-pressed="true">Lun. 12<br>18 h 00</button>
+                  <button type="button" class="slot" aria-pressed="false">Mar. 13<br>12 h 30</button>
+                  <button type="button" class="slot" aria-pressed="false">Mar. 13<br>18 h 00</button>
+                  <button type="button" class="slot" aria-pressed="false">Mer. 14<br>8 h 00</button>
+                  <button type="button" class="slot" aria-pressed="false">Mer. 14<br>18 h 30</button>
+                </div>
+                <div class="in"><label for="w-nom">Votre nom</label><input id="w-nom" type="text" value="Karim B." autocomplete="name"></div>
+                <div class="in"><label for="w-tel">Votre téléphone</label><input id="w-tel" type="tel" value="06 12 34 56 78" autocomplete="tel"></div>
+              </div>
+              <div data-step="4" hidden class="done">
+                <b>C'est noté pour lundi 12 à 18 h.</b>
+                <p>Aurélien vous appelle demain pour 15 min, puis vous montre votre maquette lundi. Un SMS de rappel part la veille.</p>
+              </div>
+              <div class="nav">
+                <button type="button" class="back" id="w-back" hidden>← Retour</button>
+                <button type="submit" class="btn btn-p" id="w-next" style="margin-left:auto">Continuer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="inline-note" data-for="8"></div>
+
+      <!-- 9 BARRE MOBILE -->
+      <div class="sticky" aria-label="Maquette : barre mobile">
+        <a class="btn btn-g" href="#form">Appeler</a>
+        <a class="btn btn-p" href="#form">Maquette gratuite</a>
+      </div>
+    </div>
+
+    <aside class="side" id="side" aria-label="Notes de conversion"></aside>
+  </div>
+
+  <div class="foot">
+    <section>
+      <h2>Ordre de mise en place conseillé</h2>
+      <ol>
+        <li><b>Brancher Umami</b> et compter 2 événements : clic « Maquette gratuite », formulaire envoyé. 15 min.</li>
+        <li><b>Hero par métier + CTA « maquette gratuite »</b> (notes 2 et 8). Le plus gros effet attendu. 1 jour.</li>
+        <li><b>Formulaire en 3 étapes avec créneau</b> (note 8). Corrige le closing. 1 jour.</li>
+        <li><b>Calculateur, étapes datées, tarifs à bascule</b> (notes 4 à 6). 1 jour.</li>
+        <li>Une page <b>/artisans</b> avec ce même gabarit, à mettre dans tes mails et DM.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Ce qui manque pour que ça marche</h2>
+      <ul>
+        <li><b>Une maquette d'exemple artisan</b> à mettre dans le téléphone du hero (aujourd'hui fictive : « Martin Plomberie »).</li>
+        <li><b>Plus d'avis Google</b> : 2 avis, dont un de Tom, c'est fragile. Viser 5 vrais avis clients avant d'afficher la note en grand.</li>
+        <li><b>Un vrai agenda</b> pour les créneaux (Cal.com gratuit ou Google Agenda), relié au formulaire.</li>
+        <li><b>Vérifier la promesse « vous ne payez rien »</b> contre les CGV : elle colle à « rien à payer au départ », mais à faire relire (à confirmer).</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+  /* ---- notes de conversion ---- */
+  const notes = {
+    1: {t:"Menu réduit de 7 à 3 liens, numéro visible", d:"Chaque lien en plus est une sortie. Le numéro en clair rassure un artisan, qui préfère appeler qu'écrire. Le bouton dit ce qu'on obtient : une maquette.", e:"30 min", g:"Moins de fuites"},
+    2: {t:"Le titre parle de son métier, pas de nous", d:"Aujourd'hui : « sites, automatisations, outils métier ». Un plombier ne se reconnaît pas. Les boutons métier changent titre, texte et exemple. Le prix et la garantie sont visibles sans défiler.", e:"1 jour", g:"Gros effet attendu"},
+    3: {t:"Preuves du même métier en premier", d:"KlientMap (un SaaS) ouvre le portfolio actuel : il ne parle pas à un commerçant. Ici on montre Aurore Piercing à un tatoueur, Kami à un restaurant. La formule « que nous avons conçus » est gardée.", e:"2 h", g:"Confiance"},
+    4: {t:"Calculateur : le prix rapporté à son gain", d:"C'est ton argument de vente au téléphone (« 2 clients par mois ? »), mis sur la page. Avec 350 € par chantier, un seul chantier paie 4 mois de site. Les chiffres sont ceux du visiteur, pas une promesse.", e:"3 h", g:"Lève « trop cher »"},
+    5: {t:"Étapes datées, paiement à la fin", d:"Remplace la méthode en 4 étapes abstraites. L'étape 2 dit noir sur blanc qu'on présente la maquette : c'est ce qui manquait à tes 10 maquettes envoyées par mail.", e:"1 h", g:"Lève la peur"},
+    6: {t:"Deux formules, bascule mois / une fois", d:"Sur-mesure passe en une ligne : il ne concerne pas ta cible et dilue le choix. Le badge parle aux artisans. L'engagement de 12 mois est écrit en clair, pas caché.", e:"2 h", g:"Choix plus simple"},
+    7: {t:"FAQ = objections réelles", d:"Les 4 freins entendus en prospection : engagement, « j'ai Facebook », pas le temps, peur de payer pour rien. Les questions techniques passent dans une page à part.", e:"1 h", g:"Lève les freins"},
+    8: {t:"Formulaire en 3 étapes qui finit par un créneau", d:"Des boutons au lieu de champs, puis nom, téléphone et choix d'un créneau de présentation. La prochaine étape est datée avant même ton premier appel. Créneaux tôt le matin et après 18 h : les heures où les artisans répondent.", e:"1 jour", g:"Corrige le closing"},
+    9: {t:"Barre collante sur téléphone", d:"Sur mobile (la plupart des visites venant d'un DM ou d'un SMS), « Appeler » et « Maquette gratuite » restent toujours sous le pouce. Visible en réduisant la fenêtre.", e:"30 min", g:"Mobile"}
+  };
+  const card = n => `<div class="note"><h3><span class="pin">${n}</span>${notes[n].t}</h3><p>${notes[n].d}</p><div class="meta"><span>Effort : ${notes[n].e}</span><span class="gain">${notes[n].g}</span></div></div>`;
+  const side = document.getElementById('side');
+  side.innerHTML = Object.keys(notes).map(card).join('');
+  document.querySelectorAll('.inline-note').forEach(el => { el.innerHTML = card(el.dataset.for); });
+  // la note 9 apparaît aussi sous la maquette en mobile
+  const last = document.querySelector('.inline-note[data-for="8"]');
+  if (last) last.insertAdjacentHTML('afterend', `<div class="inline-note">${card(9)}</div>`);
+
+  /* ---- hero par métier ---- */
+  const M = {
+    artisan:{titre:'Quand on tape « plombier Lyon 7 », on doit tomber <span class="acc">sur vous.</span>',
+      lead:"Un site pro qui vous fait trouver sur Google et sonner votre téléphone. En ligne en 7 jours, textes écrits pour vous.",
+      nom:'Martin Plomberie', s:'Dépannage en 1 h à Lyon', btn:'Appeler maintenant', bg:'linear-gradient(160deg,#1F3A5F,#0F1E33)', fg:'#fff', bc:'#FFB703', bcf:'#111',
+      list:[['Fuite, débouchage','Dès 89 €'],['Chauffe-eau','Devis 24 h'],['Avis Google','4,9 ★']], tag:'Exemple de maquette artisan',
+      ptitre:"Des sites pour des gens de métier, pas pour des start-up.",
+      proofs:[['Aurore Piercing','Beauté · Montpellier','#3B2A4A,#1A1222'],['Kami','Restauration · Capbreton','#4A2F1E,#1F140C'],['Le Château des Tourelles','Hôtellerie · Vendée','#26402F,#111F17']]},
+    tatoueur:{titre:'Vos clients regardent Instagram. Puis ils cherchent <span class="acc">votre site.</span>',
+      lead:"Un portfolio qui met vos pièces en valeur et prend les demandes de rendez-vous à votre place. En ligne en 7 jours.",
+      nom:'Aurore Piercing', s:'Piercing, Montpellier', btn:'Prendre rendez-vous', bg:'linear-gradient(160deg,#3B2A4A,#120C18)', fg:'#fff', bc:'#E9C9FF', bcf:'#1a1020',
+      list:[['Piercings','→'],['Bijoux','→'],['Rendez-vous','En ligne']], tag:'Site réalisé : Aurore Piercing',
+      ptitre:"Un site qui ressemble à votre studio.",
+      proofs:[['Aurore Piercing','Piercing · Montpellier','#3B2A4A,#1A1222'],['Tom Carvalho','Vidéo · Paris','#4A1E1E,#1F0C0C'],['Lucas Morin','Vidéo · France','#1E2E4A,#0C121F']]},
+    resto:{titre:'Avant de réserver, ils regardent votre carte <span class="acc">sur leur téléphone.</span>',
+      lead:"Carte, photos, horaires et réservation, lisibles en 5 secondes. Mis à jour par nous, en ligne en 7 jours.",
+      nom:'Kami', s:'Restaurant, Capbreton', btn:'Réserver une table', bg:'linear-gradient(160deg,#4A2F1E,#1A100A)', fg:'#fff', bc:'#F4E3C3', bcf:'#2a1a0f',
+      list:[['La carte','→'],['Horaires','→'],['Réserver','→']], tag:'Site réalisé : Kami',
+      ptitre:"Des cartes qu'on a envie de goûter.",
+      proofs:[['Kami','Restauration · Capbreton','#4A2F1E,#1F140C'],['Le Château des Tourelles','Hôtellerie · Vendée','#26402F,#111F17'],['Aurore Piercing','Beauté · Montpellier','#3B2A4A,#1A1222']]},
+    autre:{titre:'Votre site internet en ligne en 7 jours. <span class="acc">Pas dans trois mois.</span>',
+      lead:"Un site clair, trouvé sur Google, que vous n'avez pas à gérer. Un seul interlocuteur du premier appel à la mise en ligne.",
+      nom:'Votre entreprise', s:'Votre activité, votre ville', btn:'Nous contacter', bg:'linear-gradient(160deg,#2A2440,#100D1A)', fg:'#fff', bc:'#B4A5FF', bcf:'#0B0A10',
+      list:[['Services','→'],['Réalisations','→'],['Contact','→']], tag:'Exemple de maquette',
+      ptitre:"Quelques réalisations récentes.",
+      proofs:[['Kami','Restauration · Capbreton','#4A2F1E,#1F140C'],['Aurore Piercing','Beauté · Montpellier','#3B2A4A,#1A1222'],['KingdomAds','Marketing · Montpellier','#1E3A4A,#0C1A1F']]}
+  };
+  const $ = id => document.getElementById(id);
+  function setMetier(k){
+    const m = M[k];
+    $('h-titre').innerHTML = m.titre; $('h-lead').textContent = m.lead;
+    $('s-nom').textContent = m.nom; $('s-titre').textContent = m.s;
+    $('s-hero').style.background = m.bg; $('s-hero').style.color = m.fg;
+    $('s-btn').textContent = m.btn; $('s-btn').style.background = m.bc; $('s-btn').style.color = m.bcf;
+    $('s-list').innerHTML = m.list.map(([a,b]) => `<div><span>${a}</span><b>${b}</b></div>`).join('');
+    $('s-tag').textContent = m.tag;
+    $('p-titre').textContent = m.ptitre;
+    $('p-liste').innerHTML = m.proofs.map(([n,s,c]) => `<article class="proj"><div class="shot" style="background:linear-gradient(150deg,${c})">${n}</div><div class="info"><b>${n}</b>${s}</div></article>`).join('');
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.m === k)));
+  }
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => setMetier(c.dataset.m)));
+  setMetier('artisan');
+
+  /* ---- calculateur ---- */
+  const fmt = n => n.toLocaleString('fr-FR');
+  function calc(){
+    const p = +$('c-panier').value, c = +$('c-clients').value;
+    $('o-panier').textContent = fmt(p) + ' €'; $('o-clients').textContent = c;
+    const gain = p * c, mois = gain / 79;
+    $('r-big').textContent = '+' + fmt(gain) + ' € / mois';
+    $('r-txt').textContent = mois >= 1
+      ? `Un seul de ces clients paie ${p >= 79 ? fmt(Math.floor(p/79)) + ' mois' : 'une partie'} de votre site.`
+      : `Il faut ${Math.ceil(79/p)} clients par mois pour couvrir le site.`;
+  }
+  ['c-panier','c-clients'].forEach(id => $(id).addEventListener('input', calc)); calc();
+
+  /* ---- tarifs mois / une fois ---- */
+  function pay(mode){
+    document.querySelectorAll('.plan .p').forEach(el => {
+      el.innerHTML = mode === 'mois' ? `${el.dataset.mois} €<small>HT/mois</small>` : `${el.dataset.once} €<small>HT, une fois</small>`;
+    });
+    document.querySelectorAll('.toggle button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pay === mode)));
+  }
+  document.querySelectorAll('.toggle button').forEach(b => b.addEventListener('click', () => pay(b.dataset.pay))); pay('mois');
+
+  /* ---- formulaire en étapes (démo, rien n'est envoyé) ---- */
+  const wiz = $('wiz'); let step = 1;
+  const show = () => {
+    wiz.querySelectorAll('[data-step]').forEach(s => s.hidden = +s.dataset.step !== step);
+    wiz.querySelectorAll('.prog i').forEach((b,i) => b.classList.toggle('on', i < step));
+    $('w-back').hidden = step === 1 || step === 4;
+    $('w-next').hidden = step === 4;
+    $('w-next').textContent = step === 3 ? 'Réserver ma présentation' : 'Continuer';
+  };
+  wiz.addEventListener('click', e => {
+    const b = e.target.closest('.opt,.slot'); if (!b) return;
+    b.parentElement.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    if (b.classList.contains('opt') && step < 3) { step++; show(); }
+  });
+  $('w-back').addEventListener('click', () => { step--; show(); });
+  wiz.addEventListener('submit', e => { e.preventDefault(); if (step < 4) { step++; show(); } });
+  show();
+})();
+</script>
+
+</body>
+</html>
