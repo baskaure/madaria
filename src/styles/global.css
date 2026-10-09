@@ -140,6 +140,8 @@ header.sh.scrolled .sh-nav{background:linear-gradient(165deg,rgba(20,19,30,.44),
 .hero::before,.ph::before{content:'';position:absolute;left:50%;top:-200px;width:1100px;max-width:100%;height:700px;transform:translateX(-50%);pointer-events:none;
   background:radial-gradient(closest-side,rgba(139,124,246,.16),transparent)}
 .htxt{max-width:calc(50% - 48px)}
+/* les deux boutons du hero tiennent sur une ligne dès que la place le permet */
+.htxt .hcta{flex-wrap:nowrap}
 .pill{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border:1px solid var(--line2);border-radius:999px;font-size:13px;color:var(--mut);margin-bottom:32px}
 .pill b{font-weight:500;color:var(--encre);background:var(--acc);border-radius:999px;padding:2px 9px;font-size:12px;white-space:nowrap}
 .hero h1{font-size:clamp(44px,4.3vw,64px);line-height:1.03;letter-spacing:-.045em}
@@ -501,6 +503,7 @@ video.defile.joue{opacity:1}
   .hero h1{font-size:40px;line-height:1.05}
   .lead{font-size:16px;margin:20px 0 28px}
   .hcta .btn{flex:1 1 100%}
+  .htxt .hcta{flex-wrap:wrap}
   .mur{height:360px;margin-top:32px;--th:122px}
   .mur-lien{left:20px;bottom:24px;font-size:12.5px}
   .preuves{flex-direction:column;gap:10px;margin-top:28px}
