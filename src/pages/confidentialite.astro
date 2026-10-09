@@ -1,6 +1,6 @@
 ---
 import Legal from '../layouts/Legal.astro';
-import { umami } from '../data/site';
+import { umami, pubsMeta } from '../data/site';
 ---
 
 <Legal
@@ -24,6 +24,11 @@ import { umami } from '../data/site';
       description de votre projet.</li>
     <li><strong>Contact direct</strong> : les informations que vous transmettez par e-mail ou
       téléphone.</li>
+    {pubsMeta.formulaires && (
+      <li><strong>Formulaire de nos publicités Facebook et Instagram</strong> : prénom, numéro
+        de téléphone, adresse e-mail et vos réponses aux questions du formulaire (métier, besoin).
+        Vous les remplissez sur Facebook ou Instagram, qui nous les transmet.</li>
+    )}
   </ul>
   <p>Aucune donnée n'est collectée à votre insu et aucune n'est revendue à des tiers.</p>
 
@@ -49,6 +54,14 @@ import { umami } from '../data/site';
     Netlify, Inc. (États-Unis), qui héberge le site et réceptionne les soumissions du formulaire. Netlify adhère au cadre de protection des
     données UE–États-Unis (Data Privacy Framework), qui encadre ce transfert.
   </p>
+  {pubsMeta.formulaires && (
+    <p>
+      Les demandes envoyées depuis nos publicités passent par Meta Platforms Ireland Ltd, qui
+      exploite Facebook et Instagram. Meta traite aussi ces données selon sa propre politique de
+      confidentialité. Nous récupérons votre demande pour vous rappeler, puis nous la conservons
+      dans les mêmes conditions que les autres prospects (3 ans au plus après le dernier contact).
+    </p>
+  )}
 
   <h2>Cookies et mesure d'audience</h2>
   <p>

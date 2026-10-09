@@ -53,6 +53,16 @@ export const presentation = {
   lien: 'https://cal.com/madaria/presentation',
 } as const;
 
+/**
+ * Publicités Meta avec formulaire intégré (Facebook / Instagram). Passer à
+ * true le jour du lancement : la politique de confidentialité affiche alors la
+ * section sur les demandes reçues par ces formulaires. Le pixel Meta n'est pas
+ * installé : s'il l'est un jour, il faudra d'abord un bandeau de consentement.
+ */
+export const pubsMeta = {
+  formulaires: false,
+} as const;
+
 export const footerColumns = [
   {
     title: 'Services',
