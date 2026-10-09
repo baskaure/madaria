@@ -5,7 +5,7 @@
  *   email        clic sur une adresse e-mail
  *   choix-offre  clic sur « Choisir Vitrine », « Choisir Visibilité »…
  *   devis        demande de devis envoyée (Contact.astro)
- *   presentation clic sur « Réserver ma présentation » (Cal.com)
+ *   presentation clic sur « Réserver mon appel de 15 min » (Cal.com)
  */
 type Umami = { track: (evenement: string, donnees?: Record<string, string>) => void };
 
