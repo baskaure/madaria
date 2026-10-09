@@ -57,7 +57,7 @@ export const presentation = {
  * installé : s'il l'est un jour, il faudra d'abord un bandeau de consentement.
  */
 export const pubsMeta = {
-  formulaires: false,
+  formulaires: true,
 } as const;
 
 export const footerColumns = [
