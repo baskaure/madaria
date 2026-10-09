@@ -1,8 +1,0 @@
----
-/** « Jour 2 → 3 » : la flèche du texte devient l'icône (iOS en fait un emoji). */
-import Icon from './Icon.astro';
-
-const { texte } = Astro.props as { texte: string };
-const [debut, fin] = texte.split(' → ');
----
-{fin === undefined ? texte : <>{debut} <Icon name="arrow" class="i" /> {fin}</>}

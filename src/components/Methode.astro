@@ -1,23 +1,24 @@
 ---
 import SectionHead from './SectionHead.astro';
-import Delai from './Delai.astro';
 import { etapes } from '../data/methode';
 ---
 
 <section class="sec" id="methode">
   <div class="wrap">
-    <SectionHead label="Méthode">
-      <Fragment slot="titre">Quatre étapes. <span class="acc">Sept jours.</span></Fragment>
-      <p>Un point chaque jour et une préproduction ouverte en continu : vous voyez votre site avancer.</p>
+    <SectionHead label="Comment ça se passe">
+      <Fragment slot="titre">Vous voyez votre site <span class="acc">avant de payer.</span></Fragment>
+      <p>Trois rendez-vous, un seul interlocuteur. Vous payez quand le site est en ligne.</p>
     </SectionHead>
     <div class="etapes rv">
       {etapes.map((e) => (
         <div class="etape">
-          <div class="jour"><Delai texte={e.delai} /></div>
+          <span class="jour">{e.delai}</span>
           <h3>{e.titre}</h3>
           <p>{e.text}</p>
+          <span class:list={['paie', { oui: e.payant }]}>{e.paie}</span>
         </div>
       ))}
     </div>
+    <p class="etapes-note">*Délai compté une fois vos textes et photos reçus.</p>
   </div>
 </section>

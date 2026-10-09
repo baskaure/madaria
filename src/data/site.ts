@@ -12,12 +12,9 @@ export const site = {
  * exactement comme `#services` — même document, pas de rechargement.
  */
 export const nav = [
-  { href: '/services/creation-site-internet/', label: 'Services' },
-  { href: '/#methode', label: 'Méthode' },
   { href: '/#realisations', label: 'Réalisations' },
-  { href: '/#secteurs', label: 'Secteurs' },
+  { href: '/#methode', label: 'Méthode' },
   { href: '/#offres', label: 'Offres' },
-  { href: '/guides/', label: 'Guides' },
   { href: '/#faq', label: 'FAQ' },
 ] as const;
 

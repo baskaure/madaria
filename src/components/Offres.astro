@@ -1,22 +1,41 @@
 ---
+/**
+ * Deux formules côte à côte, avec une bascule mois / en une fois. Le
+ * sur-mesure n'a pas de colonne : une ligne sous les formules y renvoie.
+ */
 import SectionHead from './SectionHead.astro';
 import OfferTerms from './OfferTerms.astro';
 import PlanCard from './PlanCard.astro';
 import { offres, ENGAGEMENT_MOIS } from '../data/offres';
+
+const formules = offres.filter((o) => o.unite);
 ---
 
 <section class="sec" id="offres">
   <div class="wrap">
     <SectionHead label="Offres">
       <Fragment slot="titre">Votre site dès {offres[0].prix}&nbsp;€ par mois, création incluse.</Fragment>
-      <p>
-        Rien à payer au départ : création, hébergement et mises à jour sont dans l'abonnement.
-        Engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.
-      </p>
+      <div class="bascule" role="group" aria-label="Mode de paiement">
+        <button type="button" data-pay="mois" aria-pressed="true">Par mois</button>
+        <button type="button" data-pay="once" aria-pressed="false">En une fois</button>
+      </div>
     </SectionHead>
-    <div class="plans rv">
-      {offres.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
+    <div class="plans deux rv">
+      {formules.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
+    </div>
+    <div class="cond">
+      <span>Rien à payer au départ. Engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.</span>
+      <span>Espace client, réservation, outil sur-mesure&nbsp;? <a href="/?offre=sur-mesure#contact" data-offre="sur-mesure">Chiffré en 24&nbsp;h</a></span>
     </div>
     <OfferTerms />
   </div>
 </section>
+
+<script>
+  const section = document.getElementById('offres');
+  const boutons = section?.querySelectorAll<HTMLButtonElement>('.bascule button');
+  boutons?.forEach((b) => b.addEventListener('click', () => {
+    boutons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    section!.classList.toggle('vue-once', b.dataset.pay === 'once');
+  }));
+</script>

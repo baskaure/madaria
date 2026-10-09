@@ -3,7 +3,6 @@
 import Icon from './Icon.astro';
 import SectionHead from './SectionHead.astro';
 import CarteProjet from './CarteProjet.astro';
-import { realisations } from '../data/realisations';
 import { projet } from '../lib/projets';
 
 const phares = ['kami', 'aurore-piercing', 'recharge-clim'].map(projet);
@@ -13,7 +12,7 @@ const phares = ['kami', 'aurore-piercing', 'recharge-clim'].map(projet);
   <div class="wrap">
     <SectionHead label="Réalisations">
       <Fragment slot="titre">Des sites déjà livrés.</Fragment>
-      <a class="tlink" href="/realisations/">Les {realisations.length} réalisations<Icon name="arrow" class="i" /></a>
+      <a class="tlink" href="/realisations/">Voir les réalisations<Icon name="arrow" class="i" /></a>
     </SectionHead>
     <div class="projets">
       {phares.map((p) => <CarteProjet p={p} />)}

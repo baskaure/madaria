@@ -19,6 +19,6 @@ const { o, href } = Astro.props;
   </div>
   <p class="d">{o.accroche}</p>
   <PrixOffre o={o} />
-  <a href={href} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}<Icon name="arrow" class="i" /></a>
   <ul>{o.inclus.map((i) => <li><Icon name="check" class="i" />{i}</li>)}</ul>
+  <a href={href} data-offre={o.id} class:list={['btn', o.feat ? 'btn-p' : 'btn-g']}>{o.cta}<Icon name="arrow" class="i" /></a>
 </article>

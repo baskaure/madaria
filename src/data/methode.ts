@@ -1,33 +1,32 @@
 export type Etape = {
-  num: string;
-  titre: string;
   delai: string;
+  titre: string;
   text: string;
+  /** pastille sous le texte : ce que l'étape coûte */
+  paie: string;
+  /** l'étape où l'on paie, mise en avant */
+  payant?: boolean;
 };
 
+/** Trois rendez-vous : le client voit son site avant de payer. */
 export const etapes: Etape[] = [
   {
-    num: '01',
-    titre: 'Cadrage',
     delai: 'Jour 1',
-    text: "45 minutes au téléphone sur votre activité et vos objectifs. Vous repartez avec un périmètre chiffré.",
+    titre: 'Un appel de 15 minutes',
+    text: 'Votre métier, votre zone, ce que vous voulez. Pas de jargon, pas de devis à remplir.',
+    paie: 'Gratuit',
   },
   {
-    num: '02',
-    titre: 'Design',
-    delai: 'Jour 2 → 3',
-    text: "Maquette sur-mesure à valider avant la moindre ligne de code. Deux tours de retours inclus.",
+    delai: 'Jour 3',
+    titre: 'On vous montre la maquette',
+    text: "En visio, ou chez vous si vous êtes à Lyon. Vous dites oui, on corrige, ou on s'arrête là.",
+    paie: 'Gratuit',
   },
   {
-    num: '03',
-    titre: 'Développement',
-    delai: 'Jour 3 → 6',
-    text: "Intégration des contenus, tests sur téléphone, tablette et ordinateur. Préproduction ouverte en continu.",
-  },
-  {
-    num: '04',
-    titre: 'Mise en ligne',
-    delai: 'Jour 7',
-    text: 'Publication, formation enregistrée pour modifier vos contenus, et suivi des premières semaines.',
+    delai: '7 jours après votre oui*',
+    titre: 'Votre site est en ligne',
+    text: "Nom de domaine à votre nom, fiche Google reliée, bouton d'appel. On vous trouve.",
+    paie: 'Premier paiement',
+    payant: true,
   },
 ];

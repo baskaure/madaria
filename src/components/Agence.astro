@@ -31,9 +31,8 @@ import { avis, noteGoogle } from '../data/avis';
     </div>
     <div class="rv" id="avis">
       <div class="gnote">
-        <GoogleG />
-        <div><b>{noteGoogle}</b><small>Note moyenne sur Google</small></div>
-        <Etoiles />
+        <b>{noteGoogle}</b>
+        <div><Etoiles /><small><a href={contact.google} target="_blank" rel="noopener">Avis Google</a></small></div>
       </div>
       <div class="avis une">
         {avis.map((a) => (

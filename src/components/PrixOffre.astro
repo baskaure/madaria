@@ -1,7 +1,8 @@
 ---
 /**
  * Prix d'une formule : la mensualité en grand, puis l'engagement et le prix
- * d'achat en une fois (ou la note d'une formule sur devis).
+ * d'achat en une fois (ou la note d'une formule sur devis). La version « en
+ * une fois » est rendue aussi, masquée : la bascule de l'accueil l'affiche.
  */
 import { ENGAGEMENT_MOIS, type Offre } from '../data/offres';
 
@@ -13,7 +14,22 @@ const { o } = Astro.props;
 const unite = o.unite?.replace('/', ' / ');
 ---
 
-{o.unite ? <div class="prix">{o.prix}<small>{unite}</small></div> : <div class="prix devis">{o.prix}</div>}
-<p class="achat">
-  {o.achat ? <>Engagement {ENGAGEMENT_MOIS} mois · ou <b>{o.achat}&nbsp;€&nbsp;HT</b> en une fois</> : o.note}
-</p>
+{o.unite ? (
+  <>
+    <div class="prix" data-vue="mois">{o.prix}<small>{unite}</small></div>
+    <p class="achat" data-vue="mois">
+      {o.achat ? <>Engagement {ENGAGEMENT_MOIS} mois · ou <b>{o.achat}&nbsp;€&nbsp;HT</b> en une fois</> : o.note}
+    </p>
+    {o.achat && (
+      <>
+        <div class="prix" data-vue="once">{o.achat}<small>€ HT</small></div>
+        <p class="achat" data-vue="once">ou <b>{o.prix}&nbsp;{unite}</b>, création incluse</p>
+      </>
+    )}
+  </>
+) : (
+  <>
+    <div class="prix devis">{o.prix}</div>
+    <p class="achat">{o.note}</p>
+  </>
+)}
