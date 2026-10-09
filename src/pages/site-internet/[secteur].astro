@@ -10,6 +10,11 @@ import PlanCard from '../../components/PlanCard.astro';
 import { secteurs } from '../../data/secteurs';
 import { offres, offresLd } from '../../data/offres';
 import { projet } from '../../lib/projets';
+import { Image } from 'astro:assets';
+
+// Hero d'exemple pour les métiers sans réalisation publiée (nom et numéro fictifs,
+// photo générée) : montre à quoi ressemblerait le site avant même l'appel.
+const maquettes = import.meta.glob<{ default: ImageMetadata }>('../../assets/maquettes-metier/*.png', { eager: true });
 
 export function getStaticPaths() {
   return secteurs.map((s) => ({ params: { secteur: s.slug }, props: { s } }));
@@ -17,6 +22,7 @@ export function getStaticPaths() {
 
 const { s } = Astro.props;
 const url = new URL(Astro.url.pathname, Astro.site).href;
+const maquette = maquettes[`../../assets/maquettes-metier/${s.slug}.png`]?.default;
 
 // Deux offres suffisent sur une page métier : l'entrée de gamme et la complète.
 const offresPage = offres.slice(0, 2);
@@ -77,6 +83,20 @@ const autres = secteurs.filter((x) => x.slug !== s.slug);
       </div>
     </div>
   </section>
+
+  {maquette && (
+    <section class="sec court">
+      <div class="wrap">
+        <SectionHead label="Exemple de maquette">
+          <Fragment slot="titre">Le haut de page d'un site de {s.singulier}, <span class="acc">fait par Madaria.</span></Fragment>
+          <p>Nom et numéro fictifs. La vôtre est faite avec votre métier, vos photos et votre zone, et vous la voyez avant le développement.</p>
+        </SectionHead>
+        <figure class="maquette-metier rv">
+          <Image src={maquette} widths={[720, 1200, 1600, 2160]} sizes="(max-width: 1240px) 100vw, 1160px" format="webp" quality={78} alt={`Exemple de maquette de site internet pour ${s.singulier}, haut de page`} loading="lazy" />
+        </figure>
+      </div>
+    </section>
+  )}
 
   <section class="sec">
     <div class="wrap">
