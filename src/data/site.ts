@@ -66,7 +66,7 @@ export const footerColumns = [
     links: [
       { href: '/services/creation-site-internet/', label: 'Sites internet' },
       { href: '/services/automatisation/', label: 'Automatisations' },
-      { href: '/#offres', label: 'Développement sur-mesure' },
+      { href: '/?offre=sur-mesure#contact', label: 'Développement sur-mesure' },
       { href: '/creation-site-internet/lyon/', label: 'Site internet à Lyon' },
       { href: '/creation-site-internet/montpellier/', label: 'Site internet à Montpellier' },
       { href: '/creation-site-internet/capbreton/', label: 'Site internet à Capbreton' },
