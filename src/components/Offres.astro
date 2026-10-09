@@ -24,7 +24,7 @@ const formules = offres.filter((o) => o.unite);
       {formules.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
     </div>
     <div class="cond">
-      <span>Rien à payer au départ. Engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.</span>
+      <span>En abonnement : rien à payer au départ, engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.</span>
       <span>Espace client, réservation, outil sur-mesure&nbsp;? <a href="/?offre=sur-mesure#contact" data-offre="sur-mesure">Chiffré en 24&nbsp;h</a></span>
     </div>
     <OfferTerms />

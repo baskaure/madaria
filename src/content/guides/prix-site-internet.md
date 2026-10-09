@@ -71,9 +71,9 @@ Pour vous donner un exemple concret, voici nos deux formules principales :
 |---|---|---|
 | En abonnement | {{vitrine.mensuel}}, création incluse | {{visibilite.mensuel}}, création incluse |
 | Sur un an | {{vitrine.an}} | {{visibilite.an}} |
-| En une fois | {{vitrine.achat}}, puis frais récurrents à part | {{visibilite.achat}}, puis frais récurrents à part |
+| En une fois | {{vitrine.achat}}, 1re année d'hébergement comprise, puis {{hebergement}} | {{visibilite.achat}}, 1re année d'hébergement comprise, puis {{hebergement}} |
 
-L'abonnement engage sur {{engagement}}, puis il est résiliable à tout moment. Le nom de domaine reste à votre nom si vous arrêtez.
+L'abonnement engage sur {{engagement}}, puis il est résiliable à tout moment. En achat, les modifications sont facturées {{tauxHoraire}}. Le nom de domaine reste à votre nom si vous arrêtez.
 
 > Le bon réflexe : si vous changez souvent votre site (horaires, tarifs, nouvelles prestations), l'abonnement revient vite moins cher, parce que les modifications sont comprises. Si votre site bouge peu et que vous savez vous débrouiller, l'achat se rentabilise sur la durée.
 

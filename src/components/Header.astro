@@ -64,6 +64,11 @@ import { nav, contact } from '../data/site';
       if (e.matches) setOpen(false, false);
     });
   }
+  // Une page métier ou ville a son propre formulaire : « Devis » y reste, au lieu
+  // de renvoyer vers celui de l'accueil (le métier d'origine serait perdu).
+  if (location.pathname !== '/' && document.getElementById('contact')) {
+    document.querySelectorAll<HTMLAnchorElement>('a[href="/#contact"]').forEach((a) => { a.href = '#contact'; });
+  }
   const header = document.querySelector('header.sh');
   const sentinel = document.getElementById('nav-sentinel');
   if (header && sentinel) new IntersectionObserver(entries => {

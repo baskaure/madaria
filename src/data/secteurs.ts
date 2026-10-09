@@ -555,6 +555,118 @@ export const secteurs: Secteur[] = [
   },
 
   {
+    slug: 'chauffagiste-climatisation',
+    icon: 'chauffagiste',
+    nom: 'Chauffagistes et climaticiens',
+    singulier: 'chauffagiste',
+    text: "Des demandes d'entretien et de devis claires pour la chaudière, la pompe à chaleur et la clim, et un numéro visible quand ça tombe en panne.",
+    besoins: ['Entretien', 'Devis en ligne', 'Zone desservie'],
+    metaTitle: 'Création de site internet pour chauffagiste | Madaria',
+    metaDesc: `Site internet pour chauffagiste et climaticien : entretien, devis en ligne, zone d'intervention. Vitrine dès ${prixEntree}, options sur devis.`,
+    h1: 'Création de site internet pour chauffagiste et climaticien',
+    intro: [
+      "Une chaudière tombe en panne le premier jour de grand froid. Une climatisation lâche pendant la canicule. Le client cherche alors un artisan sur son téléphone, et appelle le premier qui répond. Le reste de l'année, il compare : entretien, remplacement, pompe à chaleur, trois devis côte à côte.",
+      "Nous construisons des sites de chauffagiste qui servent les deux moments : un numéro à portée de pouce pour la panne, et des pages précises par prestation pour les devis et les contrats d'entretien.",
+    ],
+    enjeux: [
+      {
+        titre: 'Être appelé le jour de la panne',
+        text: "Les recherches urgentes arrivent par vagues, au premier froid ou à la première chaleur. Un numéro cliquable sur chaque page, vos horaires de dépannage et votre zone d'intervention dites sans détour : le client sait tout de suite s'il peut compter sur vous.",
+      },
+      {
+        titre: 'Remplir le carnet d’entretiens',
+        text: "L'entretien d'une chaudière gaz ou fioul est obligatoire chaque année. C'est une demande qui revient, donc un client qui peut devenir fidèle. Une page claire sur l'entretien, avec un formulaire simple, permet de recevoir ces demandes. Le contrat d'entretien y est présenté si vous en proposez un.",
+      },
+      {
+        titre: 'Une page par installation',
+        text: "Chaudière, pompe à chaleur, climatisation, plancher chauffant : chaque installation a sa recherche et ses questions. Une page dédiée, qui explique comment vous travaillez, répond à ceux qui préparent un vrai chantier.",
+      },
+      {
+        titre: 'Afficher vos qualifications, si vous les avez',
+        text: "Pour certains travaux, les aides à la rénovation demandent un artisan qualifié. Si vous avez RGE, QualiPAC ou une autre qualification, elle est mise en avant avec son numéro. Si vous ne l'avez pas, nous n'en affichons pas. Pour les aides, le site renvoie vers les organismes officiels : nous n'annonçons aucun montant.",
+      },
+    ],
+    livrables: [
+      'Numéro cliquable et horaires de dépannage sur chaque page',
+      'Page entretien annuel et contrats d’entretien',
+      'Une page par installation (chaudière, pompe à chaleur, climatisation)',
+      'Qualifications affichées si vous les détenez (RGE, QualiPAC…)',
+      'Formulaire de devis avec photos de l’installation existante',
+      'Zone d’intervention et fiche Google reliée au site',
+    ],
+    faq: [
+      {
+        q: 'Je ne suis pas RGE, le site est-il utile quand même ?',
+        r: "Oui. Le site met alors en avant vos assurances, vos chantiers et votre zone. Nous n'affichons jamais une qualification que vous n'avez pas. Si vous l'obtenez plus tard, on l'ajoute en quelques minutes.",
+      },
+      {
+        q: 'Peut-on présenter mes contrats d’entretien ?',
+        r: "Oui. Vous décrivez ce que couvre le contrat, sa durée et comment le demander. Le prix peut s'afficher ou se donner sur devis, comme vous préférez. Un paiement en ligne de l'abonnement se cadre au devis.",
+      },
+      {
+        q: 'Que dit le site sur les aides à la rénovation ?',
+        r: "Il explique que certaines aides existent et à quelles conditions, en renvoyant vers les sites officiels. Les règles changent, donc nous n'écrivons ni montant ni promesse. C'est vous qui chiffrez au devis.",
+      },
+    ],
+  },
+
+  {
+    slug: 'peintre-en-batiment',
+    icon: 'peintre',
+    nom: 'Peintres en bâtiment',
+    singulier: 'peintre',
+    text: "Vos chantiers en avant-après, des demandes de devis avec surface et photos, pour les particuliers comme pour les syndics.",
+    besoins: ['Avant-après', 'Devis avec photos', 'Particuliers et syndics'],
+    metaTitle: 'Création de site internet pour peintre | Madaria',
+    metaDesc: `Site internet pour peintre en bâtiment : chantiers avant-après, devis avec surface et photos. Vitrine dès ${prixEntree}, options sur devis.`,
+    h1: 'Création de site internet pour peintre en bâtiment',
+    intro: [
+      "Un peintre se juge sur ce que l'on voit : des angles nets, des murs lisses, une façade qui tient. Un particulier qui cherche un peintre veut voir des chantiers avant de décrocher son téléphone. Un gestionnaire d'immeuble, lui, veut savoir si vous savez travailler en copropriété.",
+      "Nous construisons des sites de peintre qui montrent le travail fini, qui séparent l'intérieur, l'extérieur et le ravalement, et qui font venir des demandes de devis où l'on connaît déjà la surface et l'état des murs.",
+    ],
+    enjeux: [
+      {
+        titre: 'Des avant-après qui convainquent',
+        text: "Un mur abîmé puis refait parle mieux que trois paragraphes. Une galerie classée par type de chantier, alimentée avec vos photos de fin de chantier, devient votre meilleur argument sans que vous ayez à le défendre.",
+      },
+      {
+        titre: 'Un devis qui part de la bonne base',
+        text: "Pièces à peindre, surface en m², état des murs, plafonds, photos : le formulaire demande ces éléments. Vous chiffrez plus vite, ou vous voyez tout de suite que le chantier ne vous convient pas, avant de vous déplacer.",
+      },
+      {
+        titre: 'Intérieur, extérieur, ravalement',
+        text: "Repeindre un salon, refaire des volets et ravaler une façade ne répondent pas aux mêmes questions. Une page par type de travaux répond à chaque recherche avec les réponses qui lui sont propres.",
+      },
+      {
+        titre: 'Parler aux particuliers et aux syndics',
+        text: "Un particulier veut être rassuré et voir des photos. Un syndic veut un interlocuteur fiable, des assurances à jour et des références en copropriété. Le site a une entrée pour chacun, sans mélanger les deux discours.",
+      },
+    ],
+    livrables: [
+      'Galerie d’avant-après classée par type de chantier',
+      'Pages intérieur, extérieur et ravalement',
+      'Formulaire de devis avec surface et photos',
+      'Page dédiée aux syndics et gestionnaires',
+      'Assurances et garanties présentées clairement',
+      'Zone d’intervention et fiche Google reliée au site',
+    ],
+    faq: [
+      {
+        q: 'Comment gérer les périodes creuses et les saisons chargées ?',
+        r: "Les chantiers de façade se font plutôt à la belle saison, et l'intérieur toute l'année. Le site met en avant ce qui vous intéresse à chaque période, et vous pouvez afficher vos délais de prise en charge pour éviter les demandes que vous ne pouvez pas honorer.",
+      },
+      {
+        q: 'Je n’ai que des photos faites sur le chantier, ça suffit ?',
+        r: "Oui. Il suffit de prendre la même vue avant et après, avec un bon éclairage. Nous vous expliquons comment faire, et nous recadrons et allégeons les images pour le site.",
+      },
+      {
+        q: 'Puis-je afficher des références de syndics ou de clients ?',
+        r: "Seulement avec leur accord écrit. Sans accord, le site montre le chantier sans nommer le client. Nous n'inventons jamais de référence ni d'avis.",
+      },
+    ],
+  },
+
+  {
     slug: 'photographe',
     icon: 'photographe',
     nom: 'Photographes',

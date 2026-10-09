@@ -31,6 +31,12 @@ export const ENGAGEMENT_MOIS = 12;
  */
 export const TAUX_HORAIRE = 30;
 
+/**
+ * Site acheté en une fois : la 1re année d'hébergement est comprise, puis
+ * hébergement et mises à jour à ce prix (€ HT/mois). Décision du 9 oct. 2026.
+ */
+export const HEBERGEMENT_MOIS = 19;
+
 // Les prix affichés servent aussi aux données structurées.
 export const offres: Offre[] = [
   {
@@ -47,7 +53,7 @@ export const offres: Offre[] = [
       'Formulaire de contact',
       'Nom de domaine à votre nom, hébergement et mises à jour',
       '30 min de modifications par mois',
-      'Vitrine livrée en 7 jours après cadrage',
+      'En ligne en 7 jours après accord sur le devis et contenus reçus',
     ],
     cta: 'Choisir Vitrine',
   },
@@ -93,9 +99,10 @@ export const offres: Offre[] = [
 /** Conditions communes, reprises sur les pages de services et métier. */
 export const conditionsOffres = [
   `En abonnement, la création, l'hébergement, les mises à jour et les modifications mensuelles de la formule sont compris, sans rien à payer au départ. Engagement de ${ENGAGEMENT_MOIS} mois, prélèvement mensuel, puis résiliable à tout moment. Le nom de domaine est à votre nom : il vous reste si vous arrêtez. Le site est alors dépublié, ou ses fichiers vous sont cédés au prix indiqué au devis.`,
-  "Vous préférez payer en une fois ? Le prix d'achat de chaque formule est affiché. Le devis distingue alors le prix de création et les frais récurrents : hébergement, maintenance et éventuels abonnements de réservation ou de SMS.",
+  `Vous préférez payer en une fois ? Le prix d'achat de chaque formule est affiché. Il comprend la 1re année d'hébergement, puis l'hébergement et les mises à jour coûtent ${HEBERGEMENT_MOIS} € HT par mois. Les modifications sont alors facturées ${TAUX_HORAIRE} € HT de l'heure, et les abonnements externes éventuels (réservation, SMS) sont chiffrés au devis.`,
   'Le délai de 7 jours concerne un site vitrine, après accord sur le devis et réception des contenus et accès nécessaires. Il suppose des validations dans le calendrier convenu. Les autres projets ont un planning dédié.',
-  'La maquette est incluse et validée avant le développement. Le nombre de pages, la rédaction, les modifications au-delà du forfait mensuel et toute option sont chiffrés avant engagement.',
+  'La maquette est incluse et validée avant le développement. La rédaction est comprise en formule Visibilité. Les pages au-delà de la formule, les modifications au-delà du forfait mensuel et toute option sont chiffrées avant engagement.',
+  'Offres réservées aux professionnels. Prix hors taxes. Détail dans nos conditions générales de vente.',
 ];
 
 const premiere = offres[0];

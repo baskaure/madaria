@@ -19,7 +19,7 @@ interface Props {
 }
 const { secteur = '', projet = '' } = Astro.props;
 const metiers = [...secteurs.map((s) => s.nom), 'Autre activité'];
-const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · ${o.prix} €/mois` : o.nom })), { id: '', nom: 'Je ne sais pas' }];
+const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · ${o.prix} € HT/mois ou ${o.achat} € HT` : o.nom })), { id: '', nom: 'Je ne sais pas' }];
 ---
 
 <section class="sec" id="contact">
@@ -45,6 +45,7 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
         <input type="hidden" name="form-name" value="contact" />
         <input type="hidden" name="secteur" value={secteur} />
         <input type="hidden" name="projet" value={projet} />
+        <input type="hidden" name="provenance" value="" />
         <p hidden aria-hidden="true"><label>Ne pas remplir : <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
 
         <div class="f">
@@ -76,14 +77,14 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
           <button type="submit" class="btn btn-p">Recevoir mon devis gratuit<Icon name="arrow" class="i" /></button>
           <div class="fmsg" id="fmsg" role="status" aria-live="polite" aria-atomic="true"></div>
         </div>
-        <p class="note f full">Sans engagement. Vos coordonnées servent uniquement à vous répondre. <a href="/confidentialite/">Vos données et vos droits</a></p>
+        <p class="note f full">Le devis ne vous engage à rien. Vos coordonnées servent uniquement à vous répondre. <a href="/confidentialite/">Vos données et vos droits</a></p>
       </form>
     </div>
   </div>
 </section>
 
 <script>
-  import { suivre } from '../scripts/mesure';
+  import { suivre, provenance } from '../scripts/mesure';
 
   const form = document.querySelector<HTMLFormElement>('form[name="contact"]');
   if (form) {
@@ -159,6 +160,7 @@ const formules = [...offres.map((o) => ({ id: o.id, nom: o.unite ? `${o.nom} · 
       form.setAttribute('aria-busy', 'true');
       dire('Envoi en cours…', true);
       try {
+        (form.elements.namedItem('provenance') as HTMLInputElement).value = provenance();
         const corps = new URLSearchParams();
         new FormData(form).forEach((valeur, cle) => corps.append(cle, String(valeur)));
         const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: corps });

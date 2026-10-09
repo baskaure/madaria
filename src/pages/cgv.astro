@@ -1,0 +1,176 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { offres, ENGAGEMENT_MOIS, TAUX_HORAIRE, HEBERGEMENT_MOIS } from '../data/offres';
+import { contact } from '../data/site';
+
+const chiffrees = offres.filter(o => o.unite);
+const surMesure = offres.filter(o => !o.unite);
+---
+
+<Legal
+  title="Conditions générales de vente | Madaria"
+  description="Conditions générales de vente de Madaria pour les professionnels : abonnement ou achat en une fois, paiement, délais, propriété et responsabilité."
+  h1="Conditions générales de vente"
+  majDate="9 octobre 2026"
+>
+  <h2>Prestataire</h2>
+  <p>
+    Les présentes conditions s'appliquent aux prestations de <strong>Aurélien Branco</strong>,
+    entrepreneur individuel exerçant sous le nom commercial <strong>Madaria</strong>.
+  </p>
+  <ul>
+    <li>SIREN : 989 121 843</li>
+    <li>SIRET (siège) : 989 121 843 00019</li>
+    <li>TVA intracommunautaire : FR32989121843</li>
+    <li>Siège : 269 avenue Jean Jaurès, 69007 Lyon, France</li>
+    <li>Contact : <a href={`mailto:${contact.email}`}>{contact.email}</a> ·{' '}
+      <a href={`tel:${contact.telLien}`}>{contact.tel}</a></li>
+  </ul>
+
+  <h2>Champ d'application</h2>
+  <p>
+    Nos offres sont réservées aux professionnels. Elles ne s'adressent pas aux consommateurs.
+    Toute commande vaut acceptation des présentes conditions. Le devis signé prime sur elles en
+    cas de différence.
+  </p>
+
+  <h2>Offres et prix</h2>
+  <p>Tous les prix sont indiqués hors taxes (HT). La TVA s'ajoute au taux en vigueur.</p>
+  <ul>
+    {chiffrees.map(o => (
+      <li>
+        <strong>{o.nom}</strong> : {o.prix} {o.unite} en abonnement
+        {o.achat && <>, ou {o.achat} € HT en achat en une fois</>}.
+      </li>
+    ))}
+    {surMesure.map(o => (
+      <li><strong>{o.nom}</strong> : sur devis.</li>
+    ))}
+  </ul>
+  <p>Le contenu de chaque formule est décrit sur le site et précisé dans le devis.</p>
+
+  <h2>Abonnement mensuel</h2>
+  <p>
+    L'abonnement comprend la création du site, son hébergement, ses mises à jour et les
+    modifications mensuelles prévues par la formule.
+  </p>
+  <p>
+    L'abonnement comporte un engagement de <strong>{ENGAGEMENT_MOIS} mois</strong>. Il est réglé
+    par prélèvement mensuel.
+  </p>
+  <!-- À CONFIRMER : moment du 1er prélèvement (ici : à la mise en ligne du site). -->
+  <p>
+    Le premier prélèvement a lieu à la mise en ligne du site. La période d'engagement court à
+    partir de cette date.
+  </p>
+  <!-- À CONFIRMER : résiliation après l'engagement (ici : effet à la fin du mois en cours, sans préavis). -->
+  <p>
+    Au terme des {ENGAGEMENT_MOIS} mois, l'abonnement se poursuit de mois en mois. Il est
+    résiliable à tout moment, par e-mail, sans pénalité. La résiliation prend effet à la fin du mois en cours, qui reste dû.
+  </p>
+
+  <h2>Achat en une fois</h2>
+  <p>
+    Le prix d'achat de chaque formule est affiché sur le site. La première année d'hébergement est
+    comprise. Ensuite, l'hébergement est facturé <strong>{HEBERGEMENT_MOIS} € HT par mois</strong>.
+  </p>
+  <p>
+    Les modifications et évolutions demandées après la livraison sont facturées
+    <strong>{TAUX_HORAIRE} € HT de l'heure</strong>. Une panne due à notre travail est corrigée
+    gratuitement.
+  </p>
+  <!-- À CONFIRMER : échéancier de paiement de l'achat en une fois (ici : acompte de 30 % à la signature, solde à la livraison). -->
+  <p>
+    Un acompte de 30 % est dû à la signature du devis. Le solde est dû à la livraison du site,
+    avant sa mise en ligne.
+  </p>
+
+  <h2>Sur-mesure</h2>
+  <p>
+    Les projets sur-mesure font l'objet d'un devis. Le devis fixe le contenu, le prix, le planning
+    et les modalités de paiement.
+  </p>
+
+  <h2>Déroulement et délais</h2>
+  <p>
+    Une maquette est incluse. Elle est validée par le client avant le développement.
+  </p>
+  <p>
+    Un site Vitrine est livré en <strong>7 jours</strong> après accord sur le devis et réception
+    des contenus et accès nécessaires. Ce délai suppose des validations dans le calendrier convenu.
+    Pour les autres projets, le planning est fixé au devis.
+  </p>
+  <p>
+    Le client fournit à temps les contenus, accès et validations demandés. Un retard de sa part
+    décale d'autant la livraison.
+  </p>
+
+  <h2>Nom de domaine et fin de l'abonnement</h2>
+  <p>
+    Le nom de domaine est enregistré au nom du client. Il lui reste en toutes circonstances.
+  </p>
+  <p>
+    À l'arrêt de l'abonnement, le site est dépublié. Le client peut aussi demander la cession des
+    fichiers du site, au prix indiqué au devis.
+  </p>
+
+  <h2>Modalités de paiement</h2>
+  <!-- À CONFIRMER : factures payables à réception et règlement par virement hors abonnement. -->
+  <p>
+    Les factures sont payables à réception, sans escompte pour paiement anticipé. L'abonnement est
+    réglé par prélèvement mensuel. Les autres sommes sont réglées par virement.
+  </p>
+
+  <h2>Retard de paiement</h2>
+  <p>
+    Tout retard de paiement entraîne de plein droit, sans rappel préalable :
+  </p>
+  <ul>
+    <li>des pénalités de retard au taux de la Banque centrale européenne majoré de 10 points, sans
+      pouvoir être inférieures à 3 fois le taux d'intérêt légal ;</li>
+    <li>une indemnité forfaitaire de <strong>40 €</strong> pour frais de recouvrement (articles
+      L.441-10 et D.441-5 du Code de commerce).</li>
+  </ul>
+  <p>
+    Si les frais de recouvrement réels dépassent ce montant, une indemnité complémentaire peut
+    être demandée sur justificatif.
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    Les contenus fournis par le client (textes, photos, logo) restent sa propriété. Il garantit en
+    détenir les droits.
+  </p>
+  <!-- À CONFIRMER : répartition des droits sur le site (abonnement : usage ; achat : cession après paiement complet). -->
+  <p>
+    En abonnement, le site (design, code, maquette) reste notre propriété. Le client en a l'usage
+    pendant toute la durée de l'abonnement. En achat en une fois, les droits d'utilisation et de
+    reproduction du site sont cédés au client pour son activité, après paiement complet du prix.
+  </p>
+
+  <h2>Responsabilité</h2>
+  <p>
+    Nous sommes tenus à une obligation de moyens. Nous ne garantissons pas un niveau de trafic, un
+    classement dans Google ou un chiffre d'affaires.
+  </p>
+  <!-- À CONFIRMER : plafond de responsabilité (ici : sommes payées sur les 12 derniers mois). -->
+  <p>
+    Nous ne sommes pas responsables des contenus fournis par le client, ni des interruptions
+    dues à un hébergeur, un registre de noms de domaine ou un service tiers. Notre responsabilité
+    est limitée aux dommages directs. Elle ne peut dépasser les sommes payées par le client au
+    titre des 12 derniers mois de la prestation concernée.
+  </p>
+
+  <h2>Données personnelles</h2>
+  <p>
+    Le traitement des données personnelles est décrit dans notre{' '}
+    <a href="/confidentialite/">politique de confidentialité</a>.
+  </p>
+
+  <h2>Droit applicable et litiges</h2>
+  <p>
+    Les présentes conditions sont soumises au droit français. En cas de litige, les parties
+    cherchent d'abord une solution amiable. À défaut, le tribunal de commerce de Lyon est seul
+    compétent.
+  </p>
+</Legal>

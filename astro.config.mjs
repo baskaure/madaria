@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import { offres, ENGAGEMENT_MOIS, TAUX_HORAIRE } from './src/data/offres.ts';
+import { offres, ENGAGEMENT_MOIS, TAUX_HORAIRE, HEBERGEMENT_MOIS } from './src/data/offres.ts';
 
 /**
  * Jetons de prix dans les guides Markdown : {{vitrine.mensuel}} devient
@@ -11,7 +11,7 @@ import { offres, ENGAGEMENT_MOIS, TAUX_HORAIRE } from './src/data/offres.ts';
  * Un jeton inconnu fait échouer le build plutôt que d'afficher {{…}}.
  */
 const ESP = ' ';
-const jetons = { engagement: `${ENGAGEMENT_MOIS} mois`, tauxHoraire: `${TAUX_HORAIRE}${ESP}€${ESP}HT de l'heure` };
+const jetons = { engagement: `${ENGAGEMENT_MOIS} mois`, tauxHoraire: `${TAUX_HORAIRE}${ESP}€${ESP}HT de l'heure`, hebergement: `${HEBERGEMENT_MOIS}${ESP}€${ESP}HT par mois` };
 for (const o of offres) {
   if (o.unite) jetons[`${o.id}.mensuel`] = `${o.prix}${ESP}€${ESP}HT par mois`;
   if (o.unite) jetons[`${o.id}.prix`] = o.prix;
@@ -40,7 +40,8 @@ function remarkJetons() {
 
 export default defineConfig({
   site: 'https://madaria.fr',
-  integrations: [sitemap({ filter: (page) => !page.endsWith('/merci/') })],
+  // /pub/ : pages d'arrivée des publicités, en noindex, hors sitemap
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/merci/') && !page.includes('/pub/') })],
   build: { inlineStylesheets: 'auto' },
   markdown: { remarkPlugins: [remarkJetons] },
 });

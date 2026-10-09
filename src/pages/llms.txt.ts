@@ -33,11 +33,11 @@ export const GET: APIRoute = async () => {
   l.push('- Localisation : Lyon, Auvergne-Rhône-Alpes, France');
   l.push('- Zone desservie : Lyon et toute la France, à distance');
   l.push('- Activité : création de sites internet, automatisation, développement sur-mesure');
-  l.push('- Délai de livraison : 7 jours pour un site vitrine');
+  l.push('- Délai de livraison : 7 jours pour un site vitrine, après accord sur le devis et réception des contenus');
   l.push(`- Prix d’entrée : ${prixEntree} en abonnement, création incluse, ou ${achatEntree} en une fois`);
   l.push('- Maquette : incluse dans la prestation, validée avant tout développement');
   l.push(`- Contact : ${contact.email} · ${contact.tel}`);
-  l.push('- Devis : gratuit, chiffré sous 24 heures, sans engagement');
+  l.push('- Devis : gratuit, chiffré sous 24 heures, le devis n\'engage à rien');
   l.push('');
 
   l.push('## Offres et tarifs');

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Logo from '../components/Logo.astro';
 import { offresStructurees, prixEntree } from '../data/offres';
 import { site, contact, umami } from '../data/site';
 import { ogPour } from '../lib/og';
@@ -10,6 +11,8 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  /** page d'arrivée de pub : ni menu ni liens de sortie dans l'en-tête */
+  sansMenu?: boolean;
   preloadImage?: string;
 }
 
@@ -22,6 +25,7 @@ const {
   title = 'Création de site internet en 7 jours — Lyon & France | Madaria',
   description = `Agence web à Lyon et partout en France : site vitrine dès ${prixEntree}, création et maquette incluses, devis sous 24 h. En ligne en 7 jours.`,
   noindex = false,
+  sansMenu = false,
   preloadImage,
 } = Astro.props;
 
@@ -42,7 +46,7 @@ const jsonLd = {
       logo: 'https://madaria.fr/assets/07_logo_fond_sombre.svg',
       image: new URL('/og.png', Astro.site).href,
       description:
-        "Agence digitale à Lyon : création de sites internet sur-mesure livrés en 7 jours, automatisations et outils métier, partout en France.",
+        "Agence digitale à Lyon : création de sites internet sur-mesure (vitrine en 7 jours après validation du devis), automatisations et outils métier, partout en France.",
       email: contact.email,
       telephone: '+33 6 99 68 19 57',
       priceRange: '€€',
@@ -69,7 +73,7 @@ const jsonLd = {
       ],
       founder: { '@id': 'https://madaria.fr/#fondateur' },
       slogan: 'Votre site internet en ligne en 7 jours.',
-      foundingDate: '2020',
+      foundingDate: '2026',
       currenciesAccepted: 'EUR',
       openingHoursSpecification: {
         '@type': 'OpeningHoursSpecification',
@@ -180,11 +184,18 @@ const jsonLd = {
   </head>
   <body id="top">
     <div id="nav-sentinel" aria-hidden="true"></div>
-    <Header />
+    {sansMenu ? (
+      <header class="sh-pub"><div class="wrap"><span class="sh-brand"><Logo />MADARIA</span><a href={`tel:${contact.telLien}`}>{contact.tel}</a></div></header>
+    ) : <Header />}
     <main id="contenu">
       <slot />
     </main>
-    <Footer />
+    {sansMenu ? (
+      <footer class="pied-pub"><div class="wrap">
+        <span>© Madaria · Aurélien Branco, Lyon</span>
+        <nav><a href="/mentions-legales/">Mentions légales</a><a href="/confidentialite/">Confidentialité</a><a href="/cgv/">CGV</a></nav>
+      </div></footer>
+    ) : <Footer />}
 
     <script>
       import { initReveal } from '../scripts/reveal';

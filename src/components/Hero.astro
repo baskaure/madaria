@@ -11,8 +11,8 @@ const entree = offres[0];
   <Mur />
   <div class="wrap">
     <div class="htxt">
-      <div class="pill"><b>{entree.prix}&nbsp;€/mois</b>Rien à payer au départ, ou {achatEntree.replace(/ /g, '\u00a0')} en une fois</div>
-      <h1>Votre site internet en ligne en 7&nbsp;jours. <span class="acc">Pas dans trois mois.</span></h1>
+      <div class="pill"><b>{entree.prix}&nbsp;€&nbsp;HT/mois</b>Rien à payer au départ, ou {achatEntree.replace(/ /g, '\u00a0')} en une fois</div>
+      <h1>Votre site internet en ligne en 7&nbsp;jours*. <span class="acc">Pas dans trois mois.</span></h1>
       <p class="lead">
         Un <strong>site internet</strong> qui vous fait trouver sur Google et sonner votre téléphone.
         Textes écrits pour vous, un seul interlocuteur du premier appel à la mise en ligne.
@@ -25,6 +25,7 @@ const entree = offres[0];
         )}
         <a class="btn btn-g" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
       </div>
+      <p class="hnote">*Site vitrine, après accord sur le devis et réception de vos contenus.</p>
       <div class="preuves">
         <span><Icon name="check" class="i" />Maquette validée avant le code</span>
         <span><Icon name="check" class="i" />Nom de domaine à votre nom</span>

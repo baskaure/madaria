@@ -1,0 +1,83 @@
+---
+/**
+ * Page d'arrivée des pubs Meta « artisans du bâtiment à Lyon ». Une seule
+ * offre (Visibilité, achat en une fois), pas de menu : le visiteur réserve
+ * 15 min ou laisse son numéro. Noindex et hors sitemap : ce n'est pas une
+ * page SEO. Tous les prix viennent de data/offres.ts.
+ */
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Contact from '../../components/Contact.astro';
+import exemple from '../../assets/exemple-maquette-plombier.png';
+import portrait from '../../assets/aurelien-branco.png';
+import { offres, ENGAGEMENT_MOIS, HEBERGEMENT_MOIS } from '../../data/offres';
+import { contact, presentation } from '../../data/site';
+
+const o = offres.find((x) => x.id === 'visibilite')!;
+const reserver = presentation.lien || '#contact';
+---
+
+<Base noindex sansMenu
+  title="Site internet pour artisan du bâtiment à Lyon | Madaria"
+  description={`Plombiers, électriciens, chauffagistes, peintres à Lyon : un site pensé pour Google et relié à votre fiche, ${o.achat} € HT en une fois.`}>
+
+  <section class="ph pub-hero">
+    <div class="wrap pub-grille">
+      <div>
+        <span class="lab">Artisans du bâtiment · Lyon</span>
+        <h1>Quand on cherche votre métier à Lyon, <span class="acc">c'est vous qu'on doit appeler.</span></h1>
+        <p class="chapo">Plombier, électricien, chauffagiste, peintre : avant d'appeler, le client compare trois noms sur son téléphone. On vous fait un site clair, relié à votre fiche Google, avec votre numéro à un geste. Les textes, c'est nous qui les écrivons.</p>
+        <div class="pub-prix">
+          <div><b>{o.achat}&nbsp;€&nbsp;HT</b><span>en une fois, formule {o.nom}</span></div>
+          <p>1re année d'hébergement comprise, puis {HEBERGEMENT_MOIS}&nbsp;€&nbsp;HT/mois. Ou {o.prix}&nbsp;€&nbsp;HT/mois tout compris, engagement {ENGAGEMENT_MOIS}&nbsp;mois.</p>
+        </div>
+        <div class="hcta">
+          <a class="btn btn-p" href={reserver} target={presentation.lien ? '_blank' : undefined} rel="noopener" data-presentation={presentation.lien ? '' : undefined}>Réserver 15&nbsp;min avec moi<Icon name="arrow" class="i" /></a>
+          <a class="btn btn-g" href={`tel:${contact.telLien}`}><Icon name="phone" class="i" />{contact.tel}</a>
+        </div>
+        <p class="hnote">Offre réservée aux professionnels. Vous voyez la maquette avant le développement.</p>
+      </div>
+      <figure class="pub-exemple">
+        <Image src={exemple} width={390} height={1060} widths={[300, 390]} sizes="300px" format="webp" quality={80} alt="Exemple de maquette de site pour un plombier, vue sur téléphone" />
+        <figcaption>Exemple de maquette. Nom et numéro fictifs.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead rv">
+        <div><span class="lab">Inclus</span><h2>Ce que contient la formule {o.nom}</h2></div>
+      </div>
+      <ul class="pub-inclus rv">
+        {o.inclus.map((i) => <li><Icon name="check" class="i" />{i}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead rv">
+        <div><span class="lab">Comment ça se passe</span><h2>Trois rendez-vous, <span class="acc">un seul interlocuteur.</span></h2></div>
+      </div>
+      <div class="etapes rv">
+        <div class="etape"><span class="jour">Étape 1</span><h3>Un appel de 15 minutes</h3><p>Votre métier, votre zone, vos chantiers. Je vous dis franchement si un site vous sera utile.</p><span class="paie">Gratuit</span></div>
+        <div class="etape"><span class="jour">Étape 2</span><h3>Je vous montre la maquette</h3><p>En visio, ou chez vous à Lyon. Vous dites oui, ou on corrige avant de construire.</p><span class="paie">Maquette incluse</span></div>
+        <div class="etape"><span class="jour">Étape 3</span><h3>Votre site est en ligne</h3><p>Nom de domaine à votre nom, fiche Google reliée, bouton d'appel. Le délai est fixé ensemble au devis.</p><span class="paie oui">{o.achat}&nbsp;€&nbsp;HT</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap pub-moi rv">
+      <Image class="avatar" src={portrait} width={88} height={88} densities={[1, 2]} format="webp" quality={80} alt="Aurélien Branco" loading="lazy" />
+      <div>
+        <h2>C'est moi qui fais votre site.</h2>
+        <p>Je m'appelle Aurélien Branco, je suis basé à Lyon. Je fais l'appel, la maquette, le code et la mise en ligne. Quand vous appelez, c'est moi qui décroche.</p>
+      </div>
+    </div>
+  </section>
+
+  <Contact secteur="BTP & artisans" />
+</Base>

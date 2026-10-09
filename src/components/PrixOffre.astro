@@ -4,7 +4,7 @@
  * d'achat en une fois (ou la note d'une formule sur devis). La version « en
  * une fois » est rendue aussi, masquée : la bascule de l'accueil l'affiche.
  */
-import { ENGAGEMENT_MOIS, type Offre } from '../data/offres';
+import { ENGAGEMENT_MOIS, HEBERGEMENT_MOIS, type Offre } from '../data/offres';
 
 interface Props {
   o: Offre;
@@ -23,7 +23,7 @@ const unite = o.unite?.replace('/', ' / ');
     {o.achat && (
       <>
         <div class="prix" data-vue="once">{o.achat}<small>€ HT</small></div>
-        <p class="achat" data-vue="once">ou <b>{o.prix}&nbsp;{unite}</b>, création incluse</p>
+        <p class="achat" data-vue="once">1re année d'hébergement comprise, puis {HEBERGEMENT_MOIS}&nbsp;€&nbsp;HT&nbsp;/&nbsp;mois · ou <b>{o.prix}&nbsp;{unite}</b></p>
       </>
     )}
   </>

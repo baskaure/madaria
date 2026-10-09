@@ -1,13 +1,13 @@
 ---
 import Legal from '../layouts/Legal.astro';
-import { umami, pubsMeta } from '../data/site';
+import { umami, pubsMeta, presentation } from '../data/site';
 ---
 
 <Legal
   title="Politique de confidentialité | Madaria"
   description="Politique de confidentialité de madaria.fr — données collectées, finalités, durées de conservation et droits RGPD."
   h1="Politique de confidentialité"
-  majDate="1er octobre 2026"
+  majDate="9 octobre 2026"
 >
   <h2>Responsable du traitement</h2>
   <p>
@@ -21,7 +21,8 @@ import { umami, pubsMeta } from '../data/site';
   <ul>
     <li><strong>Formulaire de contact</strong> : nom, numéro de téléphone ou adresse e-mail,
       activité, formule envisagée, métier ou projet de référence et, si vous le souhaitez, la
-      description de votre projet.</li>
+      description de votre projet, ainsi que la provenance de votre visite (publicité ou site
+      d'origine, sans identifiant personnel).</li>
     <li><strong>Contact direct</strong> : les informations que vous transmettez par e-mail ou
       téléphone.</li>
     {pubsMeta.formulaires && (
@@ -54,6 +55,14 @@ import { umami, pubsMeta } from '../data/site';
     Netlify, Inc. (États-Unis), qui héberge le site et réceptionne les soumissions du formulaire. Netlify adhère au cadre de protection des
     données UE–États-Unis (Data Privacy Framework), qui encadre ce transfert.
   </p>
+  {presentation.lien && (
+    <p>
+      Si vous réservez une présentation en ligne, la prise de rendez-vous se fait sur Cal.com,
+      service de la société Cal.com, Inc. (États-Unis). Vous y indiquez votre nom, votre adresse
+      e-mail et le créneau choisi. Cal.com traite ces données selon sa propre politique de
+      confidentialité, et nous les utilisons uniquement pour tenir le rendez-vous.
+    </p>
+  )}
   {pubsMeta.formulaires && (
     <p>
       Les demandes envoyées depuis nos publicités passent par Meta Platforms Ireland Ltd, qui

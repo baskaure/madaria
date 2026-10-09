@@ -1,4 +1,4 @@
-import { offres, prixEntree, achatEntree, ENGAGEMENT_MOIS, TAUX_HORAIRE } from './offres';
+import { offres, prixEntree, achatEntree, ENGAGEMENT_MOIS, TAUX_HORAIRE, HEBERGEMENT_MOIS } from './offres';
 /** `accueil` : affichée sur la page d'accueil (7 au plus, pour aller droit au but). Toutes vont dans llms.txt. */
 export type Question = { q: string; r: string; accueil?: boolean };
 
@@ -30,7 +30,7 @@ export const questions: Question[] = [
   },
   {
     q: "Et si j'arrête l'abonnement ?",
-    r: `Après les ${ENGAGEMENT_MOIS} premiers mois, vous arrêtez quand vous voulez, sans frais. Le nom de domaine est à votre nom : il vous reste. Le site est dépublié, ou ses fichiers vous sont cédés si vous souhaitez le garder, au prix indiqué au devis.`,
+    r: `Après les ${ENGAGEMENT_MOIS} premiers mois, vous arrêtez quand vous voulez, sans pénalité. Le nom de domaine est à votre nom : il vous reste. Le site est dépublié, ou ses fichiers vous sont cédés si vous souhaitez le garder, au prix indiqué au devis.`,
   },
   {
     q: 'Je peux modifier mon site moi-même ?',
@@ -43,11 +43,11 @@ export const questions: Question[] = [
   {
     accueil: true,
     q: 'À qui appartient le site une fois livré ?',
-    r: "Le nom de domaine et vos contenus sont à vous dès le premier jour. Acheté en une fois, le site est entièrement à vous : code et hébergement compris. En abonnement, si vous arrêtez, vous gardez le domaine et pouvez racheter les fichiers du site au prix indiqué au devis.",
+    r: "Le nom de domaine et vos contenus sont à vous dès le premier jour. Acheté en une fois, le site est à vous, avec la 1re année d'hébergement comprise. En abonnement, si vous arrêtez, vous gardez le domaine et pouvez racheter les fichiers du site au prix indiqué au devis.",
   },
   {
     q: 'Et après la mise en ligne ?',
-    r: `En abonnement, rien à prévoir : hébergement, mises à jour, sauvegardes et modifications mensuelles sont compris. Si vous avez acheté le site en une fois, une panne qui vient de notre travail est réparée gratuitement, et les modifications sont facturées à l'heure (${TAUX_HORAIRE} € HT).`,
+    r: `En abonnement, rien à prévoir : hébergement, mises à jour, sauvegardes et modifications mensuelles sont compris. Si vous avez acheté le site en une fois, la 1re année d'hébergement est comprise, puis l'hébergement et les mises à jour coûtent ${HEBERGEMENT_MOIS} € HT par mois. Une panne qui vient de notre travail est réparée gratuitement, et les modifications sont facturées à l'heure (${TAUX_HORAIRE} € HT).`,
   },
   {
     accueil: true,

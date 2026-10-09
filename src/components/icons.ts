@@ -29,6 +29,8 @@ export const icons = {
   perceur: '<circle cx="12" cy="13" r="6.5"/><circle cx="12" cy="4.5" r="2"/>',
   plombier: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
   electricien: '<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  chauffagiste: '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5"/>',
+  peintre: '<rect x="4" y="3" width="14" height="5" rx="1.2"/><path d="M18 5.5h2v5H12v3"/><rect x="10.5" y="13.5" width="3" height="7.5" rx="1"/>',
   photographe: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
   garage: '<path d="M3 13l2-6h14l2 6v5H3z"/><path d="M3 13h18"/><circle cx="7" cy="16" r="1.2"/><circle cx="17" cy="16" r="1.2"/>',
   fleuriste: '<path d="M12 21v-9"/><path d="M7 4l2.5 3L12 4l2.5 3L17 4v4a5 5 0 0 1-10 0z"/><path d="M12 17c-2.5 0-4.5-1.5-5-4 2.5 0 4.5 1.5 5 4z"/>',
