@@ -142,6 +142,7 @@ header.sh.scrolled .sh-nav{background:linear-gradient(165deg,rgba(20,19,30,.44),
 .htxt{max-width:calc(50% - 48px)}
 /* les deux boutons du hero tiennent sur une ligne dès que la place le permet */
 .htxt .hcta{flex-wrap:nowrap}
+@media(min-width:1101px) and (max-width:1240px){.htxt .hcta{gap:8px}.htxt .hcta .btn{padding:0 18px}}
 .pill{display:inline-flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border:1px solid var(--line2);border-radius:999px;font-size:13px;color:var(--mut);margin-bottom:32px}
 .pill b{font-weight:500;color:var(--encre);background:var(--acc);border-radius:999px;padding:2px 9px;font-size:12px;white-space:nowrap}
 .hero h1{font-size:clamp(44px,4.3vw,64px);line-height:1.03;letter-spacing:-.045em}
