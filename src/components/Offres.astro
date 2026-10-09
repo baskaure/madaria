@@ -6,7 +6,7 @@
 import SectionHead from './SectionHead.astro';
 import OfferTerms from './OfferTerms.astro';
 import PlanCard from './PlanCard.astro';
-import { offres, ENGAGEMENT_MOIS } from '../data/offres';
+import { offres } from '../data/offres';
 
 const formules = offres.filter((o) => o.unite);
 ---
@@ -22,10 +22,6 @@ const formules = offres.filter((o) => o.unite);
     </SectionHead>
     <div class="plans deux rv">
       {formules.map((o) => <PlanCard o={o} href={`/?offre=${o.id}#contact`} />)}
-    </div>
-    <div class="cond">
-      <span>En abonnement : rien à payer au départ, engagement {ENGAGEMENT_MOIS} mois, puis résiliable quand vous voulez.</span>
-      <span>Espace client, réservation, outil sur-mesure&nbsp;? <a href="/?offre=sur-mesure#contact" data-offre="sur-mesure">Chiffré en 24&nbsp;h</a></span>
     </div>
     <OfferTerms />
   </div>

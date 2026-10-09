@@ -146,7 +146,6 @@ header.sh.scrolled .sh-nav{background:linear-gradient(165deg,rgba(20,19,30,.44),
 .lead{font-size:18px;color:var(--mut);margin:28px 0 36px;max-width:520px}
 .lead strong{color:#fff;font-weight:500}
 .hnote{margin-top:14px;font-size:12.5px;color:var(--faint)}
-.sous-plans a{color:#fff;border-bottom:1px solid var(--line2)}
 .preuves{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:36px;font-size:13.5px;color:var(--mut)}
 .preuves span{display:flex;align-items:center;gap:8px}
 .preuves .i{width:15px;height:15px;color:var(--acc)}
@@ -257,11 +256,8 @@ video.defile.joue{opacity:1}
 .plan li{display:flex;gap:12px;font-size:15px;line-height:1.5;color:var(--fg)}
 .plan li .i{width:16px;height:16px;margin-top:4px;color:var(--acc)}
 .plan .btn{width:100%;margin-top:auto}
-.cond{display:flex;justify-content:space-between;gap:12px 40px;flex-wrap:wrap;margin-top:24px;font-size:14px;color:var(--faint)}
-.cond a{color:#fff;border-bottom:1px solid var(--line2)}
-.sous-plans{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:20px;font-size:13.5px;color:var(--faint)}
 /* conditions détaillées, repliées sous les formules */
-.conditions{margin-top:8px;border-bottom:1px solid var(--line)}
+.conditions{margin-top:20px;border-bottom:1px solid var(--line)}
 .conditions summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;font-size:14px;color:var(--mut)}
 .conditions summary::-webkit-details-marker{display:none}
 .conditions summary:hover{color:#fff}
@@ -278,7 +274,6 @@ video.defile.joue{opacity:1}
 .etape p{font-size:15px;color:var(--mut);max-width:34ch}
 .paie{display:inline-flex;margin-top:18px;font-size:12.5px;padding:4px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--mut)}
 .paie.oui{border-color:rgba(180,165,255,.5);color:var(--acc)}
-.etapes-note{margin-top:28px;font-size:13px;color:var(--faint)}
 
 /* ============ SERVICES (liste à filets) ============ */
 .srv{border-top:1px solid var(--line2)}
@@ -289,12 +284,6 @@ video.defile.joue{opacity:1}
 .srow .tlink{justify-self:end;font-size:13.5px;color:var(--mut)}
 
 /* ============ MÉTIERS ============ */
-.metiers-ligne{padding-block:56px;border-top:1px solid var(--line)}
-.metiers-ligne h2{font-size:20px;letter-spacing:-.02em;margin-bottom:18px}
-.metiers-ligne nav{display:flex;flex-wrap:wrap;gap:8px}
-.metiers-ligne a{padding:7px 14px;border:1px solid var(--line2);border-radius:999px;font-size:14px;color:var(--mut);transition:color .2s,border-color .2s}
-.metiers-ligne a:hover{color:#fff;border-color:rgba(255,255,255,.35)}
-.metiers-ligne a.autre{border-style:dashed}
 .metiers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .metier{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid var(--line);border-radius:14px;font-size:15px;font-weight:500;color:#fff;transition:border-color .25s,background .25s}
 .metier:hover{border-color:var(--line2);background:rgba(255,255,255,.03)}
@@ -379,6 +368,10 @@ video.defile.joue{opacity:1}
 .fcols h2{margin-bottom:16px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 .fcols ul{list-style:none;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--mut)}
 .fcols a:hover{color:#fff}
+.fmetiers{margin-top:48px;padding-top:32px;border-top:1px solid var(--line)}
+.fmetiers h2{margin-bottom:16px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.fmetiers nav{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14px;color:var(--mut)}
+.fmetiers a:hover{color:#fff}
 /* wordmark en particules (ParticleWordmark.astro) */
 .pw{position:relative;width:100%;aspect-ratio:1600/340;overflow:hidden;margin-top:40px;user-select:none;-webkit-user-select:none}
 .pw canvas{width:100%;height:100%}

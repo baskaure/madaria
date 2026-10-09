@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import ParticleWordmark from './ParticleWordmark.astro';
 import { footerColumns } from '../data/site';
+import { secteurs } from '../data/secteurs';
 
 const annee = new Date().getFullYear();
 ---
@@ -24,6 +25,16 @@ const annee = new Date().getFullYear();
           </ul>
         </div>
       ))}
+    </div>
+
+    <!-- Métiers : chaque lien mène à sa page métier, c'est le maillage interne
+         le plus utile du site. Présent sur toutes les pages : ne pas retirer. -->
+    <div class="fmetiers" id="secteurs">
+      <h2>Un site pensé pour votre métier</h2>
+      <nav aria-label="Sites par métier">
+        {secteurs.map((s) => <a href={`/site-internet/${s.slug}/`}>{s.nom}</a>)}
+        <a href="/#contact">Autre métier&nbsp;? Parlons-en</a>
+      </nav>
     </div>
 
     <ParticleWordmark text="MADARIA" />

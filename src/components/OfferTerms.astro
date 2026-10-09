@@ -3,9 +3,6 @@ import Icon from './Icon.astro';
 import { conditionsOffres } from '../data/offres';
 ---
 
-<div class="sous-plans">
-  <span>Offres réservées aux professionnels. Prix HT. Le nom de domaine reste à votre nom si vous arrêtez. <a href="/cgv/">Conditions générales de vente</a></span>
-</div>
 <details class="conditions">
   <summary>Délais, périmètre et frais récurrents<Icon name="plus" class="i" /></summary>
   {conditionsOffres.map((texte) => <p>{texte}</p>)}

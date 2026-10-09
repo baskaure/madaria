@@ -29,7 +29,7 @@ export const etapes: Etape[] = [
     paie: 'Maquette incluse',
   },
   {
-    delai: 'Jour 7*',
+    delai: 'Jour 7',
     titre: 'Votre site est en ligne',
     text: "Nom de domaine à votre nom, fiche Google reliée, bouton d'appel. Vos clients vous joignent en un geste.",
     paie: `Dès ${prixEntree}, rien au départ`,
