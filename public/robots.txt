@@ -1,6 +1,8 @@
 # Moteurs de recherche classiques
 User-agent: *
 Allow: /
+# Visuels des publicités Meta : pas à indexer
+Disallow: /pubs/
 
 # Moteurs de réponse et assistants IA — autorisés explicitement.
 # Sans cette déclaration ils passent quand même, mais l'autorisation explicite
